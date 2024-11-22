@@ -1,6 +1,7 @@
 package user_controller
 
 import (
+	"github.com/andifg/artemis_backend/app/service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,23 +11,19 @@ type UserController interface {
 }
 
 type UserControllerImpl struct {
-	userService string
+	userService service.UserService
 }
 
 func (controller UserControllerImpl) CreateUser(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "Create User",
-	})
+	controller.userService.CreateUser(c)
 }
 
 func (controller UserControllerImpl) GetAllUsers(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "Get All Users",
-	})
+	controller.userService.GetAllUsers(c)
 }
 
-func UserControllerInit() UserController {
+func UserControllerInit(service service.UserService) UserController {
 	return &UserControllerImpl{
-		userService: "user_service",
+		userService: service,
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"github.com/andifg/artemis_backend/app/domain/dao"
 	"github.com/andifg/artemis_backend/app/repository"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type UserService interface {
@@ -17,19 +18,36 @@ type UserServiceImpl struct {
 
 func (u UserServiceImpl) CreateUser(c *gin.Context) {
 	var user dao.User
-	c.BindJSON(&user)
-	u.userRepository.CreateUser(user)
+
+	if err := c.BindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	usr, err := u.userRepository.CreateUser(user)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(200, gin.H{
-		"message": "User Created",
+		"message": "Created User ddde",
+		"user":    usr,
 	})
 }
 
-
 func (u UserServiceImpl) GetAllUsers(c *gin.Context) {
-	users := u.userRepository.GetAllUsers()
+	res, err := u.userRepository.GetAllUsers()
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(200, gin.H{
 		"message": "All Users",
-		"data":    users,
+		"data":    res,
 	})
 }
 

@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/andifg/artemis_backend/app/router"
-	"github.com/andifg/artemis_backend/config"
-	"github.com/andifg/artemis_backend/app/repository"
-	"github.com/andifg/artemis_backend/app/service"
 	"github.com/andifg/artemis_backend/app/controller"
+	"github.com/andifg/artemis_backend/app/repository"
+	"github.com/andifg/artemis_backend/app/router"
+	"github.com/andifg/artemis_backend/app/service"
+	"github.com/andifg/artemis_backend/config"
 )
 
 func main() {
@@ -15,7 +15,7 @@ func main() {
 	db := config.InitDB()
 	userRepo := repository.UserRepositoryInit(db)
 	userService := service.UserServiceInit(userRepo)
-	userController := user_controller.UserControllerInit()
+	userController := user_controller.UserControllerInit(userService)
 
 	init := config.Init(userRepo, userService, userController)
 
