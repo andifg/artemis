@@ -1,7 +1,9 @@
 package service
 
 import (
+	"github.com/andifg/artemis_backend/app/constant"
 	"github.com/andifg/artemis_backend/app/domain/dao"
+	"github.com/andifg/artemis_backend/app/pkg"
 	"github.com/andifg/artemis_backend/app/repository"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -17,6 +19,7 @@ type UserServiceImpl struct {
 }
 
 func (u UserServiceImpl) CreateUser(c *gin.Context) {
+	defer pkg.PanicHandler(c)
 	var user dao.User
 
 	if err := c.BindJSON(&user); err != nil {
@@ -27,28 +30,23 @@ func (u UserServiceImpl) CreateUser(c *gin.Context) {
 	usr, err := u.userRepository.CreateUser(user)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		pkg.PanicException(constant.InvalidRequest)
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"message": "Created User ddde",
-		"user":    usr,
-	})
+	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, usr))
 }
 
 func (u UserServiceImpl) GetAllUsers(c *gin.Context) {
+	defer pkg.PanicHandler(c)
 	res, err := u.userRepository.GetAllUsers()
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		pkg.PanicException(constant.DataNotFound)
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"message": "All Users",
-		"data":    res,
-	})
+	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, res))
 }
 
 func UserServiceInit(userRepository repository.UserRepository) UserService {
