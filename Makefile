@@ -1,0 +1,14 @@
+local-compose:
+	echo "Starting lokal-dev"
+	cd devservice && docker-compose up -d
+
+local-reload:
+	~/go/bin/air .
+
+
+local-dev: local-compose local-reload
+	echo "Starting lokal-dev"
+
+
+format:
+	go fmt ./...
