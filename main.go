@@ -1,16 +1,20 @@
 package main
 
 import (
-	"fmt"
 	"github.com/andifg/artemis_backend/app/controller"
 	"github.com/andifg/artemis_backend/app/repository"
 	"github.com/andifg/artemis_backend/app/router"
 	"github.com/andifg/artemis_backend/app/service"
 	"github.com/andifg/artemis_backend/config"
+	log "github.com/sirupsen/logrus"
 )
 
+func init() {
+	config.InitLog()
+}
+
 func main() {
-	fmt.Println("Hello, World!")
+	log.Info("Starting Application")
 
 	db := config.InitDB()
 	userRepo := repository.UserRepositoryInit(db)
