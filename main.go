@@ -19,9 +19,10 @@ func main() {
 	db := config.InitDB()
 	userRepo := repository.UserRepositoryInit(db)
 	userService := service.UserServiceInit(userRepo)
-	userController := user_controller.UserControllerInit(userService)
+	userController := controller.UserControllerInit(userService)
+	healthCheckController := controller.HealthCheckControllerInit()
 
-	init := config.Init(userRepo, userService, userController)
+	init := config.Init(userRepo, userService, userController, healthCheckController)
 
 	r := router.Init(init)
 	r.Run(":8080")

@@ -8,8 +8,19 @@ import (
 func Init(init *config.Initialization) *gin.Engine {
 	r := gin.Default()
 
-	r.POST("/user", init.UserController.CreateUser)
-	r.GET("/user", init.UserController.GetAllUsers)
+	r.GET("health", init.HealathCheckController.HealthCheck)
+
+	api := r.Group("/api")
+	{
+
+		v1 := api.Group("/v1")
+		{
+			v1.POST("/user", init.UserController.CreateUser)
+			v1.GET("/user", init.UserController.GetAllUsers)
+
+		}
+
+	}
 
 	return r
 }

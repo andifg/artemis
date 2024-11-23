@@ -7,14 +7,16 @@ import (
 )
 
 type Initialization struct {
-	UserController user_controller.UserController
+	UserController controller.UserController
+	HealathCheckController controller.HealthCheckController
 	UserService    service.UserService
 	UserRepository repository.UserRepository
 }
 
-func Init(userRepo repository.UserRepository, userService service.UserService, userController user_controller.UserController) *Initialization {
+func Init(userRepo repository.UserRepository, userService service.UserService, userController controller.UserController, healthCheckController controller.HealthCheckController) *Initialization {
 	return &Initialization{
 		UserController: userController,
+		HealathCheckController: healthCheckController,
 		UserService:    userService,
 		UserRepository: userRepo,
 	}

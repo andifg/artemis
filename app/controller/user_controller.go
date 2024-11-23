@@ -1,4 +1,4 @@
-package user_controller
+package controller
 
 import (
 	"github.com/andifg/artemis_backend/app/service"

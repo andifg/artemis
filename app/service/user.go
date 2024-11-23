@@ -6,8 +6,8 @@ import (
 	"github.com/andifg/artemis_backend/app/pkg"
 	"github.com/andifg/artemis_backend/app/repository"
 	"github.com/gin-gonic/gin"
-	"net/http"
 	log "github.com/sirupsen/logrus"
+	"net/http"
 )
 
 type UserService interface {
