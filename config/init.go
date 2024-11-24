@@ -7,17 +7,17 @@ import (
 )
 
 type Initialization struct {
-	UserController controller.UserController
+	UserController         controller.UserController
 	HealathCheckController controller.HealthCheckController
-	UserService    service.UserService
-	UserRepository repository.UserRepository
+	UserService            service.UserService
+	UserRepository         repository.UserRepository
 }
 
 func Init(userRepo repository.UserRepository, userService service.UserService, userController controller.UserController, healthCheckController controller.HealthCheckController) *Initialization {
 	return &Initialization{
-		UserController: userController,
+		UserController:         userController,
 		HealathCheckController: healthCheckController,
-		UserService:    userService,
-		UserRepository: userRepo,
+		UserService:            userService,
+		UserRepository:         userRepo,
 	}
 }
