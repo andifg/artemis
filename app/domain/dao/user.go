@@ -6,8 +6,8 @@ import (
 )
 
 type BaseModel struct {
-	CreatedAd time.Time `gorm:"->:false;column:created_at" json:"-"`
-	UpdatedAt time.Time `gorm:"->:false;column:updated_at" json:"-"`
+	CreatedAt time.Time `gorm:"column:created_at" json:"-"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime:nano;column:updated_at" json:"-"`
 }
 
 type User struct {

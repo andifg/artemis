@@ -18,7 +18,10 @@ import (
 	"gorm.io/gorm"
 )
 
-func initTestcontainer() (*gorm.DB, func(t *testing.T)) {
+var db *gorm.DB
+
+
+func initTestcontainer() func() {
 	ctx := context.Background()
 
 	appConfig := constant.AppConfigInit()
@@ -39,7 +42,6 @@ func initTestcontainer() (*gorm.DB, func(t *testing.T)) {
 		panic(fmt.Sprintf("failed to start container: %s", err))
 	}
 
-
 	connectionString, err := postgresContainer.ConnectionString(ctx)
 
 	if err != nil {
@@ -47,33 +49,30 @@ func initTestcontainer() (*gorm.DB, func(t *testing.T)) {
 		panic(fmt.Sprintf("failed to get connection string: %s", err))
 	}
 
-	log.Printf("Connection string: %s", connectionString)
-
-	db, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
+	db, err = gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 	if err != nil {
 		panic("Failed to connect to database!")
 	}
 
-
-    // Clean up database before each test
-    db.Exec("DELETE FROM users")
-
-
-	teardown := func(t *testing.T) {
+	teardown := func() {
 		fmt.Println("Teardown testcontainer")
 		if err := testcontainers.TerminateContainer(postgresContainer); err != nil {
 			log.Printf("failed to terminate container: %s", err)
 		}
 	}
 
-	return db, teardown
+	return teardown
 }
 
-func TestUserRepositoryCreateUser(t *testing.T) {
-	db, teardown := initTestcontainer()
-	defer teardown(t)
+func cleanupDB(db *gorm.DB) {
+	fmt.Println("Cleaning up database table users")
+	db.Exec("DELETE FROM users")
+}
 
-	userRepo := UserRepositoryInit(db)
+
+func DummyUsers() []dao.User {
+	var users []dao.User
+
 
 	createdAt, err := time.Parse(time.RFC3339, "2024-01-01T00:00:00+01:00")
 
@@ -87,43 +86,52 @@ func TestUserRepositoryCreateUser(t *testing.T) {
 		log.Printf("Error: %s", err)
 	}
 
-	user := dao.User{
+
+	user_one := dao.User{
 		BaseModel: dao.BaseModel{
 			CreatedAt: createdAt,
 			UpdatedAt: updatedAt,
 		},
-		ID: uuid.New(),
+		ID:       uuid.New(),
 		Username: "test",
 	}
 
-	userRepo.CreateUser(user)
-
-	var resultUser dao.User
-
-	tx := db.Raw("Select * from users;").Scan(&resultUser)
-
-	if tx.Error != nil {
-		log.Printf("Error: %s", tx.Error)
+	user_2 := dao.User{
+		BaseModel: dao.BaseModel{
+			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
+		},
+		ID:       uuid.New(),
+		Username: "test",
 	}
 
-	fmt.Printf("User: %v\n", resultUser)
+	users = append(users, user_one)
+	users = append(users, user_2)
 
-
-	assert.Equal(t, user.Username, resultUser.Username)
-	assert.Equal(t, user.ID, resultUser.ID)
-	assert.Equal(t, user.CreatedAt, resultUser.CreatedAt)
-	assert.Equal(t, user.UpdatedAt, resultUser.UpdatedAt)
+	return users
 
 }
 
 
-func TestUserRepositoryCreateUser2(t *testing.T){
+func TestUserRepositoryInit(t *testing.T) {
+	teardown := initTestcontainer()
+	defer teardown()
 
-	db, teardown := initTestcontainer()
-	defer teardown(t)
+	t.Run("TestOne", testOne)
+	t.Run("TestTwo", testTwo)
 
-	UserRepositoryInit(db)
+}
 
+func testOne(t *testing.T) {
+
+	userRepo := UserRepositoryInit(db)
+
+	t.Cleanup(func() {
+		cleanupDB(db)
+	})
+
+	user_one := DummyUsers()[0]
+	userRepo.CreateUser(user_one)
 
 	var resultUser dao.User
 
@@ -135,8 +143,42 @@ func TestUserRepositoryCreateUser2(t *testing.T){
 
 	fmt.Printf("User: %v\n", resultUser)
 
+	assert.Equal(t, user_one.Username, resultUser.Username)
+	assert.Equal(t, user_one.ID, resultUser.ID)
+	assert.Equal(t, user_one.CreatedAt, resultUser.CreatedAt)
+	assert.Equal(t, user_one.UpdatedAt, resultUser.UpdatedAt)
 
-	assert.Equal(t, 0, len(resultUser.Username))
+}
+
+func testTwo(t *testing.T) {
+	userRepo := UserRepositoryInit(db)
+
+	t.Cleanup(func() {
+		cleanupDB(db)
+	})
+
+	users := DummyUsers()
+
+	userRepo.CreateUser(users[0])
+	userRepo.CreateUser(users[1])
+
+	var resultUser []dao.User
+
+	tx := db.Raw("Select * from users;").Scan(&resultUser)
+
+	if tx.Error != nil {
+		log.Printf("Error: %s", tx.Error)
+	}
+
+	assert.Equal(t, users[0].Username, resultUser[0].Username)
+	assert.Equal(t, users[0].ID, resultUser[0].ID)
+	assert.Equal(t, users[0].CreatedAt, resultUser[0].CreatedAt)
+	assert.Equal(t, users[0].UpdatedAt, resultUser[0].UpdatedAt)
+
+	assert.Equal(t, users[1].Username, resultUser[1].Username)
+	assert.Equal(t, users[1].ID, resultUser[1].ID)
+	assert.Equal(t, users[1].CreatedAt, resultUser[1].CreatedAt)
+	assert.Equal(t, users[1].UpdatedAt, resultUser[1].UpdatedAt)
 
 
 }
