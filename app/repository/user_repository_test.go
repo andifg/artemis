@@ -20,7 +20,6 @@ import (
 
 var db *gorm.DB
 
-
 func initTestcontainer() func() {
 	ctx := context.Background()
 
@@ -69,10 +68,8 @@ func cleanupDB(db *gorm.DB) {
 	db.Exec("DELETE FROM users")
 }
 
-
 func DummyUsers() []dao.User {
 	var users []dao.User
-
 
 	createdAt, err := time.Parse(time.RFC3339, "2024-01-01T00:00:00+01:00")
 
@@ -85,7 +82,6 @@ func DummyUsers() []dao.User {
 	if err != nil {
 		log.Printf("Error: %s", err)
 	}
-
 
 	user_one := dao.User{
 		BaseModel: dao.BaseModel{
@@ -111,7 +107,6 @@ func DummyUsers() []dao.User {
 	return users
 
 }
-
 
 func TestUserRepositoryInit(t *testing.T) {
 	teardown := initTestcontainer()
@@ -179,6 +174,5 @@ func testTwo(t *testing.T) {
 	assert.Equal(t, users[1].ID, resultUser[1].ID)
 	assert.Equal(t, users[1].CreatedAt, resultUser[1].CreatedAt)
 	assert.Equal(t, users[1].UpdatedAt, resultUser[1].UpdatedAt)
-
 
 }

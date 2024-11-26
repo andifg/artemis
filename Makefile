@@ -12,3 +12,6 @@ local-dev: local-compose local-reload
 
 format:
 	go fmt ./...
+
+test:
+	go test ./... -v
