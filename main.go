@@ -29,6 +29,6 @@ func main() {
 	init := config.Init(userRepo, userService, userController, healthCheckController)
 
 	r := router.Init(init)
-	r.Run(":8080")
+	r.Run(":8000")
 
 }
