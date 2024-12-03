@@ -43,5 +43,5 @@ docker-compose up
 docker exec -it devservice-keycloak-1 bash
 /opt/keycloak/bin/kc.sh export --file /tmp/artemis.json --realm artemis
 exit
-docker cp devservice-keycloak-1:/tmp/coffee-app-realm.json .
+docker cp devservice-keycloak-1:/tmp/artemis.json .
 ```
