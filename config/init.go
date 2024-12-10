@@ -22,7 +22,7 @@ func Init(appConfig constant.AppConfig) *Initialization {
 	db := InitDB(appConfig.DatabaseHost, appConfig.DatabaseUser, appConfig.DatabasePassword, appConfig.DatabaseName, appConfig.DatabasePort)
 	userRepo := repository.UserRepositoryInit(db)
 	userService := service.UserServiceInit(userRepo)
-	oidcMgr := pkg.OidcManagerInit(appConfig.KeycloakClientID, appConfig.KeycloakSecret, appConfig.KeycloakRealm, appConfig.KeycloakRealmRedirectURI, appConfig.KeycloakURL, appConfig.KeycloakCertPath)
+	oidcMgr := pkg.OidcManagerInit(appConfig.KeycloakClientID, appConfig.KeycloakSecret, appConfig.KeycloakRealm, appConfig.KeycloakRealmIssuerUrl, appConfig.KeycloakRealmRedirectURI, appConfig.KeycloakURL, appConfig.KeycloakCertPath)
 	authService := service.AuthServiceInit(oidcMgr)
 	authController := controller.AuthControllerInit(authService)
 	userController := controller.UserControllerInit(userService)

@@ -3,12 +3,13 @@ package config
 import (
 	nested "github.com/antonfisher/nested-logrus-formatter"
 	log "github.com/sirupsen/logrus"
-	"os"
 )
 
 func InitLog() {
 
-	log.SetLevel(getLoggerLevel(os.Getenv("LOG_LEVEL")))
+	defaultLogLevel := "DEBUG"
+
+	log.SetLevel(getLoggerLevel(defaultLogLevel))
 	log.SetReportCaller(true)
 	log.SetFormatter(&nested.Formatter{
 		HideKeys:        true,

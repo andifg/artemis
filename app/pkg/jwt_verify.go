@@ -4,13 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/hashicorp/cap/jwt"
+	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
-
-	"github.com/hashicorp/cap/jwt"
-	log "github.com/sirupsen/logrus"
+	"time"
 )
 
 type OidcTokens struct {
@@ -20,20 +20,74 @@ type OidcTokens struct {
 }
 
 type OidcManager interface {
-	VerifyToken(string) (bool, error)
+	VerifyToken(string) (JWT, error)
 	FetchAuthToken(string) (OidcTokens, error)
+	VerifyClaims(*JWT) bool
 }
 
 type OidcManagerImpl struct {
 	clientID            string
 	clientSecret        string
 	realmName           string
+	issuerUrl           string
 	redirectUri         string
 	authProviderUrl     string
 	authProviderCertUrl string
 	jwtKeySet           jwt.KeySet
 	context             context.Context
 }
+
+type JWT struct {
+	Issuer    string `json:"iss"` // Issuer of the token
+	Subject   string `json:"sub"` // Subject of the token
+	Audience  string `json:"aud"` // Audience of the token
+	ExpiresAt int64  `json:"exp"` // Expiration time (Unix timestamp)
+	IssuedAt  int64  `json:"iat"` // Issued at (Unix timestamp)
+	ID        string `json:"jti"` // JWT ID (unique identifier)
+}
+
+func (o *OidcManagerImpl) VerifyClaims(jwt *JWT) bool {
+	var valid bool
+
+	valid = jwt.verifyExpirationClaim()
+	if !valid {
+		log.Info("Token expired")
+		return false
+	}
+	valid = jwt.verifyIssuerClaim(o.issuerUrl)
+	if !valid {
+		log.Info("Invalid issuer")
+		return false
+	}
+
+	// valid = jwt.verifyAudienceClaim(o.issuerUrl)
+	// if !valid {
+	// 	log.Info("Invalid audience")
+	// 	return false
+	// }
+
+	return true
+
+}
+
+func (jwt *JWT) verifyExpirationClaim() bool {
+
+	now := time.Now().Unix()
+
+	log.Debug("Verifying expiration claim with values: ", jwt.ExpiresAt, now)
+
+	return jwt.ExpiresAt > now
+}
+
+func (jwt *JWT) verifyIssuerClaim(issuer string) bool {
+	log.Debug(fmt.Sprintf("Verifying issuer claim with values: %s, %s", jwt.Issuer, issuer))
+	return jwt.Issuer == issuer
+}
+
+// func (jwt *JWT) verifyAudienceClaim(audience string) bool {
+// 	log.Debug(fmt.Sprintf("Verifying audience claim with values: %s, %s", jwt.Audience, audience))
+// 	return jwt.Audience == audience
+// }
 
 func (o *OidcManagerImpl) createKeySet() error {
 
@@ -93,27 +147,73 @@ func (o *OidcManagerImpl) FetchAuthToken(code string) (OidcTokens, error) {
 
 }
 
-func (o *OidcManagerImpl) VerifyToken(token string) (bool, error) {
+func (o *OidcManagerImpl) VerifyToken(token string) (JWT, error) {
 
 	log.Debug("Verifying token: ", token)
 
 	claims, err := o.jwtKeySet.VerifySignature(o.context, token)
 	if err != nil {
 		log.Info("Error verifying token: ", err)
-		return false, err
+		return JWT{}, err
 	}
 
 	log.Info("Token verified: ", claims)
 
-	return true, nil
+	jwt := JWT{}
+
+	if iss, ok := claims["iss"].(string); ok {
+		jwt.Issuer = iss
+	} else {
+		return JWT{}, fmt.Errorf("missing or invalid 'iss' claim")
+	}
+
+	if sub, ok := claims["sub"].(string); ok {
+		jwt.Subject = sub
+	} else {
+		return JWT{}, fmt.Errorf("missing or invalid 'sub' claim")
+	}
+
+	if aud, ok := claims["aud"].(string); ok {
+		jwt.Audience = aud
+	} else {
+		return JWT{}, fmt.Errorf("missing or invalid 'aud' claim")
+	}
+
+	if exp, ok := claims["exp"].(float64); ok {
+		jwt.ExpiresAt = int64(exp)
+	} else {
+		return JWT{}, fmt.Errorf("missing or invalid 'exp' claim")
+	}
+
+	if iat, ok := claims["iat"].(float64); ok {
+		jwt.IssuedAt = int64(iat)
+	} else {
+		return JWT{}, fmt.Errorf("missing or invalid 'iat' claim")
+	}
+
+	if jti, ok := claims["jti"].(string); ok {
+		jwt.ID = jti
+	} else {
+		return JWT{}, fmt.Errorf("missing or invalid 'jti' claim")
+	}
+
+	jsonData, err := json.Marshal(jwt)
+	if err != nil {
+		return JWT{}, err
+	}
+
+	log.Info("JWT: ", string(jsonData))
+
+	return jwt, nil
 
 }
 
-func OidcManagerInit(clientID string, clientSecret string, realmName string, redirectUri string, authProviderUrl string, authProviderCertUrl string) OidcManager {
+func OidcManagerInit(clientID string, clientSecret string, realmName string, issuerUrl string, redirectUri string, authProviderUrl string, authProviderCertUrl string) OidcManager {
 	oidcm := &OidcManagerImpl{
 		clientID:            clientID,
 		clientSecret:        clientSecret,
 		realmName:           realmName,
+		issuerUrl:           issuerUrl,
 		redirectUri:         redirectUri,
 		authProviderUrl:     authProviderUrl,
 		authProviderCertUrl: authProviderCertUrl,

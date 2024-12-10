@@ -13,6 +13,7 @@ type AppConfig struct {
 	KeycloakClientID         string
 	KeycloakSecret           string
 	KeycloakRealm            string
+	KeycloakRealmIssuerUrl   string
 	KeycloakRealmRedirectURI string
 	KeycloakURL              string
 	KeycloakCertPath         string
@@ -38,6 +39,7 @@ func AppConfigInit() *AppConfig {
 		KeycloakClientID:         lookupEnv("KEYCLOAK_CLIENT_ID", "artemis"),
 		KeycloakSecret:           lookupEnv("KEYCLOAK_CLIENT_SECRET", "3bKwPwaQpSVhhZzdlUFWgajnlllWgVsi"),
 		KeycloakRealm:            lookupEnv("KEYCLOAK_REALM", "artemis"),
+		KeycloakRealmIssuerUrl:   lookupEnv("KEYCLOAK_REALM_ISSUER_URL", "http://keycloak:8080/realms/artemis"),
 		KeycloakRealmRedirectURI: lookupEnv("KEYCLOAK_REALM_REDIRECT_URI", "http://localhost:8000/api/v1/login"),
 		KeycloakURL:              lookupEnv("KEYCLOAK_URL", "http://localhost:8080"),
 		KeycloakCertPath:         lookupEnv("KEYCLOAK_CERT_PATH", "/protocol/openid-connect/certs"),
