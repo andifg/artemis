@@ -18,6 +18,7 @@ func AuthMiddleware(oidcMgr pkg.OidcManager) gin.HandlerFunc {
 		if err != nil || accessToken == "" {
 			log.Info("No access token found")
 			c.SetCookie("access_token", "", -1, "/", "localhost", false, true)
+			c.SetCookie("id_token", "", -1, "/", "localhost", false, false)
 			c.JSON(401, gin.H{"error": "Unauthorized"})
 			c.Abort()
 			return
@@ -27,6 +28,8 @@ func AuthMiddleware(oidcMgr pkg.OidcManager) gin.HandlerFunc {
 
 		if err != nil {
 			log.Info("Error verifying token: ", err)
+			c.SetCookie("access_token", "", -1, "/", "localhost", false, true)
+			c.SetCookie("id_token", "", -1, "/", "localhost", false, false)
 			c.JSON(401, gin.H{"error": "Unauthorized"})
 			c.Abort()
 			return
@@ -37,6 +40,7 @@ func AuthMiddleware(oidcMgr pkg.OidcManager) gin.HandlerFunc {
 		if !validClaims {
 			log.Info("Invalid claims")
 			c.SetCookie("access_token", "", -1, "/", "localhost", false, true)
+			c.SetCookie("id_token", "", -1, "/", "localhost", false, false)
 			c.JSON(401, gin.H{"error": "Unauthorized"})
 			c.Abort()
 			return

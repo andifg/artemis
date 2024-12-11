@@ -24,6 +24,8 @@ func Init(init *config.Initialization, oidcMgr pkg.OidcManager, origin string) *
 		{
 			v1_unauthorized.GET("/login", init.AuthController.Login)
 
+			v1_unauthorized.GET("/refresh", init.AuthController.Refresh)
+
 		}
 
 		v1_authorized := api.Group("/v1", middleware.AuthMiddleware(oidcMgr))

@@ -7,6 +7,7 @@ import (
 
 type AuthController interface {
 	Login(c *gin.Context)
+	Refresh(c *gin.Context)
 }
 
 type AuthControllerImpl struct {
@@ -15,6 +16,10 @@ type AuthControllerImpl struct {
 
 func (controller *AuthControllerImpl) Login(c *gin.Context) {
 	controller.authService.Login(c)
+}
+
+func (controller *AuthControllerImpl) Refresh(c *gin.Context) {
+	controller.authService.Refresh(c)
 }
 
 func AuthControllerInit(authService service.AuthService) AuthController {

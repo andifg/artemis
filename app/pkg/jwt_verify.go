@@ -22,6 +22,7 @@ type OidcTokens struct {
 type OidcManager interface {
 	VerifyToken(string) (JWT, error)
 	FetchAuthToken(string) (OidcTokens, error)
+	RefreshToken(string) (OidcTokens, error)
 	VerifyClaims(*JWT) bool
 }
 
@@ -146,6 +147,53 @@ func (o *OidcManagerImpl) FetchAuthToken(code string) (OidcTokens, error) {
 	}, nil
 
 }
+
+func (o *OidcManagerImpl) RefreshToken(refreshToken string) (OidcTokens, error) {
+
+	request := fmt.Sprintf("%s/realms/%s/protocol/openid-connect/token", o.authProviderUrl, o.realmName)
+
+	requestBody := url.Values{}
+	requestBody.Set("client_id", o.clientID)
+	requestBody.Set("client_secret", o.clientSecret)
+	requestBody.Set("refresh_token", refreshToken)
+	requestBody.Set("grant_type", "refresh_token")
+
+	resp, err := http.Post(request, "application/x-www-form-urlencoded", strings.NewReader(requestBody.Encode()))
+
+	if err != nil {
+		log.Info("Error during POST request: ", err)
+		return OidcTokens{}, err
+	}
+
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Info("Error reading response body: ", err)
+		return OidcTokens{}, err
+	}
+
+	var data map[string]interface{}
+	err = json.Unmarshal(body, &data)
+	if err != nil {
+		log.Info("Error unmarshalling response body: ", err)
+		return OidcTokens{}, err
+	}
+
+	AccessToken := data["access_token"]
+	RefreshToken := data["refresh_token"]
+	IdToken := data["id_token"]
+
+	log.Info("Successfully refreshed token")
+
+	return OidcTokens{
+		AccessToken:  AccessToken.(string),
+		RefreshToken: RefreshToken.(string),
+		IdToken:      IdToken.(string),
+	}, nil
+
+}
+
 
 func (o *OidcManagerImpl) VerifyToken(token string) (JWT, error) {
 
