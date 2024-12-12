@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/andifg/artemis_backend/app/constant"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
 )
@@ -15,6 +16,8 @@ func PanicHandler(c *gin.Context) {
 
 		key := strArr[0]
 		msg := strings.Trim(strArr[1], " ")
+
+		log.Info("PAAAAANNICE")
 
 		switch key {
 		case

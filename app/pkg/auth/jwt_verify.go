@@ -1,4 +1,4 @@
-package pkg
+package auth
 
 import (
 	"context"
@@ -194,7 +194,6 @@ func (o *OidcManagerImpl) RefreshToken(refreshToken string) (OidcTokens, error) 
 
 }
 
-
 func (o *OidcManagerImpl) VerifyToken(token string) (JWT, error) {
 
 	log.Debug("Verifying token: ", token)
@@ -250,7 +249,7 @@ func (o *OidcManagerImpl) VerifyToken(token string) (JWT, error) {
 		return JWT{}, err
 	}
 
-	log.Info("JWT: ", string(jsonData))
+	log.Trace("JWT: ", string(jsonData))
 
 	return jwt, nil
 

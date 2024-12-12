@@ -10,7 +10,7 @@ func InitLog() {
 	defaultLogLevel := "DEBUG"
 
 	log.SetLevel(getLoggerLevel(defaultLogLevel))
-	log.SetReportCaller(true)
+	log.SetReportCaller(false)
 	log.SetFormatter(&nested.Formatter{
 		HideKeys:        true,
 		FieldsOrder:     []string{"component", "category"},

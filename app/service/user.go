@@ -4,10 +4,12 @@ import (
 	"github.com/andifg/artemis_backend/app/constant"
 	"github.com/andifg/artemis_backend/app/domain/dao"
 	"github.com/andifg/artemis_backend/app/pkg"
+	"github.com/andifg/artemis_backend/app/pkg/contextutils"
 	"github.com/andifg/artemis_backend/app/repository"
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type UserService interface {
@@ -42,6 +44,11 @@ func (u UserServiceImpl) CreateUser(c *gin.Context) {
 
 func (u UserServiceImpl) GetAllUsers(c *gin.Context) {
 	defer pkg.PanicHandler(c)
+
+	userID := contextutils.GetUserID(c)
+
+	log.Info("Resolving Request from user with ID: ", userID)
+
 	res, err := u.userRepository.GetAllUsers()
 
 	log.Info("Get All Users")
