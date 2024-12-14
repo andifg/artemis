@@ -7,8 +7,8 @@ import (
 
 func SetTokens(c *gin.Context, tokens auth.OidcTokens) {
 
-	c.SetCookie("access_token", tokens.AccessToken, 3600, "/", "localhost", false, true)
-	c.SetCookie("refresh_token", tokens.RefreshToken, 3600, "/", "localhost", false, true)
-	c.SetCookie("id_token", tokens.IdToken, 3600, "/", "localhost", false, false)
+	c.SetCookie("access_token", tokens.AccessToken, 2592000, "/", "localhost", false, true)
+	c.SetCookie("refresh_token", tokens.RefreshToken, 2592000, "/", "localhost", false, true)
+	c.SetCookie("id_token", tokens.IdToken, 2592000, "/", "localhost", false, false)
 
 }
