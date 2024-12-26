@@ -39,12 +39,13 @@ type OidcManagerImpl struct {
 }
 
 type JWT struct {
-	Issuer    string `json:"iss"` // Issuer of the token
-	Subject   string `json:"sub"` // Subject of the token
-	Audience  string `json:"aud"` // Audience of the token
-	ExpiresAt int64  `json:"exp"` // Expiration time (Unix timestamp)
-	IssuedAt  int64  `json:"iat"` // Issued at (Unix timestamp)
-	ID        string `json:"jti"` // JWT ID (unique identifier)
+	Issuer           string `json:"iss"` // Issuer of the token
+	Subject          string `json:"sub"` // Subject of the token
+	Audience         string `json:"aud"` // Audience of the token
+	ExpiresAt        int64  `json:"exp"` // Expiration time (Unix timestamp)
+	IssuedAt         int64  `json:"iat"` // Issued at (Unix timestamp)
+	ID               string `json:"jti"` // JWT ID (unique identifier)
+	PreferedUsername string `json:"preferred_username"`
 }
 
 func (o *OidcManagerImpl) VerifyClaims(jwt *JWT) bool {
@@ -242,6 +243,12 @@ func (o *OidcManagerImpl) VerifyToken(token string) (JWT, error) {
 		jwt.ID = jti
 	} else {
 		return JWT{}, fmt.Errorf("missing or invalid 'jti' claim")
+	}
+
+	if preferredUsername, ok := claims["preferred_username"].(string); ok {
+		jwt.PreferedUsername = preferredUsername
+	} else {
+		return JWT{}, fmt.Errorf("missing or invalid 'preferred_username' claim")
 	}
 
 	jsonData, err := json.Marshal(jwt)

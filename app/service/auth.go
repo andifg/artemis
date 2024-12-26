@@ -1,8 +1,12 @@
 package service
 
 import (
+	"errors"
+	"github.com/andifg/artemis_backend/app/domain/dao"
 	"github.com/andifg/artemis_backend/app/pkg/auth"
 	"github.com/andifg/artemis_backend/app/pkg/contextutils"
+	"github.com/andifg/artemis_backend/app/pkg/customerrors"
+	"github.com/andifg/artemis_backend/app/repository"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
@@ -13,7 +17,8 @@ type AuthService interface {
 }
 
 type AuthServiceImpl struct {
-	oidcMgr auth.OidcManager
+	oidcMgr       auth.OidcManager
+	usrRepository repository.UserRepository
 }
 
 func (svc *AuthServiceImpl) Login(c *gin.Context) {
@@ -41,13 +46,33 @@ func (svc *AuthServiceImpl) Login(c *gin.Context) {
 		return
 	}
 
-	userID, err := uuid.Parse(accessToken.ID)
+	userID, err := uuid.Parse(accessToken.Subject)
 
 	if err != nil {
 		log.Info("Error parsing user ID: ", err)
 		contextutils.UnauthorizedHandler(c)
 		return
 	}
+
+	addedUser, err := svc.usrRepository.CreateUser(dao.User{
+		ID:       userID,
+		Username: accessToken.PreferedUsername,
+	})
+
+	if err != nil {
+		customErr := &customerrors.DuplicateKeyError{}
+		if errors.As(err, &customErr) {
+			log.Infof("User already registered")
+		} else {
+			log.Error("Error creating user: ", err)
+			contextutils.UnauthorizedHandler(c)
+			return
+		}
+
+	}
+
+	// compiler fix for unused variable
+	_ = addedUser
 
 	contextutils.SetUserID(c, userID)
 	contextutils.SetTokens(c, tokens)
@@ -58,8 +83,9 @@ func (svc *AuthServiceImpl) Login(c *gin.Context) {
 
 }
 
-func AuthServiceInit(oidcMgr auth.OidcManager) AuthService {
+func AuthServiceInit(oidcMgr auth.OidcManager, usrRepo repository.UserRepository) AuthService {
 	return &AuthServiceImpl{
-		oidcMgr: oidcMgr,
+		oidcMgr:       oidcMgr,
+		usrRepository: usrRepo,
 	}
 }
