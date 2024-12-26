@@ -17,7 +17,7 @@ func PanicHandler(c *gin.Context) {
 		key := strArr[0]
 		msg := strings.Trim(strArr[1], " ")
 
-		log.Info("PAAAAANNICE")
+		log.Info(fmt.Sprintf("Panic: %v", str))
 
 		switch key {
 		case
@@ -29,7 +29,7 @@ func PanicHandler(c *gin.Context) {
 			c.JSON(http.StatusUnauthorized, BuildResponse_(key, msg, Null()))
 			c.Abort()
 		default:
-			c.JSON(http.StatusInternalServerError, BuildResponse_(key, msg, Null()))
+			c.JSON(http.StatusInternalServerError, BuildResponse_(key, str, Null()))
 			c.Abort()
 		}
 	}
