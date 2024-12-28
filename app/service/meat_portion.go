@@ -41,6 +41,7 @@ func (m MeatPortionServiceImpl) CreateMeatPortion(c *gin.Context) {
 		ID:     createMeatPortion.ID,
 		Size:   createMeatPortion.Size,
 		UserID: user_id,
+		Date: createMeatPortion.Date,
 	})
 
 	if err != nil {
@@ -49,7 +50,7 @@ func (m MeatPortionServiceImpl) CreateMeatPortion(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, usr))
+	c.JSON(http.StatusCreated, pkg.BuildResponse(constant.Success, usr))
 }
 
 func NewMeatPortionService(meatPortionRepository repository.MeatPortionRepository) MeatPortionService {
