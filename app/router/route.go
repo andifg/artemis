@@ -34,7 +34,7 @@ func Init(init *config.Initialization, oidcMgr auth.OidcManager, origin string) 
 
 			v1_authorized.POST("/user/:id/meat-portions", init.MeatPortionController.CreateMeatPortion)
 
-			v1_authorized.GET("/user/:id/meat-portions", init.MeatPortionController.GetMeatPortions)
+			v1_authorized.GET("/user/:id/meat-portions", init.MeatPortionController.GetDailyOverview)
 
 		}
 

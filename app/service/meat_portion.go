@@ -6,7 +6,7 @@ import (
 	"github.com/andifg/artemis_backend/app/domain/dto"
 	"github.com/google/uuid"
 	"net/http"
-
+	"time"
 	"github.com/andifg/artemis_backend/app/pkg"
 	"github.com/andifg/artemis_backend/app/repository"
 	"github.com/gin-gonic/gin"
@@ -15,7 +15,7 @@ import (
 
 type MeatPortionService interface {
 	CreateMeatPortion(*gin.Context)
-	GetMeatPortions(*gin.Context)
+	GetDailyOverview(*gin.Context)
 }
 
 type MeatPortionServiceImpl struct {
@@ -54,7 +54,7 @@ func (m MeatPortionServiceImpl) CreateMeatPortion(c *gin.Context) {
 	c.JSON(http.StatusCreated, pkg.BuildResponse(constant.Success, usr))
 }
 
-func (m MeatPortionServiceImpl) GetMeatPortions(c *gin.Context) {
+func (m MeatPortionServiceImpl) GetDailyOverview(c *gin.Context) {
 
 	user := c.Param("id")
 	user_id := uuid.MustParse(user)
@@ -63,7 +63,9 @@ func (m MeatPortionServiceImpl) GetMeatPortions(c *gin.Context) {
 
 	var meatPortions []dao.MeatPortion
 
-	meatPortions, err := m.meatPortionRepository.GetMeatPortionsByUserID(user_id.String())
+	twoWeeksAgo := time.Now().AddDate(0,0,-14)
+
+	meatPortions, err := m.meatPortionRepository.GetMeatPortionsByUserID(user_id.String(), &twoWeeksAgo, nil)
 
 	if err != nil {
 		log.Error("Error getting meat portions: ", err)

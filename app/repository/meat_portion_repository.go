@@ -10,7 +10,7 @@ import (
 
 type MeatPortionRepository interface {
 	CreateMeatPortion(meatPortion dao.MeatPortion) (dao.MeatPortion, error)
-	GetMeatPortionsByUserID(userID string) ([]dao.MeatPortion, error)
+	GetMeatPortionsByUserID(userID string, cutOffDay *time.Time, limit *int) ([]dao.MeatPortion, error)
 }
 
 type MeatPortionRepositoryImpl struct {
@@ -30,13 +30,22 @@ func (m MeatPortionRepositoryImpl) CreateMeatPortion(meatPortion dao.MeatPortion
 }
 
 
-func (m MeatPortionRepositoryImpl) GetMeatPortionsByUserID(userID string) ([]dao.MeatPortion, error) {
+func (m MeatPortionRepositoryImpl) GetMeatPortionsByUserID(userID string, cutOffDay *time.Time, limit *int) ([]dao.MeatPortion, error) {
 	log.Debug(fmt.Sprintf("Getting Meat Portion by user ID: %v", userID))
 
-	twoWeeksAgo := time.Now().AddDate(0,0,-14)
-
 	var meatPortions []dao.MeatPortion
-	result := m.db.Model(&dao.MeatPortion{}).Where("user_id = ?", userID).Where("date > ?", twoWeeksAgo).Find(&meatPortions)
+
+	query := m.db.Model(&dao.MeatPortion{}).Where("user_id = ?", userID)
+
+	if cutOffDay != nil {
+		query = query.Where("date >= ?", cutOffDay)
+	}
+
+	if limit != nil {
+		query = query.Limit(*limit)
+	}
+
+	result := query.Find(&meatPortions)
 	if result.Error != nil {
 		fmt.Println("Error: ", result.Error)
 		return []dao.MeatPortion{}, result.Error
@@ -45,6 +54,7 @@ func (m MeatPortionRepositoryImpl) GetMeatPortionsByUserID(userID string) ([]dao
 	log.Debug("Meat Portion found: ", meatPortions)
 	return meatPortions, nil
 }
+
 
 func NewMeatPortionRepository(db *gorm.DB) MeatPortionRepository {
 	return &MeatPortionRepositoryImpl{
