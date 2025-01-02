@@ -29,13 +29,12 @@ func (m MeatPortionRepositoryImpl) CreateMeatPortion(meatPortion dao.MeatPortion
 	return meatPortion, nil
 }
 
-
 func (m MeatPortionRepositoryImpl) GetMeatPortionsByUserID(userID string, cutOffDay *time.Time, limit *int) ([]dao.MeatPortion, error) {
 	log.Debug(fmt.Sprintf("Getting Meat Portion by user ID: %v", userID))
 
 	var meatPortions []dao.MeatPortion
 
-	query := m.db.Model(&dao.MeatPortion{}).Where("user_id = ?", userID)
+	query := m.db.Model(&dao.MeatPortion{}).Where("user_id = ?", userID).Order("date desc")
 
 	if cutOffDay != nil {
 		query = query.Where("date >= ?", cutOffDay)
@@ -54,7 +53,6 @@ func (m MeatPortionRepositoryImpl) GetMeatPortionsByUserID(userID string, cutOff
 	log.Debug("Meat Portion found: ", meatPortions)
 	return meatPortions, nil
 }
-
 
 func NewMeatPortionRepository(db *gorm.DB) MeatPortionRepository {
 	return &MeatPortionRepositoryImpl{

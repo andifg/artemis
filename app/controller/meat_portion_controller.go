@@ -7,7 +7,8 @@ import (
 
 type MeatPortionController interface {
 	CreateMeatPortion(c *gin.Context)
-	GetDailyOverview(c * gin.Context)
+	GetDailyOverview(c *gin.Context)
+	GetStreak(c *gin.Context)
 }
 
 type MeatPortionControllerImpl struct {
@@ -20,6 +21,10 @@ func (controller MeatPortionControllerImpl) CreateMeatPortion(c *gin.Context) {
 
 func (controller MeatPortionControllerImpl) GetDailyOverview(c *gin.Context) {
 	controller.meatPortionService.GetDailyOverview(c)
+}
+
+func (controller MeatPortionControllerImpl) GetStreak(c *gin.Context) {
+	controller.meatPortionService.GetVeggiStreak(c)
 }
 
 func NewMeatPortionController(s service.MeatPortionService) MeatPortionController {
