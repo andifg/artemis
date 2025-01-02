@@ -15,6 +15,7 @@ import (
 
 type MeatPortionService interface {
 	CreateMeatPortion(*gin.Context)
+	GetMeatPortions(*gin.Context)
 }
 
 type MeatPortionServiceImpl struct {
@@ -41,7 +42,7 @@ func (m MeatPortionServiceImpl) CreateMeatPortion(c *gin.Context) {
 		ID:     createMeatPortion.ID,
 		Size:   createMeatPortion.Size,
 		UserID: user_id,
-		Date: createMeatPortion.Date,
+		Date:   createMeatPortion.Date,
 	})
 
 	if err != nil {
@@ -51,6 +52,27 @@ func (m MeatPortionServiceImpl) CreateMeatPortion(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, pkg.BuildResponse(constant.Success, usr))
+}
+
+func (m MeatPortionServiceImpl) GetMeatPortions(c *gin.Context) {
+
+	user := c.Param("id")
+	user_id := uuid.MustParse(user)
+
+	log.Info("Create Meat Portion")
+
+	var meatPortions []dao.MeatPortion
+
+	meatPortions, err := m.meatPortionRepository.GetMeatPortionsByUserID(user_id.String())
+
+	if err != nil {
+		log.Error("Error getting meat portions: ", err)
+		pkg.PanicException(constant.InvalidRequest)
+		return
+	}
+
+	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, meatPortions))
+
 }
 
 func NewMeatPortionService(meatPortionRepository repository.MeatPortionRepository) MeatPortionService {
