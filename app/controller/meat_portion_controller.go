@@ -9,6 +9,7 @@ type MeatPortionController interface {
 	CreateMeatPortion(c *gin.Context)
 	GetDailyOverview(c *gin.Context)
 	GetStreak(c *gin.Context)
+	GetAverage(c *gin.Context)
 }
 
 type MeatPortionControllerImpl struct {
@@ -25,6 +26,11 @@ func (controller MeatPortionControllerImpl) GetDailyOverview(c *gin.Context) {
 
 func (controller MeatPortionControllerImpl) GetStreak(c *gin.Context) {
 	controller.meatPortionService.GetVeggiStreak(c)
+}
+
+func (controller MeatPortionControllerImpl) GetAverage(c *gin.Context) {
+	controller.meatPortionService.GetDailyAverage(c)
+
 }
 
 func NewMeatPortionController(s service.MeatPortionService) MeatPortionController {

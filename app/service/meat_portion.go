@@ -19,6 +19,7 @@ type MeatPortionService interface {
 	CreateMeatPortion(*gin.Context)
 	GetDailyOverview(*gin.Context)
 	GetVeggiStreak(*gin.Context)
+	GetDailyAverage(*gin.Context)
 }
 
 type MeatPortionServiceImpl struct {
@@ -58,7 +59,7 @@ func (m MeatPortionServiceImpl) CreateMeatPortion(c *gin.Context) {
 }
 
 func (m MeatPortionServiceImpl) GetDailyOverview(c *gin.Context) {
-
+	defer pkg.PanicHandler(c)
 	user := c.Param("id")
 	user_id := uuid.MustParse(user)
 
@@ -81,6 +82,7 @@ func (m MeatPortionServiceImpl) GetDailyOverview(c *gin.Context) {
 }
 
 func (m MeatPortionServiceImpl) GetVeggiStreak(c *gin.Context) {
+	defer pkg.PanicHandler(c)
 
 	user := c.Param("id")
 	user_id := uuid.MustParse(user)
@@ -113,6 +115,74 @@ func (m MeatPortionServiceImpl) GetVeggiStreak(c *gin.Context) {
 
 	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, streak))
 
+}
+
+func (m MeatPortionServiceImpl) GetDailyAverage(c *gin.Context) {
+	defer pkg.PanicHandler(c)
+	user := c.Param("id")
+	user_id := uuid.MustParse(user)
+
+	timeframe := c.Query("timeframe")
+
+	var cutoff time.Time
+	var middleTime time.Time
+	var weeks int64
+
+	switch {
+	case timeframe == "week":
+		cutoff = time.Now().AddDate(0, 0, -14)
+		middleTime = time.Now().AddDate(0, 0, -7)
+		weeks = 1
+	case timeframe == "month":
+		cutoff = time.Now().AddDate(0, -2, 0)
+		middleTime = time.Now().AddDate(0, -1, 0)
+		weeks = 4
+	case timeframe == "6month":
+		cutoff = time.Now().AddDate(0, -12, 0)
+		middleTime = time.Now().AddDate(0, -6, 0)
+		weeks = 24
+	default:
+		log.Error("Invalid timeframe value selected")
+		pkg.PanicException(constant.InvalidRequest)
+	}
+
+	meatPortions, err := m.meatPortionRepository.GetMeatPortionsByUserID(user_id.String(), &cutoff, nil)
+
+	if err != nil {
+		log.Error("Error getting meat portions: ", err)
+		pkg.PanicException(constant.InvalidRequest)
+		return
+	}
+
+	var sumNew int64
+	var sumOld int64
+
+	for _, portion := range meatPortions {
+		if portion.Date.Before(middleTime) {
+			sumOld++
+		} else {
+			sumNew++
+		}
+	}
+
+	averageNew := float64(sumNew / weeks)
+	averageOld := float64(sumOld / weeks)
+
+	changeRate := 0
+
+	if averageOld != 0 {
+		changeRate = int(float64(averageNew-averageOld) / float64(averageOld) * 100)
+	}
+
+	log.Debug(fmt.Printf("Sum of new: %d, Sum of old %d with change rate %d%% \n", sumNew, sumOld, changeRate))
+
+	avg := dto.AverageMeatPortions{
+		Timeframe:  dto.Timeframe(timeframe),
+		Value:      int64(averageNew),
+		ChangeRate: int64(changeRate),
+	}
+
+	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, avg))
 }
 
 func NewMeatPortionService(meatPortionRepository repository.MeatPortionRepository) MeatPortionService {
