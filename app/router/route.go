@@ -40,6 +40,8 @@ func Init(init *config.Initialization, oidcMgr auth.OidcManager, origin string) 
 
 			v1_authorized.GET("/user/:id/average", init.MeatPortionController.GetAverage)
 
+			v1_authorized.GET("/user/:id/aggregate", init.MeatPortionController.GetAggregatedMeatPortionsByTimeframe)
+
 		}
 
 	}

@@ -10,6 +10,7 @@ type MeatPortionController interface {
 	GetDailyOverview(c *gin.Context)
 	GetStreak(c *gin.Context)
 	GetAverage(c *gin.Context)
+	GetAggregatedMeatPortionsByTimeframe(c *gin.Context)
 }
 
 type MeatPortionControllerImpl struct {
@@ -31,6 +32,10 @@ func (controller MeatPortionControllerImpl) GetStreak(c *gin.Context) {
 func (controller MeatPortionControllerImpl) GetAverage(c *gin.Context) {
 	controller.meatPortionService.GetDailyAverage(c)
 
+}
+
+func (controller MeatPortionControllerImpl) GetAggregatedMeatPortionsByTimeframe(c *gin.Context) {
+	controller.meatPortionService.GetAggregatedMeatPortionsByTimeframe(c)
 }
 
 func NewMeatPortionController(s service.MeatPortionService) MeatPortionController {

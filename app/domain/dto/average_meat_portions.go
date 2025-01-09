@@ -3,9 +3,9 @@ package dto
 type Timeframe = string
 
 const (
-	Small  Timeframe = "week"
-	Medium Timeframe = "month"
-	Large  Timeframe = "6month"
+	Week     Timeframe = "week"
+	Month    Timeframe = "month"
+	SixMonth Timeframe = "6month"
 )
 
 type AverageMeatPortions struct {
