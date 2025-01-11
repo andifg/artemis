@@ -1,0 +1,17 @@
+.daily-overview-wrapper {
+  background-color: var(--primary-color);
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.daily-overview {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.daily-overview-slider {
+  display: flex;
+  flex-direction: row;
+}

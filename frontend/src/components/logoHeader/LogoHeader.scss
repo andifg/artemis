@@ -1,0 +1,11 @@
+.logo-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 40px;
+  width: 100%;
+}
+
+.logo-header-colored {
+  background-color: var(--primary-color);
+}

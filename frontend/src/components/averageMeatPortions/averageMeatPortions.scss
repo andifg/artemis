@@ -1,0 +1,66 @@
+.average-meat-portions {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 10px;
+}
+
+.average-meat-portions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.average-meat-portions-header-title {
+  display: inline-flex;
+  font-size: 1rem;
+  align-items: center;
+}
+
+.average-meat-portions-header-title-title {
+  margin-left: 10px;
+}
+
+.average-meat-portions-value-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.average-meat-portions-value {
+  font-size: 3rem;
+  margin-left: 10px;
+}
+
+.average-meat-portions-diff {
+  border-radius: 4px;
+  margin-left: 10px;
+  padding: 2px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+.average-meat-portions-diff-negative {
+  background-color: #3e721d;
+  color: white;
+}
+
+.average-meat-portions-diff-zero {
+  background-color: var(--background-color);
+}
+
+.average-meat-portions-header-selector {
+  display: flex;
+  flex-direction: row;
+  border-radius: 5px;
+  background-color: var(--background-color);
+  padding-left: 1px;
+  padding-right: 1px;
+}
+.average-meat-portions-header-selector-item {
+  padding-left: 1px;
+  padding-right: 1px;
+}
+
+.average-meat-portions-header-selector-item-selected {
+  font-weight: 800;
+}

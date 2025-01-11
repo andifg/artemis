@@ -1,0 +1,28 @@
+.bottom-navigator {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  border-radius: 50% 50% 0px 0px;
+  min-height: 80px;
+}
+
+.bottom-navigator-circle {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%); /* Center the circle horizontally */
+  width: 100px; /* Circle diameter */
+  height: 100px; /* Circle diameter */
+  background-color: var(--secondary-color);
+  border-radius: 50%; /* Makes the div a circle */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

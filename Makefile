@@ -5,6 +5,8 @@ local-compose:
 local-reload:
 	~/go/bin/air .
 
+local-frontend:
+	cd frontend && npm run start
 
 local-dev: local-compose local-reload
 	echo "Starting lokal-dev"
