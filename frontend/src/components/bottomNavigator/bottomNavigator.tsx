@@ -1,4 +1,4 @@
-import "./BottomNavigator.scss";
+import "./bottomNavigator.scss";
 import TestSvg from "../../assets/meat.svg";
 import { AddMealSheet } from "@/components/addMeal/AddMealSheet";
 import { useState } from "react";
