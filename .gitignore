@@ -55,3 +55,6 @@ go.work.sum
 
 # Environment file
 .envrc
+
+# Build files
+**/bin
