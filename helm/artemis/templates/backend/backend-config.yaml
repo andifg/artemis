@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "artemis.backend.name" . }}
+  labels:
+    {{- include "artemis.backend.labels" . | nindent 4 }}
+data:
+    LOG_LEVEL: {{ .Values.backend.log_level | quote }}
+    DATABASE_HOST: {{ .Values.backend.DatabaseHost | quote }}
+    DATABASE_USER: {{ .Values.postgresql.auth.username | quote }}
+    DATABASE_NAME: {{ .Values.postgresql.auth.database | quote }}
+    DATABASE_PORT: {{ .Values.backend.DatabasePort | quote }}
+    KEYCLOAK_CLIENT_ID: {{ .Values.backend.KeycloakClientID | quote }}
+    KEYCLOAK_REALM: {{ .Values.backend.KeycloakRealm | quote }}
+    KEYCLOAKREALMISSUERURL: {{ .Values.backend.KeycloakRealmIssuerUrl | quote }}
+    KEYCLOAKREALMREDIRECTURI: {{ .Values.backend.KeycloakRealmRedirectURI | quote }}
+    KEYCLOAKURL: {{ .Values.backend.KeycloakURL | quote }}
+    KEYCLOAKCERTPATH: {{ .Values.backend.KeycloakCertPath | quote }}
+    FRONTENDORIGIN: {{ .Values.backend.FrontendOrigin | quote }}

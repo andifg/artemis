@@ -58,3 +58,7 @@ go.work.sum
 
 # Build files
 **/bin
+
+
+# Charts directory
+**/charts

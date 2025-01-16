@@ -1,0 +1,45 @@
+nameOverride: ""
+fullnameOverride: ""
+
+
+backend:
+  log_level: "info"
+  containerPort: 8000
+  replicaCount: 1
+  image:
+    name: ""
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  DatabaseHost: "artemis-postgresql.meat-meater-dev.svc.cluster.local"
+  DatabasePort: "5432"
+  KeycloakClientID: ""
+  KeycloakRealm: ""
+  KeycloakRealmIssuerUrl: ""
+  KeycloakRealmRedirectURI: ""
+  KeycloakURL: ""
+  KeycloakCertPath: ""
+  FrontendOrigin: ""
+
+serviceAccount:
+  create: true
+
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+autoscaling: {}
+
+
+postgresql:
+  auth:
+    existingSecret: artemis-database-access
+    database: "artemis"
+    username: "artemis"
+    secretKeys:
+      userPasswordKey: postgres-password

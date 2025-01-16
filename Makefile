@@ -2,7 +2,7 @@ image_registry = ${ARTEMIS_IMAGE_REGISTRY}
 backend_image_name = artemis-backend
 frontend_image_name = artemis-frontend
 
-image_tag =$(shell date +"%Y-%m-%d-%H-%M")-$(shell git rev-parse --short HEAD)
+image_tag =$(shell date +"%Y-%m-%d--%H-%M")--$(shell git rev-parse --short HEAD)
 
 local-devservice:
 	echo "Starting lokal-dev"
@@ -30,9 +30,31 @@ test:
 build-backend:
 	echo "Building backend image"
 	echo "${image_registry}/${backend_image_name}:${image_tag}"
-	cd backend && podman build -t ${image_registry}/${backend_image_name}:${image_tag} .
+	cd backend && podman build --arch x86_64 -t ${image_registry}/${backend_image_name}:${image_tag} .
 
 build-frontend:
 	echo "Building frontend image"
 	echo "${image_registry}/${frontend_image_name}:${image_tag}"
 	cd frontend && podman build --arch x86_64 -t ${image_registry}/${frontend_image_name}:${image_tag} .
+
+push-frontend:
+	${MAKE} build-frontend
+	echo "Pushing frontend image"
+	podman push ${image_registry}/${frontend_image_name}:${image_tag}
+
+push-backend:
+	${MAKE} build-backend
+	echo "Pushing backend image"
+	podman push ${image_registry}/${backend_image_name}:${image_tag}
+
+
+deploy-chart:
+	cd helm && helm upgrade --install artemis ./artemis --set backend.image.name=${image_registry}/${backend_image_name}:${image_tag} --namespace ${NAMESPACE}
+
+deploy:
+	${MAKE} push-backend
+	# ${MAKE} push-frontend
+	${MAKE} deploy-chart
+
+deploy-dev:
+	${MAKE} NAMESPACE=meat-meater-dev deploy
