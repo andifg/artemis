@@ -26,7 +26,7 @@ func Init(appConfig constant.AppConfig) *Initialization {
 	userService := service.UserServiceInit(userRepo)
 	meatPortionService := service.NewMeatPortionService(meatPortionRepository)
 	oidcMgr := auth.OidcManagerInit(appConfig.KeycloakClientID, appConfig.KeycloakSecret, appConfig.KeycloakRealm, appConfig.KeycloakRealmIssuerUrl, appConfig.KeycloakRealmRedirectURI, appConfig.KeycloakURL, appConfig.KeycloakCertPath)
-	authService := service.AuthServiceInit(oidcMgr, userRepo)
+	authService := service.AuthServiceInit(oidcMgr, userRepo, appConfig)
 	authController := controller.AuthControllerInit(authService)
 	userController := controller.UserControllerInit(userService)
 	meatPortionController := controller.NewMeatPortionController(meatPortionService)

@@ -12,8 +12,7 @@ data:
     DATABASE_PORT: {{ .Values.backend.DatabasePort | quote }}
     KEYCLOAK_CLIENT_ID: {{ .Values.backend.KeycloakClientID | quote }}
     KEYCLOAK_REALM: {{ .Values.backend.KeycloakRealm | quote }}
-    KEYCLOAKREALMISSUERURL: {{ .Values.backend.KeycloakRealmIssuerUrl | quote }}
-    KEYCLOAKREALMREDIRECTURI: {{ .Values.backend.KeycloakRealmRedirectURI | quote }}
-    KEYCLOAKURL: {{ .Values.backend.KeycloakURL | quote }}
-    KEYCLOAKCERTPATH: {{ .Values.backend.KeycloakCertPath | quote }}
-    FRONTENDORIGIN: {{ .Values.backend.FrontendOrigin | quote }}
+    KEYCLOAK_REALM_ISSUER_URL: https://{{ .Values.keycloak.ingress.hostname }}/realms/{{ .Values.backend.KeycloakRealm }}
+    KEYCLOAK_REALM_REDIRECT_URI: https://{{ .Values.hostname }}{{ .Values.backend.KeycloakRealmRedirectPath }}
+    KEYCLOAK_URL: https://{{ .Values.keycloak.ingress.hostname }}
+    FRONTEND_ORIGIN: https://{{ .Values.hostname }}

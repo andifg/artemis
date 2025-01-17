@@ -2,6 +2,9 @@ package service
 
 import (
 	"errors"
+	"fmt"
+
+	"github.com/andifg/artemis_backend/app/constant"
 	"github.com/andifg/artemis_backend/app/domain/dao"
 	"github.com/andifg/artemis_backend/app/pkg/auth"
 	"github.com/andifg/artemis_backend/app/pkg/contextutils"
@@ -17,8 +20,9 @@ type AuthService interface {
 }
 
 type AuthServiceImpl struct {
-	oidcMgr       auth.OidcManager
-	usrRepository repository.UserRepository
+	oidcMgr         auth.OidcManager
+	usrRepository   repository.UserRepository
+	frontendBaseUrl string
 }
 
 func (svc *AuthServiceImpl) Login(c *gin.Context) {
@@ -28,14 +32,14 @@ func (svc *AuthServiceImpl) Login(c *gin.Context) {
 
 	if !ok {
 		log.Error("Code not found")
-		c.Redirect(302, "http://localhost:5173")
+		c.Redirect(302, svc.frontendBaseUrl)
 	}
 
 	tokens, err := svc.oidcMgr.FetchAuthToken(code)
 
 	if err != nil {
 		log.Error("Not able to fetch tokens from auth provider")
-		c.Redirect(302, "http://localhost:5173")
+		c.Redirect(302, svc.frontendBaseUrl)
 	}
 
 	accessToken, err := svc.oidcMgr.VerifyToken(tokens.AccessToken)
@@ -79,13 +83,14 @@ func (svc *AuthServiceImpl) Login(c *gin.Context) {
 
 	log.Info("Successfully logged in, redirecting to dashboard")
 
-	c.Redirect(302, "http://localhost:5173/dashboard")
+	c.Redirect(302, fmt.Sprintf("%s/dashboard", svc.frontendBaseUrl))
 
 }
 
-func AuthServiceInit(oidcMgr auth.OidcManager, usrRepo repository.UserRepository) AuthService {
+func AuthServiceInit(oidcMgr auth.OidcManager, usrRepo repository.UserRepository, appConfig constant.AppConfig) AuthService {
 	return &AuthServiceImpl{
-		oidcMgr:       oidcMgr,
-		usrRepository: usrRepo,
+		oidcMgr:         oidcMgr,
+		usrRepository:   usrRepo,
+		frontendBaseUrl: appConfig.FrontendOrigin,
 	}
 }

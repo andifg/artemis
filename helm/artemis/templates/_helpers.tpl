@@ -47,6 +47,17 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
+{{- define "artemis.frontend.labels" -}}
+helm.sh/chart: {{ include "artemis.chart" . }}
+frontendVersion: {{ splitList ":" .Values.frontend.image.name | last | quote }}
+{{ include "artemis.frontend.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+
 {{- define "artemis.backend.labels" -}}
 helm.sh/chart: {{ include "artemis.chart" . }}
 backendVersion: {{ splitList ":" .Values.backend.image.name | last | quote }}
@@ -63,6 +74,11 @@ Selector labels
 */}}
 {{- define "artemis.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "artemis.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "artemis.frontend.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "artemis.frontend.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 

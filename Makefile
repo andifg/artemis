@@ -20,9 +20,11 @@ local-dev:
 
 format-backend:
 	echo "Formatting backend"
-	go fmt ./backend/...
+	cd ./backend && go fmt ./...
+
+format-frontend:
 	echo "Formatting frontend"
-	cd frontend && npm run format
+	cd frontend && npm run format-fix
 
 test:
 	go test ./... -v
@@ -49,11 +51,12 @@ push-backend:
 
 
 deploy-chart:
-	cd helm && helm upgrade --install artemis ./artemis --set backend.image.name=${image_registry}/${backend_image_name}:${image_tag} --namespace ${NAMESPACE}
+	cd helm && helm upgrade --install artemis ./artemis --set backend.image.name=${image_registry}/${backend_image_name}:${image_tag} \
+	--namespace ${NAMESPACE} --set frontend.image.name=${image_registry}/${frontend_image_name}:${image_tag}
 
 deploy:
 	${MAKE} push-backend
-	# ${MAKE} push-frontend
+	${MAKE} push-frontend
 	${MAKE} deploy-chart
 
 deploy-dev:

@@ -2,6 +2,9 @@ nameOverride: ""
 fullnameOverride: ""
 
 
+hostname: meat-meater-dev.apps.ocp4.gummy-bears.de
+
+
 backend:
   log_level: "info"
   containerPort: 8000
@@ -14,13 +17,89 @@ backend:
     port: 80
   DatabaseHost: "artemis-postgresql.meat-meater-dev.svc.cluster.local"
   DatabasePort: "5432"
-  KeycloakClientID: ""
-  KeycloakRealm: ""
-  KeycloakRealmIssuerUrl: ""
-  KeycloakRealmRedirectURI: ""
+  KeycloakClientID: "artemis"
+  KeycloakRealm: "artemis"
+  KeycloakRealmRedirectPath: /api/v1/login
   KeycloakURL: ""
   KeycloakCertPath: ""
   FrontendOrigin: ""
+
+postgresql:
+  auth:
+    existingSecret: artemis-database-access
+    database: "artemis"
+    username: "artemis"
+    secretKeys:
+      userPasswordKey: postgres-password
+
+frontend:
+  containerPort: 8080
+  service:
+    type: ClusterIP
+    port: 80
+  image:
+    name: ""
+    pullPolicy: IfNotPresent
+
+keycloak:
+  nameOverride: keycloak
+  fullnameOverride: keycloak
+  production: true
+  proxy: edge
+
+  podSecurityContext:
+    enabled: false
+
+
+  extraStartupArgs: "--import-realm"
+
+
+  containerSecurityContext:
+    enabled: false
+
+  extraVolumes:
+    - name: inital-realm
+      configMap:
+        name: keycloak-realm-import
+
+  extraVolumeMounts:
+    - name: inital-realm
+      mountPath: /opt/bitnami/keycloak/data/import/
+
+  extraEnvVars:
+    - name: ARTEMIS_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: artemis-keycloak-client
+          key: secret
+
+  auth:
+    adminUser: admin
+    existingSecret: artemis-keycloak-postgres
+
+
+  ingress:
+    enabled: true
+    hostname: test-keycloak-meat-meater-dev.apps.ocp4.gummy-bears.de
+    annotations:
+      route.openshift.io/termination: edge
+
+  postgresql:
+    fullnameOverride: keycloak-postgresql
+    nameOverride: keycloak-postgresql
+    primary:
+      persistence:
+        existingClaim: data-mount-keycloak-postgresql-0
+    #   podSecurityContext:
+    #     enabled: false
+    #   containerSecurityContext:
+    #     enabled: false
+    auth:
+      existingSecret: artemis-keycloak-postgres
+      secretKeys:
+        userPasswordKey: admin-password
+        adminPasswordKey: admin-password
+
 
 serviceAccount:
   create: true
@@ -34,12 +113,3 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 autoscaling: {}
-
-
-postgresql:
-  auth:
-    existingSecret: artemis-database-access
-    database: "artemis"
-    username: "artemis"
-    secretKeys:
-      userPasswordKey: postgres-password
