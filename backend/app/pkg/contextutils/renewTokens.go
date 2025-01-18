@@ -38,7 +38,7 @@ func RenewTokens(c *gin.Context, refreshToken string, oidcMgr auth.OidcManager) 
 
 	SetUserID(c, userID)
 	log.Info("Successfully refreshed tokens")
-	SetTokens(c, tokens)
+	SetTokens(c, tokens,c.Request.Host)
 	c.Next()
 
 }

@@ -2,7 +2,9 @@ image_registry = ${ARTEMIS_IMAGE_REGISTRY}
 backend_image_name = artemis-backend
 frontend_image_name = artemis-frontend
 
-image_tag =$(shell date +"%Y-%m-%d--%H-%M")--$(shell git rev-parse --short HEAD)
+ifeq ($(origin image_tag), undefined)
+$(eval image_tag := $(shell date +"%Y-%m-%d--%H-%M")--$(shell git rev-parse --short HEAD))
+endif
 
 local-devservice:
 	echo "Starting lokal-dev"

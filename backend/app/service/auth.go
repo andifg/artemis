@@ -79,7 +79,7 @@ func (svc *AuthServiceImpl) Login(c *gin.Context) {
 	_ = addedUser
 
 	contextutils.SetUserID(c, userID)
-	contextutils.SetTokens(c, tokens)
+	contextutils.SetTokens(c, tokens, c.Request.Host)
 
 	log.Info("Successfully logged in, redirecting to dashboard")
 
