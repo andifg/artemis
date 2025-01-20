@@ -153,3 +153,7 @@
 body {
   overscroll-behavior: none;
 }
+
+html {
+  overscroll-behavior: none;
+}
