@@ -6,7 +6,7 @@ image_tag := $(shell date +"%Y-%m-%d--%H-%M")--$(shell git rev-parse --short HEA
 
 local-devservice:
 	echo "Starting lokal-dev"
-	cd backend/devservice && docker-compose up -d
+	cd backend/devservice && podman compose up -d
 
 local-backend:
 	cd backend && ~/go/bin/air .
@@ -14,8 +14,8 @@ local-backend:
 local-frontend:
 	cd frontend && npm run dev
 
-local-dev:
-	${MAKE} -j local-devservice local-frontend local-backend
+local-dev: local-devservice
+	${MAKE} -j local-frontend local-backend
 	echo "Started local dev with frontend, backend and services"
 
 format-backend:

@@ -14,7 +14,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       # - ./keycloak.conf:/opt/keycloak/conf/keycloak.conf
-      # - ./realms:/opt/keycloak/data/import
+      - ./realms:/opt/keycloak/data/import
     ports:
       - 8080:8080
     command: ["start-dev", "--import-realm"]
