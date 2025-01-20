@@ -29,7 +29,8 @@ function useAuthentication(): useAuthenticationReturn {
     console.log("Redirecting to auth provider");
 
     if (window.location.origin == "http://localhost:5173") {
-      window.location.href =  "http://keycloak:8080/realms/artemis/protocol/openid-connect/auth?response_type=code&client_id=artemis&redirect_uri=http://localhost:8000/api/v1/login&state=1234&scope=openid";
+      window.location.href =
+        "http://keycloak:8080/realms/artemis/protocol/openid-connect/auth?response_type=code&client_id=artemis&redirect_uri=http://localhost:8000/api/v1/login&state=1234&scope=openid";
       return;
     }
 
