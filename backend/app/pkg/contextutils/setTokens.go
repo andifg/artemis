@@ -4,10 +4,9 @@ import (
 	"github.com/andifg/artemis_backend/app/pkg/auth"
 	"github.com/gin-gonic/gin"
 	"regexp"
-
 )
 
-func SetTokens(c *gin.Context, tokens auth.OidcTokens, domain string,) {
+func SetTokens(c *gin.Context, tokens auth.OidcTokens, domain string) {
 
 	var secure bool = true
 

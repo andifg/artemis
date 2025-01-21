@@ -1,5 +1,5 @@
 import "./LogoHeader.scss";
-import MeatMeterLogo from "../../assets/meat-meter-logo.png";
+import MeatMeterLogo from "../../../public/meat-meter-logo.png";
 
 type LogoHeaderProps = {
   backgroundColor?: boolean;

@@ -17,11 +17,12 @@ function Dashboard() {
             style={{
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
+              justifyContent: "flex-start",
               alignItems: "center",
               height: "100vh",
               width: "100%",
               marginBottom: "100px",
+              marginTop: "20px",
             }}
           >
             <DailyOverview />
