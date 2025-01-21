@@ -5,12 +5,13 @@ import { VeggieStreak } from "@/components/veggiStreak/VeggieStreak";
 import { DailyOverview } from "@/components/dailyOverview/dailyOverview";
 import { AverageAndChartWrapper } from "@/components/averageAndChartWrapper/averageAndChartWrapper";
 import { AddMeatPortionContextProvider } from "@/contexts/addMeatPortionContext";
+import { Header } from "@/components/Header/Header";
 
 function Dashboard() {
   return (
     <>
       <Layout>
-        <LogoHeader />
+        <Header />
         <AddMeatPortionContextProvider>
           <div
             className="dashboard-main"
