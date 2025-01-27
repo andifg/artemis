@@ -22,7 +22,7 @@ function Dashboard() {
               height: "100vh",
               width: "100%",
               marginBottom: "100px",
-              marginTop: "20px",
+              marginTop: "10px",
             }}
           >
             <DailyOverview />

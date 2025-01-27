@@ -50,7 +50,7 @@ function MeatPortionsChart({ selected }: MeatPortionsChartProps) {
             <Bar
               dataKey="Value"
               name="Total Portions"
-              fill="var(--color-desktop)"
+              fill="var(--meat-color)"
               radius={4}
             />
           </BarChart>

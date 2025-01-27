@@ -9,8 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "format-fix": "prettier . --write",
-    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/meat-meter-icon.svg",
-    "generate-pwa-assets-color": "pwa-assets-generator --preset minimal public/meat-meter-icon-color.svg"
+    "generate-pwa-assets": "pwa-assets-generator --preset minimal -o public/meat-meter-icon.svg",
+    "generate-pwa-assets-dev": "pwa-assets-generator --preset minimal -o public/mygreendays-icon-green.svg"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

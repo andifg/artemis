@@ -10,9 +10,9 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["*.png", "*.jpg"],
       manifest: {
-        name: "Meat Meater Dev",
-        short_name: "Meat Meater",
-        description: "Track your meat consumption",
+        name: "MyGreenDays",
+        short_name: "MGD",
+        description: "A simple and intuitive meat consumption tracker.",
         theme_color: "#f7dcdc",
         icons: [
           {

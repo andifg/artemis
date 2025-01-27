@@ -6,7 +6,15 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app
 
+ARG PWA_ICON_GENERATE_COMMAND
+
 RUN npm install
+
+RUN npm rebuild --verbose sharp
+
+RUN echo "PWA_ICON_GENERATE_COMMAND: $PWA_ICON_GENERATE_COMMAND"
+
+RUN npm run $PWA_ICON_GENERATE_COMMAND
 
 RUN npm run build
 

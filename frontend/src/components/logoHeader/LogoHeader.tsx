@@ -1,5 +1,5 @@
 import "./LogoHeader.scss";
-import MeatMeterLogo from "../../../public/meat-meter-logo.png";
+import MyGreenDaysLogo from "../../../public/mygreendays-logo.png";
 
 type LogoHeaderProps = {
   backgroundColor?: boolean;
@@ -13,9 +13,14 @@ function LogoHeader({ backgroundColor = true }: LogoHeaderProps) {
       }
     >
       <img
-        src={MeatMeterLogo}
+        src={MyGreenDaysLogo}
         alt="test"
-        style={{ height: "40px", width: "auto" }}
+        style={{
+          height: "40px",
+          width: "auto",
+          margin: "5px",
+          display: "block",
+        }}
       />
     </div>
   );

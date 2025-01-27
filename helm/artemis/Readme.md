@@ -22,12 +22,12 @@ Create keycloak realm password (Needs to match imported secret)
 
 ```bash
 oc create secret generic artemis-keycloak-client \
-  --from-literal=secret="3bKwPwaQpSVhhZzdlUFWgajnlllWgVsi"
+  --from-literal=secret=$ARTEMIS_CLIENT_SECRET
 ```
 
 Create keycloak postgres admin password
 
 ```bash
 oc create secret generic artemis-keycloak-postgres \
-  --from-literal=admin-password="adsfdsfdsfadsfhadsfh1231234adsffds"
+  --from-literal=admin-password=$ARTEMIS_KEYCLOAK_POSTGRES_PASSWORD
 ```
