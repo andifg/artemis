@@ -4,11 +4,15 @@ metadata:
   name: {{ include "artemis.name" . }}
   labels:
     {{- include "artemis.backend.labels" . | nindent 4 }}
-  annotations:
-    route.openshift.io/termination: edge
+  annotations: {}
+    #route.openshift.io/termination: edge
 spec:
+  tls:
+    - hosts:
+        - {{ .Values.ingress.hostname | quote }}
+      secretName: {{ .Values.ingress.tls.secretName }}
   rules:
-    - host: {{ .Values.hostname | quote }}
+    - host: {{ .Values.ingress.hostname | quote }}
       http:
         paths:
           - path: /api

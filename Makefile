@@ -1,10 +1,12 @@
 image_registry = ${ARTEMIS_IMAGE_REGISTRY}
 backend_image_name = artemis-backend
 frontend_image_name = artemis-frontend
+stage = staging
 deploy-dev: NAMESPACE = meat-meater-dev
 deploy-dev: PWA_ICON_GENERATE_COMMAND = generate-pwa-assets-dev
 deploy-prod: NAMESPACE = meat-meater
 deploy-prod: PWA_ICON_GENERATE_COMMAND = generate-pwa-assets
+deploy-prod: stage = production
 
 image_tag := $(shell date +"%Y-%m-%d--%H-%M")--$(shell git rev-parse --short HEAD)
 
@@ -41,7 +43,7 @@ build-backend:
 build-frontend:
 	echo "Building frontend image"
 	echo "${image_registry}/${NAMESPACE}/${frontend_image_name}:${image_tag}"
-	cd frontend && podman build --build-arg PWA_ICON_GENERATE_COMMAND=${PWA_ICON_GENERATE_COMMAND} --arch x86_64 -t ${image_registry}/${NAMESPACE}/${frontend_image_name}:${image_tag} .
+	cd frontend && podman build --build-arg PWA_ICON_GENERATE_COMMAND=${PWA_ICON_GENERATE_COMMAND} --build-arg STAGE=${stage} --arch x86_64 -t ${image_registry}/${NAMESPACE}/${frontend_image_name}:${image_tag} .
 
 push-frontend: build-frontend
 	# ${MAKE} build-frontend

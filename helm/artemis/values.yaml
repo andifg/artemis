@@ -2,8 +2,10 @@ nameOverride: ""
 fullnameOverride: ""
 
 
-hostname: meat-meater-dev.apps.ocp4.gummy-bears.de
-
+ingress:
+  hostname: test.mygreendays.de
+  tls:
+    secretName: artemis-tls-secret
 
 backend:
   log_level: "info"
@@ -23,6 +25,7 @@ backend:
   KeycloakURL: ""
   KeycloakCertPath: ""
   FrontendOrigin: ""
+
 
 postgresql:
   auth:
@@ -80,9 +83,15 @@ keycloak:
 
   ingress:
     enabled: true
-    hostname: test-keycloak-meat-meater-dev.apps.ocp4.gummy-bears.de
+    hostname: auth.test.mygreendays.de
     annotations:
-      route.openshift.io/termination: edge
+      cert-manager.io/cluster-issuer: letsencrypt
+
+    extraTls:
+      - hosts:
+          # Make sure its same as ingress.hostname
+          - auth.test.mygreendays.de
+        secretName: keycloak-tls
 
   postgresql:
     fullnameOverride: keycloak-postgresql

@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "artemis.name" . }}
+  labels:
+    {{- include "artemis.labels" . | nindent 4 }}
+spec:
+  dnsNames:
+    - {{ .Values.ingress.hostname }}
+  duration: 2160h0m0s
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt
+  renewBefore: 360h0m0s
+  secretName: {{ .Values.ingress.tls.secretName }}

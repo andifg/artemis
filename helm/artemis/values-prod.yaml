@@ -1,0 +1,26 @@
+
+
+
+ingress:
+  hostname: test.mygreendays.de
+
+
+
+
+frontend:
+  containerPort: 8080
+  service:
+    type: ClusterIP
+    port: 80
+  image:
+    name: ""
+    pullPolicy: IfNotPresent
+
+keycloak:
+  ingress:
+    hostname: auth.test.mygreendays.de
+    extraTls:
+      - hosts:
+          # Make sure its same as ingress.hostname
+          - auth.test.mygreendays.de
+        secretName: keycloak-tls

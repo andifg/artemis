@@ -28,13 +28,7 @@ function useAuthentication(): useAuthenticationReturn {
   const initiateLogin = () => {
     console.log("Redirecting to auth provider");
 
-    if (window.location.origin == "http://localhost:5173") {
-      window.location.href =
-        "http://keycloak:8080/realms/artemis/protocol/openid-connect/auth?response_type=code&client_id=artemis&redirect_uri=http://localhost:8000/api/v1/login&state=1234&scope=openid";
-      return;
-    }
-
-    window.location.href = `https://test-keycloak-meat-meater-dev.apps.ocp4.gummy-bears.de/realms/artemis/protocol/openid-connect/auth?response_type=code&client_id=artemis&redirect_uri=${window.location.origin}/api/v1/login&state=1234&scope=openid`;
+    window.location.href = `${import.meta.env.VITE_KEYCLOAK_BASE_URL}/realms/artemis/protocol/openid-connect/auth?response_type=code&client_id=artemis&redirect_uri=${import.meta.env.VITE_KEYCLOAK_REDIRECT_URL}/api/v1/login&state=1234&scope=openid`;
   };
 
   const logout = () => {
