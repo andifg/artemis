@@ -1,11 +1,5 @@
-
-
-
 ingress:
-  hostname: test.mygreendays.de
-
-
-
+  hostname: mygreendays.de
 
 frontend:
   containerPort: 8080
@@ -16,11 +10,14 @@ frontend:
     name: ""
     pullPolicy: IfNotPresent
 
+# backend:
+#   DatabaseHost: "artemis-postgresql.artemis-prod.svc.cluster.local"
+
 keycloak:
   ingress:
-    hostname: auth.test.mygreendays.de
+    hostname: auth.mygreendays.de
     extraTls:
       - hosts:
           # Make sure its same as ingress.hostname
-          - auth.test.mygreendays.de
+          - auth.mygreendays.de
         secretName: keycloak-tls

@@ -17,7 +17,7 @@ backend:
   service:
     type: ClusterIP
     port: 80
-  DatabaseHost: "artemis-postgresql.meat-meater-dev.svc.cluster.local"
+  # DatabaseHost: "artemis-postgresql.meat-meater-dev.svc.cluster.local"
   DatabasePort: "5432"
   KeycloakClientID: "artemis"
   KeycloakRealm: "artemis"

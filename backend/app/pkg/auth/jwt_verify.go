@@ -117,6 +117,8 @@ func (o *OidcManagerImpl) FetchAuthToken(code string) (OidcTokens, error) {
 
 	resp, err := http.Post(request, "application/x-www-form-urlencoded", strings.NewReader(requestBody.Encode()))
 
+	log.Info("Request body: ", requestBody.Encode())
+
 	if err != nil {
 		log.Info("Error during POST request: ", err)
 		return OidcTokens{}, err
@@ -129,6 +131,8 @@ func (o *OidcManagerImpl) FetchAuthToken(code string) (OidcTokens, error) {
 		log.Info("Error reading response body: ", err)
 		return OidcTokens{}, err
 	}
+
+	log.Info("Response body create token: ", string(body))
 
 	var data map[string]interface{}
 	err = json.Unmarshal(body, &data)

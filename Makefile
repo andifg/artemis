@@ -4,7 +4,7 @@ frontend_image_name = artemis-frontend
 stage = staging
 deploy-dev: NAMESPACE = meat-meater-dev
 deploy-dev: PWA_ICON_GENERATE_COMMAND = generate-pwa-assets-dev
-deploy-prod: NAMESPACE = meat-meater
+deploy-prod: NAMESPACE = artemis-prod
 deploy-prod: PWA_ICON_GENERATE_COMMAND = generate-pwa-assets
 deploy-prod: stage = production
 
@@ -58,7 +58,7 @@ push-backend: build-backend
 
 deploy-chart:
 	cd helm && helm upgrade --install artemis ./artemis --set backend.image.name=${image_registry}/${NAMESPACE}/${backend_image_name}:${image_tag} \
-	--namespace ${NAMESPACE} --set frontend.image.name=${image_registry}/${NAMESPACE}/${frontend_image_name}:${image_tag}
+	--namespace ${NAMESPACE} --set frontend.image.name=${image_registry}/${NAMESPACE}/${frontend_image_name}:${image_tag} --values ./artemis/values-${stage}.yaml
 
 deploy: push-backend push-frontend deploy-chart
 	@echo "PWA: ${PWA_ICON_GENERATE_COMMAND}"

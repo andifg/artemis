@@ -44,7 +44,7 @@ spec:
               secretKeyRef:
                 name: "artemis-database-access"
                 key: postgres-password
-          - name: KEYCLOAK_SECRET
+          - name: KEYCLOAK_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
                 name: "artemis-keycloak-client"
