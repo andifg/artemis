@@ -43,12 +43,17 @@ func (m MeatPortionServiceImpl) CreateMeatPortion(c *gin.Context) {
 		return
 	}
 
-	usr, err := m.meatPortionRepository.CreateMeatPortion(dao.MeatPortion{
+	meatPortion := dao.MeatPortion{
 		ID:     createMeatPortion.ID,
 		Size:   createMeatPortion.Size,
 		UserID: user_id,
 		Date:   createMeatPortion.Date,
-	})
+		Note:   createMeatPortion.Note,
+	}
+
+	log.Debug(fmt.Sprintf("Meat Portion to be created: %v", meatPortion))
+
+	usr, err := m.meatPortionRepository.CreateMeatPortion(meatPortion)
 
 	if err != nil {
 		log.Error("Error creating meat portion: ", err)

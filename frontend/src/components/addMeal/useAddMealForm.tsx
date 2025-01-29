@@ -11,7 +11,7 @@ import { useAuthentication } from "@/hooks/useAuthentication";
 const formSchema = z.object({
   date: z.date(),
   portionSize: z.enum(["small", "medium", "large"]),
-  notes: z.string().max(20).optional(),
+  notes: z.string().max(100).optional(),
 });
 
 type useAddMealFormReturn = {
@@ -51,6 +51,7 @@ function useAddMealForm({
       size: values.portionSize,
       ID: currentUUID,
       date: values.date,
+      note: values.notes,
     }).then(() => {
       callAllCallbacks({
         UserID: user.id,

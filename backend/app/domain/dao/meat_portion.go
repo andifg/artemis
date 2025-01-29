@@ -19,4 +19,5 @@ type MeatPortion struct {
 	Date   time.Time `gorm:"column:date; not null" json:"date" binding:"required"`
 	Size   Size      `gorm:"column:size; type:meat_portion_size; not null" json:"size" binding:"required"`
 	UserID uuid.UUID `gorm:"column:user_id; type:uuid; not null" json:"user_id" binding:"required"`
+	Note   string    `gorm:"column:note" json:"note"`
 }

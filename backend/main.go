@@ -17,6 +17,8 @@ func main() {
 	appConfig := constant.AppConfigInit()
 	init := config.Init(*appConfig)
 
+	log.Info("Starting Router")
+
 	r := router.Init(init, init.OidcManager, appConfig.FrontendOrigin)
 	r.Run(":8000")
 

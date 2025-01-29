@@ -4,6 +4,7 @@ export type BodyCreateMeatPortion = {
   size: MeatPortionSize;
   ID: string;
   date: Date;
+  note?: string;
 };
 
 export type MeatPortion = {
@@ -11,6 +12,7 @@ export type MeatPortion = {
   ID: string;
   UserID: string;
   date: string;
+  note?: string;
 };
 
 export type APIResponse<T> = {
