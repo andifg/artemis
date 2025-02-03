@@ -40,23 +40,28 @@ const mapforMonths = (result: meatPortionMap, startDate: Date) => {
 };
 
 const mapforQuarter = (result: meatPortionMap, startDate: Date) => {
-  const currentMonth = startDate.getMonth(); // Month index (0-11)
-  const currentQuarter = Math.floor(currentMonth / 3) + 1; // Quarter (1-4)
-
-  console.log("Current quarter: ", currentQuarter);
+  // Align to the first day of the current quarter
+  const firstMonthOfQuarter = startDate.getMonth() - (startDate.getMonth() % 3);
+  const startOfQuarter = new Date(
+    startDate.getFullYear(),
+    firstMonthOfQuarter,
+    1,
+  );
 
   for (let i = 0; i < 6; i++) {
-    const monthsAgo = i * 3;
-    const date = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
-    date.setMonth(currentMonth - monthsAgo);
+    const date = new Date(startOfQuarter);
+    date.setMonth(startOfQuarter.getMonth() - i * 3);
 
+    // Calculate quarter and year
     const quarter = Math.floor(date.getMonth() / 3) + 1;
     const year = date.getFullYear();
 
-    result[extractDate(date)] = {
+    // Add the entry to the result
+    const timeframeStart = extractDate(date);
+    result[timeframeStart] = {
       Timeframe: "quarter",
       Value: 0,
-      TimeframeStart: extractDate(date),
+      TimeframeStart: timeframeStart,
       label: `Q${quarter} ${year}`, // Label as "Q1 YYYY"
     };
   }

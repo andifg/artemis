@@ -72,7 +72,9 @@ function useMeatPortionChart({ selected }: useMeatPortionChartProps): {
       function: MeatPortionService.GetAggregatedMeatPortions,
       args: [getUser().id, selected],
     }).then((data) => {
+      console.log("Meat portion chart data: ", data);
       const initialMap = getInitialData(selected);
+      console.log("inital chart data: ", initialMap);
       setMeatPortionMap(updateMap(initialMap, data.data));
     });
   };
