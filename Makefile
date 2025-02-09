@@ -32,8 +32,11 @@ format-frontend:
 	echo "Formatting frontend"
 	cd frontend && npm run format-fix
 
-test:
-	go test ./... -v
+test-backend:
+	echo "Running backend tests"
+	cd backend && go test ./... -v
+
+pre-commit: format-backend format-frontend
 
 build-backend:
 	echo "Building backend image"
