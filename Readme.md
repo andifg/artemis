@@ -19,10 +19,6 @@ Start devservices, backend and frontend all together with relaod funcitonality:
 make local-dev
 ```
 
-
-
-
-
 Locally running services:
 
 | URL                    | Description          |
