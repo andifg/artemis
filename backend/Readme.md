@@ -1,16 +1,5 @@
 # Artemis Backend
 
-
-
-
-## Prerequestites
-
-- [Make](https://wiki.ubuntuusers.de/Makefile/)
-- [Air](https://github.com/air-verse/air)
-
-
-
-
 ## Devservices
 
 Devservices fulfill the purpose to have a full functioning local setup with all
@@ -23,19 +12,6 @@ functionailities to conduct user tests.
 | DB               | Postgres Database for artemis backend service         |
 | Keycloak         | Keycloak server used as central authentication server |
 | Kc-db            | Postgres database for keycloak server                 |
-
-
-
-
-
-
-### Start devservice
-
-```bash
-docker-compose up
-```
-
-
 
 ### Export realm from keycloak devservice
 
