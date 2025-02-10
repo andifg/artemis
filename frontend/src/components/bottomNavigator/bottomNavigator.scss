@@ -6,11 +6,12 @@
   background-color: var(--primary-color);
   color: white;
   display: flex;
-  justify-content: space-around;
   align-items: center;
   padding: 10px 0;
   border-radius: 50% 50% 0px 0px;
   min-height: 80px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .bottom-navigator-circle {
@@ -25,4 +26,29 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.bottom-navigator-child {
+  flex: 1; /* Each child will take up an equal portion of the space */
+  text-align: center;
+  min-height: 1px;
+}
+
+.bottom-navigator-left {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  top: -10px;
+}
+
+.bottom-navigator-middle {
+  flex: 0 0 auto;
+  width: 100px; /* Circle diameter */
+  min-height: 1px;
+}
+
+.bottom-navigator-list-wrapper {
+  background-color: var(--secondary-color);
+  padding: 10px;
+  border-radius: 50%;
 }
