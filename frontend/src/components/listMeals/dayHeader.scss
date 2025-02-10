@@ -1,0 +1,24 @@
+.day-header {
+  display: flex;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+.day-header-date {
+  font-size: 1.2rem;
+}
+
+.day-header-line {
+  border-top: 1px solid;
+  flex: 1;
+  height: 1px;
+  align-self: center;
+}
+
+.day-header-line-left{
+  margin-right: 8px;
+}
+
+.day-header-line-right{
+  margin-left: 8px;
+}

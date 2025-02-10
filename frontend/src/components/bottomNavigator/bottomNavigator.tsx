@@ -1,33 +1,45 @@
 import "./bottomNavigator.scss";
 import TestSvg from "../../assets/meat.svg";
 import { AddMealSheet } from "@/components/addMeal/AddMealSheet";
+import { ListMealsSheet } from "../listMeals/listMealsSheet";
 import { useState } from "react";
+import { List } from "lucide-react";
 
 function BottomNavigator() {
-  const [open, setOpen] = useState(false);
+  const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [openList, setOpenList] = useState<boolean>(false);
 
-  const closeModal = () => {
-    setOpen(false);
+  const toggleList = () => {
+    setOpenList((prev) => !prev);
   };
 
-  const openModal = () => {
-    setOpen(true);
+  const toggleAddModal = () => {
+    setOpenAddModal((prev) => !prev);
   };
 
   return (
-    <div className="bottom-navigator">
-      Hello
-      <div className="bottom-navigator-circle">
-        <img
-          src={TestSvg}
-          alt="test"
-          onClick={openModal}
-          style={{ width: "50px" }}
-        />
+    <>
+      <div className="bottom-navigator">
+        <div className="bottom-navigator-left bottom-navigator-child">
+          <div className="bottom-navigator-list-wrapper">
+            <List onClick={toggleList} color="black" />
+          </div>
+        </div>
+        <div className="bottom-navigator-child bottom-navigator-middle">
+          <div className="bottom-navigator-circle">
+            <img
+              src={TestSvg}
+              alt="test"
+              onClick={toggleAddModal}
+              style={{ width: "50px" }}
+            />
+          </div>
+        </div>
+        <div className="bottom-navigator-right bottom-navigator-child"></div>
       </div>
-      {/* <AddMealDrawer open={open} onClose={closeModal} /> */}
-      <AddMealSheet open={open} onClose={closeModal} />
-    </div>
+      <AddMealSheet open={openAddModal} onClose={toggleAddModal} />
+      <ListMealsSheet open={openList} onClose={toggleList} />
+    </>
   );
 }
 

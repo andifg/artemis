@@ -1,0 +1,27 @@
+.portion {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--primary-color);
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 8px 8px 8px;
+  border-radius: 8px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.portion-icon {
+  height: 24px;
+  width: auto;
+  margin-right: 5px;
+}
+
+.portion-size {
+  background-color: var(--secondary-color);
+  padding: 2px 5px 2px 5px;
+  border-radius: 4px;
+}
+
+.portion-note {
+  width: 65%;
+}
