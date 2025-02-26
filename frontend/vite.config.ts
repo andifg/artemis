@@ -14,6 +14,7 @@ export default defineConfig({
         short_name: "MGD",
         description: "A simple and intuitive meat consumption tracker.",
         theme_color: "#f7dcdc",
+        background_color: "#f7dcdc",
         icons: [
           {
             src: "pwa-64x64.png",
