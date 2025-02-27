@@ -1,7 +1,7 @@
 import "./bottomNavigator.scss";
 import TestSvg from "../../assets/meat.svg";
 import { AddMealSheet } from "@/components/addMeal/AddMealSheet";
-import { ListMealsSheet } from "../listMeals/listMealsSheet";
+import { ListMealsSheet } from "../listMeals/ListMealsSheet";
 import { useState } from "react";
 import { List } from "lucide-react";
 

@@ -1,4 +1,4 @@
-import "./portion.scss";
+import "./Portion.scss";
 
 import { Trash2 } from "lucide-react";
 import ChickenLeg from "../../assets/chicken-leg.svg";
