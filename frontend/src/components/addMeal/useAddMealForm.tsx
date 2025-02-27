@@ -54,9 +54,9 @@ function useAddMealForm({
       note: values.notes,
     }).then(() => {
       callAllCallbacks({
-        UserID: user.id,
+        user_id: user.id,
         date: values.date.toISOString(),
-        ID: currentUUID,
+        id: currentUUID,
         size: values.portionSize,
       });
 

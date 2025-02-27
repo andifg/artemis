@@ -33,7 +33,7 @@ function DailyOverview() {
       if (dailyOverview[key] !== undefined) {
         meatPortions.push(dailyOverview[key]);
       } else {
-        meatPortions.push({ date: key, ID: "", UserID: "" });
+        meatPortions.push({ date: key, id: "", user_id: "" });
       }
     }
     meatPortions.reverse();
