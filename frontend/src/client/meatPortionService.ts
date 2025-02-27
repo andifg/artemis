@@ -3,6 +3,7 @@ import {
   AverageMeatPortions,
   AggregatedMeatPortions,
   BodyCreateMeatPortion,
+  MeatPortionDateList,
   MeatPortion,
   Timeframe,
 } from "./types";
@@ -48,6 +49,27 @@ class MeatPortionService {
         if (response.status !== 200) {
           throw new Error(
             `Failed to get meat portions with error: ${response.statusText}`,
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        return data;
+      });
+  }
+
+  public static GetMeatPortion(
+    userID: string,
+    page: number,
+    size: number,
+  ): Promise<APIResponse<MeatPortionDateList>> {
+    const url = `${API.baseURL}/api/v1/user/${userID}/meat-portion?page=${page}&size=${size}`;
+
+    return fetch(url)
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error(
+            `Failed to get meat portion with error: ${response.statusText}`,
           );
         }
         return response.json();

@@ -35,3 +35,7 @@ export type AggregatedMeatPortions = {
   TimeframeStart: string;
   CalendarWeek?: number;
 };
+
+export type MeatPortionDateList = {
+  [key: string]: MeatPortion[];
+};

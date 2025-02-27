@@ -2,9 +2,6 @@ package service
 
 import (
 	"fmt"
-	"net/http"
-	"time"
-
 	"github.com/andifg/artemis_backend/app/constant"
 	"github.com/andifg/artemis_backend/app/domain/dao"
 	"github.com/andifg/artemis_backend/app/domain/dto"
@@ -13,11 +10,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
+	"net/http"
+	"strconv"
+	"time"
 )
 
 type MeatPortionService interface {
 	CreateMeatPortion(*gin.Context)
 	GetDailyOverview(*gin.Context)
+	GetMeatPortionsByUserID(*gin.Context)
 	GetVeggiStreak(*gin.Context)
 	GetDailyAverage(*gin.Context)
 	GetAggregatedMeatPortionsByTimeframe(*gin.Context)
@@ -84,6 +85,67 @@ func (m MeatPortionServiceImpl) GetDailyOverview(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, meatPortions))
+
+}
+
+func (m MeatPortionServiceImpl) GetMeatPortionsByUserID(c *gin.Context) {
+
+	defer pkg.PanicHandler(c)
+
+	user := c.Param("id")
+	user_id := uuid.MustParse(user)
+
+	page_str := c.Query("page")
+
+	if page_str == "" {
+		page_str = "1"
+	}
+
+	size_str := c.Query("size")
+
+	if size_str == "" {
+		size_str = "15"
+	}
+
+	page, err := strconv.Atoi(page_str)
+
+	if err != nil {
+		log.Error("Error converting page to int: ", err)
+		pkg.PanicException(constant.InvalidRequest)
+		return
+	}
+
+	size, err := strconv.Atoi(size_str)
+
+	if err != nil {
+		log.Error("Error converting size to int: ", err)
+		pkg.PanicException(constant.InvalidRequest)
+		return
+	}
+
+	log.Info("Fetching Meat Portion List")
+
+	var meatPortions []dao.MeatPortion
+
+	meatPortions, errr := m.meatPortionRepository.GetMeatPortions(user_id.String(), page, size)
+
+	if errr != nil {
+		log.Error("Error getting meat portions: ", err)
+		pkg.PanicException(constant.InvalidRequest)
+		return
+	}
+
+	response_map := dto.MeatPortionTimeframe{}
+
+	for _, portion := range meatPortions {
+		date := portion.Date.Format("2006-01-02")
+		log.Debug("Date: ", date)
+		response_map[date] = append(response_map[date], portion)
+	}
+
+	log.Debug("Response map: ", response_map)
+
+	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, response_map))
 
 }
 
