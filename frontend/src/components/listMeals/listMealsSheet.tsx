@@ -1,7 +1,7 @@
 import "./ListMealsSheet.scss";
 
-import { DayHeader } from "./dayHeader";
-import { Portion } from "./portion";
+import { DayHeader } from "./DayHeader";
+import { Portion } from "./Portion";
 import { useListMeals } from "./useListMeals";
 
 import { LoaderIcon } from "lucide-react";
