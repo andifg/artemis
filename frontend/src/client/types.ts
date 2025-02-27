@@ -9,8 +9,8 @@ export type BodyCreateMeatPortion = {
 
 export type MeatPortion = {
   size?: MeatPortionSize;
-  ID: string;
-  UserID: string;
+  id: string;
+  user_id: string;
   date: string;
   note?: string;
 };
