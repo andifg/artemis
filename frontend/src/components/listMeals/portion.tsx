@@ -27,9 +27,9 @@ const Portion = ({ portion }: PortionProps) => {
     <div className="portion">
       <img src={ChickenLeg} alt="chicken leg" className="portion-icon" />
       <div className="portion-size">{getSize(portion.size || "medium")}</div>
-      <div className="portion-note">{portion.note || "Note ..."}</div>
+      <div className="portion-note">{portion.note && portion.note}</div>
       <div className="portion-delete-icon">
-        <Trash2  strokeWidth={1}/>
+        <Trash2 strokeWidth={1} stroke="grey" />
       </div>
     </div>
   );

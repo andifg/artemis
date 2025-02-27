@@ -1,9 +1,10 @@
-import "./listMealsSheet.scss";
+import "./ListMealsSheet.scss";
 
 import { DayHeader } from "./dayHeader";
 import { Portion } from "./portion";
+import { useListMeals } from "./useListMeals";
 
-import { listMealsTmpData } from "./ListMealsTmpData";
+import { LoaderIcon } from "lucide-react";
 
 import {
   Sheet,
@@ -18,25 +19,34 @@ export type AddMealSheetProps = {
 };
 
 function ListMealsSheet({ open, onClose }: AddMealSheetProps) {
+  const { meals, loading } = useListMeals({ open });
+
   return (
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent className="w-full list-meals-sheet-background" side="left">
         <SheetTitle className="text-3xl">Servings</SheetTitle>
         <SheetDescription></SheetDescription>
-        <div className="list-meals-sheet-content">
-          {Array.from(listMealsTmpData).map(([day, portions]) => {
-            return (
-              <>
-                <DayHeader day={day} />
-                {portions.map((portion) => {
-                  return <Portion portion={portion} />;
+        {loading ? (
+          <LoaderIcon className="animate-spin" />
+        ) : (
+          <div className="list-meals-sheet-content">
+            <div style={{ overflowY: "scroll", height: "100%" }}>
+              {Object.keys(meals)
+                .sort()
+                .reverse()
+                .map((day) => {
+                  return (
+                    <>
+                      <DayHeader day={day} key={day} />
+                      {meals[day].map((portion) => {
+                        return <Portion portion={portion} key={`${day}-${portion.date}`} />;
+                      })}
+                    </>
+                  );
                 })}
-              </>
-            );
-          })}
-          {/* <DayHeader />
-          <Portion /> */}
-        </div>
+            </div>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );
