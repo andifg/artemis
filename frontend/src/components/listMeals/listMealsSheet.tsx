@@ -39,7 +39,12 @@ function ListMealsSheet({ open, onClose }: AddMealSheetProps) {
                     <>
                       <DayHeader day={day} key={day} />
                       {meals[day].map((portion) => {
-                        return <Portion portion={portion} key={`${day}-${portion.date}`} />;
+                        return (
+                          <Portion
+                            portion={portion}
+                            key={`${day}-${portion.id}`}
+                          />
+                        );
                       })}
                     </>
                   );
