@@ -1,3 +1,6 @@
+import { UnauthorizedError } from "@/client/types";
+import { useAuthentication } from "./useAuthentication";
+
 interface ClientCallConfig<T, K extends unknown[]> {
   function: (...args: K) => Promise<T>;
   rethrowError?: boolean | undefined;
@@ -5,6 +8,8 @@ interface ClientCallConfig<T, K extends unknown[]> {
 }
 
 function useClient() {
+  const { logout } = useAuthentication();
+
   async function callClientServiceMethod<T, K extends unknown[]>(
     clientCallConfig: ClientCallConfig<T, K>,
   ): Promise<T> {
@@ -15,10 +20,9 @@ function useClient() {
         console.log("Error during fetch of coffee");
         console.log(e);
 
-        if (e.message === "Unauthorized") {
-          console.log("UnauthorizedApiException");
-          //   auth.removeUser();
-          return undefined as T;
+        if (e instanceof UnauthorizedError) {
+          console.log("Unauthorized error");
+          logout();
         }
       }
 
