@@ -3,6 +3,7 @@ import "./ListMealsSheet.scss";
 import { DayHeader } from "./DayHeader";
 import { Portion } from "./Portion";
 import { useListMeals } from "./useListMeals";
+import { useDeleteMeal } from "./useDeleteMeal";
 
 import { LoaderIcon } from "lucide-react";
 
@@ -21,10 +22,12 @@ export type AddMealSheetProps = {
 function ListMealsSheet({ open, onClose }: AddMealSheetProps) {
   const { meals, loading } = useListMeals({ open });
 
+  const { selectedMeal, selectForDeletion } = useDeleteMeal();
+
   return (
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent className="w-full list-meals-sheet-background" side="left">
-        <SheetTitle className="text-3xl">Servings</SheetTitle>
+        <SheetTitle className="text-3xl">Recent Servings</SheetTitle>
         <SheetDescription></SheetDescription>
         {loading ? (
           <LoaderIcon className="animate-spin" />
@@ -42,6 +45,8 @@ function ListMealsSheet({ open, onClose }: AddMealSheetProps) {
                         return (
                           <Portion
                             portion={portion}
+                            selectedForDeletion={selectedMeal}
+                            selectForDeletion={selectForDeletion}
                             key={`${day}-${portion.id}`}
                           />
                         );
