@@ -24,7 +24,7 @@ function useListMeals({ open }: useListMealsProps) {
 
     callClientServiceMethod({
       function: MeatPortionService.GetMeatPortion,
-      args: [user.id, 1, 20],
+      args: [user.id, 1, 30],
     }).then((response) => {
       setMeals(response.data);
       setLoading(false);
