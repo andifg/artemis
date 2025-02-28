@@ -6,9 +6,9 @@ import {
   MeatPortionDateList,
   MeatPortion,
   Timeframe,
-  UnauthorizedError,
 } from "./types";
 import { API } from "./config";
+import { handleApiRequest } from "./utils";
 
 class MeatPortionService {
   public static CreateMeatPortion(
@@ -26,21 +26,7 @@ class MeatPortionService {
       body: JSON.stringify(bodyCreateMeatPortion),
     };
 
-    return fetch(url, options)
-      .then((response) => {
-        if (response.status === 401) {
-          throw new UnauthorizedError();
-        }
-        if (response.status !== 201) {
-          throw new Error(
-            `Failed to create meat portion with error: ${response.statusText}`,
-          );
-        }
-        return response.json();
-      })
-      .then((data) => {
-        return data;
-      });
+    return handleApiRequest<MeatPortion>(url, options);
   }
 
   public static GetMeatPortions(
@@ -48,21 +34,7 @@ class MeatPortionService {
   ): Promise<APIResponse<MeatPortion[]>> {
     const url = `${API.baseURL}/api/v1/user/${userID}/meat-portions`;
 
-    return fetch(url)
-      .then((response) => {
-        if (response.status === 401) {
-          throw new UnauthorizedError();
-        }
-        if (response.status !== 200) {
-          throw new Error(
-            `Failed to get meat portions with error: ${response.statusText}`,
-          );
-        }
-        return response.json();
-      })
-      .then((data) => {
-        return data;
-      });
+    return handleApiRequest<APIResponse<MeatPortion[]>>(url);
   }
 
   public static GetMeatPortion(
@@ -72,41 +44,13 @@ class MeatPortionService {
   ): Promise<APIResponse<MeatPortionDateList>> {
     const url = `${API.baseURL}/api/v1/user/${userID}/meat-portion?page=${page}&size=${size}`;
 
-    return fetch(url)
-      .then((response) => {
-        if (response.status === 401) {
-          throw new UnauthorizedError();
-        }
-        if (response.status !== 200) {
-          throw new Error(
-            `Failed to get meat portion with error: ${response.statusText}`,
-          );
-        }
-        return response.json();
-      })
-      .then((data) => {
-        return data;
-      });
+    return handleApiRequest<APIResponse<MeatPortionDateList>>(url);
   }
 
   public static GetVeggieStreak(userID: string): Promise<APIResponse<number>> {
     const url = `${API.baseURL}/api/v1/user/${userID}/streak`;
 
-    return fetch(url)
-      .then((response) => {
-        if (response.status === 401) {
-          throw new UnauthorizedError();
-        }
-        if (response.status !== 200) {
-          throw new Error(
-            `Failed to get meat portions with error: ${response.statusText}`,
-          );
-        }
-        return response.json();
-      })
-      .then((data) => {
-        return data;
-      });
+    return handleApiRequest<APIResponse<number>>(url);
   }
 
   public static GetAverageMeatPortions(
@@ -115,21 +59,7 @@ class MeatPortionService {
   ): Promise<APIResponse<AverageMeatPortions>> {
     const url = `${API.baseURL}/api/v1/user/${userID}/average?timeframe=${timeframe}`;
 
-    return fetch(url)
-      .then((response) => {
-        if (response.status === 401) {
-          throw new UnauthorizedError();
-        }
-        if (response.status !== 200) {
-          throw new Error(
-            `Failed to get average meat portions with error: ${response.statusText}`,
-          );
-        }
-        return response.json();
-      })
-      .then((data) => {
-        return data;
-      });
+    return handleApiRequest<APIResponse<AverageMeatPortions>>(url);
   }
 
   public static GetAggregatedMeatPortions(
@@ -138,21 +68,7 @@ class MeatPortionService {
   ): Promise<APIResponse<AggregatedMeatPortions[]>> {
     const url = `${API.baseURL}/api/v1/user/${userID}/aggregate?timeframe=${timeframe}`;
 
-    return fetch(url)
-      .then((response) => {
-        if (response.status === 401) {
-          throw new UnauthorizedError();
-        }
-        if (response.status !== 200) {
-          throw new Error(
-            `Failed to get aggregated meat portions with error: ${response.statusText}`,
-          );
-        }
-        return response.json();
-      })
-      .then((data) => {
-        return data;
-      });
+    return handleApiRequest<APIResponse<AggregatedMeatPortions[]>>(url);
   }
 }
 
