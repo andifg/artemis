@@ -80,11 +80,14 @@ function AddMealForm({ onClose }: AddMealFormProps) {
                     <Calendar
                       mode="single"
                       selected={field.value}
-                      onSelect={field.onChange}
                       disabled={(date) =>
                         date > new Date() || date < new Date("1900-01-01")
                       }
                       initialFocus
+                      onDayClick={(date) => {
+                        date.setUTCHours(12, 30, 0, 0);
+                        field.onChange(date);
+                      }}
                     />
                   </PopoverContent>
                 </Popover>
