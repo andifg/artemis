@@ -6,6 +6,7 @@ import {
   MeatPortionDateList,
   MeatPortion,
   Timeframe,
+  UnauthorizedError,
 } from "./types";
 import { API } from "./config";
 
@@ -27,6 +28,9 @@ class MeatPortionService {
 
     return fetch(url, options)
       .then((response) => {
+        if (response.status === 401) {
+          throw new UnauthorizedError();
+        }
         if (response.status !== 201) {
           throw new Error(
             `Failed to create meat portion with error: ${response.statusText}`,
@@ -46,6 +50,9 @@ class MeatPortionService {
 
     return fetch(url)
       .then((response) => {
+        if (response.status === 401) {
+          throw new UnauthorizedError();
+        }
         if (response.status !== 200) {
           throw new Error(
             `Failed to get meat portions with error: ${response.statusText}`,
@@ -67,6 +74,9 @@ class MeatPortionService {
 
     return fetch(url)
       .then((response) => {
+        if (response.status === 401) {
+          throw new UnauthorizedError();
+        }
         if (response.status !== 200) {
           throw new Error(
             `Failed to get meat portion with error: ${response.statusText}`,
@@ -84,6 +94,9 @@ class MeatPortionService {
 
     return fetch(url)
       .then((response) => {
+        if (response.status === 401) {
+          throw new UnauthorizedError();
+        }
         if (response.status !== 200) {
           throw new Error(
             `Failed to get meat portions with error: ${response.statusText}`,
@@ -104,6 +117,9 @@ class MeatPortionService {
 
     return fetch(url)
       .then((response) => {
+        if (response.status === 401) {
+          throw new UnauthorizedError();
+        }
         if (response.status !== 200) {
           throw new Error(
             `Failed to get average meat portions with error: ${response.statusText}`,
@@ -124,6 +140,9 @@ class MeatPortionService {
 
     return fetch(url)
       .then((response) => {
+        if (response.status === 401) {
+          throw new UnauthorizedError();
+        }
         if (response.status !== 200) {
           throw new Error(
             `Failed to get aggregated meat portions with error: ${response.statusText}`,
