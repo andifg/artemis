@@ -39,3 +39,10 @@ export type AggregatedMeatPortions = {
 export type MeatPortionDateList = {
   [key: string]: MeatPortion[];
 };
+
+export class UnauthorizedError extends Error {
+  constructor() {
+    super("Unauthorized");
+    this.name = "UnauthorizedError";
+  }
+}
