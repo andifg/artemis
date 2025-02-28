@@ -1,21 +1,27 @@
 import "./Portion.scss";
 
+import { RefObject, useRef } from "react";
+
 import { Trash2 } from "lucide-react";
 import ChickenLeg from "../../assets/chicken-leg.svg";
-
-import { useState } from "react";
 
 import { MeatPortion } from "@/client/types";
 
 type PortionProps = {
   portion: MeatPortion;
+  selectedForDeletion: string;
+  selectForDeletion: (id: string, ref: RefObject<HTMLElement>) => void;
 };
 
-const Portion = ({ portion }: PortionProps) => {
-  const [confirmDelete, setConfirmDelete] = useState(false);
+const Portion = ({
+  portion,
+  selectedForDeletion,
+  selectForDeletion,
+}: PortionProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleDeleteFirstClick = () => {
-    setConfirmDelete(true);
+    selectForDeletion(portion.id, inputRef);
   };
 
   const getSize = (size: string) => {
@@ -37,11 +43,12 @@ const Portion = ({ portion }: PortionProps) => {
       <div className="portion-size">{getSize(portion.size || "medium")}</div>
       <div className="portion-note">{portion.note && portion.note}</div>
       <div
-        className={`portion-delete-icon ${confirmDelete ? "portion-confirm-delete-icon" : ""}`}
+        className={`portion-delete-icon ${portion.id === selectedForDeletion ? "portion-confirm-delete-icon" : ""}`}
+        ref={inputRef}
       >
         <Trash2
           strokeWidth={1}
-          stroke={confirmDelete ? "white" : "black"}
+          stroke={portion.id === selectedForDeletion ? "white" : "black"}
           onClick={handleDeleteFirstClick}
         />
       </div>
