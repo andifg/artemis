@@ -47,7 +47,7 @@ function ListMealsSheet({ open, onClose }: AddMealSheetProps) {
                             portion={portion}
                             selectedForDeletion={selectedMeal}
                             selectForDeletion={selectForDeletion}
-                            key={`${day}-${portion.id}`}
+                            key={`list-${day}-${portion.id}`}
                           />
                         );
                       })}
