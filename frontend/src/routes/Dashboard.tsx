@@ -1,3 +1,5 @@
+import "./Dashboard.scss";
+
 import { Layout } from "@/components/layout/layout";
 import { BottomNavigator } from "@/components/bottomNavigator/bottomNavigator";
 import { LogoHeader } from "@/components/logoHeader/LogoHeader";
@@ -12,19 +14,7 @@ function Dashboard() {
       <Layout>
         <LogoHeader />
         <AddMeatPortionContextProvider>
-          <div
-            className="dashboard-main"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              height: "100vh",
-              width: "100%",
-              marginBottom: "100px",
-              marginTop: "10px",
-            }}
-          >
+          <div className="dashboard-main">
             <DailyOverview />
             <VeggieStreak />
             <AverageAndChartWrapper />
