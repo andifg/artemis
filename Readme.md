@@ -9,6 +9,7 @@
 - (docker-compose)[https://docs.docker.com/compose/] or (podman-compose)[https://docs.podman.io/en/v5.1.1/markdown/podman-compose.1.html]
 - (go)[https://go.dev/] & (go air)[https://github.com/air-verse/air]
 - (npm)[https://www.npmjs.com/]
+- (oc cli)[https://docs.openshift.com/container-platform/4.11/cli_reference/openshift_cli/getting-started-cli.html]
 - Local dns resolution to resolve keycloak to 127.0.0.1
 
 ### Local development
