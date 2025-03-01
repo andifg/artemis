@@ -45,13 +45,14 @@ build-frontend:
 	echo "${image_registry}/${NAMESPACE}/${frontend_image_name}:${image_tag}"
 	cd frontend && podman build --build-arg PWA_ICON_GENERATE_COMMAND=${PWA_ICON_GENERATE_COMMAND} --build-arg STAGE=${stage} --arch x86_64 -t ${image_registry}/${NAMESPACE}/${frontend_image_name}:${image_tag} .
 
-push-frontend: build-frontend
-	# ${MAKE} build-frontend
+podman-login:
+	podman login -u `oc whoami` -p `oc whoami -t` ${image_registry}
+
+push-frontend: build-frontend podman-login
 	echo "Pushing frontend image"
 	podman push ${image_registry}/${NAMESPACE}/${frontend_image_name}:${image_tag}
 
-push-backend: build-backend
-	# ${MAKE} build-backend
+push-backend: build-backend podman-login
 	echo "Pushing backend image"
 	podman push ${image_registry}/${NAMESPACE}/${backend_image_name}:${image_tag}
 
