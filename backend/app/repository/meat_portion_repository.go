@@ -1,17 +1,22 @@
 package repository
 
 import (
+	"errors"
 	"fmt"
+	"time"
+
 	"github.com/andifg/artemis_backend/app/domain/dao"
+	"github.com/andifg/artemis_backend/app/pkg/customerrors"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
-	"time"
 )
 
 type MeatPortionRepository interface {
 	CreateMeatPortion(meatPortion dao.MeatPortion) (dao.MeatPortion, error)
 	GetMeatPortionsByUserID(userID string, cutOffDay *time.Time, limit *int) ([]dao.MeatPortion, error)
+	GetMeatPortionById(meatPortionID string) (dao.MeatPortion, error)
 	GetMeatPortions(userID string, page int, limit int) ([]dao.MeatPortion, error)
+	DeleteMeatPortion(meatPortionID string) error
 	GetAggregatedMeatPortionsByTimeframe(userID string, timeframe dao.Timeframe) ([]dao.AggregatedMeatPortions, error)
 }
 
@@ -32,7 +37,7 @@ func (m MeatPortionRepositoryImpl) CreateMeatPortion(meatPortion dao.MeatPortion
 }
 
 func (m MeatPortionRepositoryImpl) GetMeatPortionsByUserID(userID string, cutOffDay *time.Time, limit *int) ([]dao.MeatPortion, error) {
-	log.Debug(fmt.Sprintf("Getting Meat Portion by user ID: %v", userID))
+	log.Debug(fmt.Sprintf("Fetching Meat Portion by user ID: %v", userID))
 
 	var meatPortions []dao.MeatPortion
 
@@ -52,8 +57,41 @@ func (m MeatPortionRepositoryImpl) GetMeatPortionsByUserID(userID string, cutOff
 		return []dao.MeatPortion{}, result.Error
 	}
 
-	log.Debug("Meat Portion found: ", meatPortions)
+	log.Debug("Meat Portions found: ", meatPortions)
 	return meatPortions, nil
+}
+
+func (m MeatPortionRepositoryImpl) GetMeatPortionById(meatPortionID string) (dao.MeatPortion, error) {
+	log.Debug(fmt.Sprintf("Getting Meat Portion by ID: %v", meatPortionID))
+
+	var meatPortion dao.MeatPortion
+
+	result := m.db.First(&meatPortion, "id = ?", meatPortionID)
+
+	if result.Error != nil {
+
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return dao.MeatPortion{}, customerrors.NewNotFoundError(meatPortionID)
+		}
+
+		fmt.Println("Error: ", result.Error)
+		return dao.MeatPortion{}, result.Error
+	}
+
+	log.Debug("Meat Portion found: ", meatPortion)
+	return meatPortion, nil
+}
+
+func (m MeatPortionRepositoryImpl) DeleteMeatPortion(meatPortionID string) error {
+	log.Debug(fmt.Sprintf("Deleting Meat Portion by ID: %v", meatPortionID))
+
+	result := m.db.Delete(&dao.MeatPortion{}, "id = ?", meatPortionID)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	log.Info("Meat Portion deleted: ", meatPortionID)
+	return nil
 }
 
 func (m MeatPortionRepositoryImpl) GetMeatPortions(userID string, page int, limit int) ([]dao.MeatPortion, error) {
