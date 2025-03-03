@@ -2,23 +2,26 @@ package service
 
 import (
 	"fmt"
+	"net/http"
+	"strconv"
+	"time"
+
 	"github.com/andifg/artemis_backend/app/constant"
 	"github.com/andifg/artemis_backend/app/domain/dao"
 	"github.com/andifg/artemis_backend/app/domain/dto"
 	"github.com/andifg/artemis_backend/app/pkg"
+	"github.com/andifg/artemis_backend/app/pkg/customerrors"
 	"github.com/andifg/artemis_backend/app/repository"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
-	"net/http"
-	"strconv"
-	"time"
 )
 
 type MeatPortionService interface {
 	CreateMeatPortion(*gin.Context)
 	GetDailyOverview(*gin.Context)
 	GetMeatPortionsByUserID(*gin.Context)
+	DeleteMeatPortion(uuid.UUID, uuid.UUID) error
 	GetVeggiStreak(*gin.Context)
 	GetDailyAverage(*gin.Context)
 	GetAggregatedMeatPortionsByTimeframe(*gin.Context)
@@ -139,13 +142,39 @@ func (m MeatPortionServiceImpl) GetMeatPortionsByUserID(c *gin.Context) {
 
 	for _, portion := range meatPortions {
 		date := portion.Date.Format("2006-01-02")
-		log.Debug("Date: ", date)
 		response_map[date] = append(response_map[date], portion)
 	}
 
 	log.Debug("Response map: ", response_map)
 
 	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, response_map))
+
+}
+
+func (m MeatPortionServiceImpl) DeleteMeatPortion(meat_portion_id uuid.UUID, user_id uuid.UUID) error {
+
+	log.Info("Delete Meat Portion with ID: ", meat_portion_id)
+
+	portion, err := m.meatPortionRepository.GetMeatPortionById(meat_portion_id.String())
+
+	if err != nil {
+		log.Error("Error getting meat portion: d ", err)
+		return err
+	}
+
+	if portion.UserID != user_id {
+		log.Debug("User is not the owner of the meat portion. user_id: ", user_id, " portion owner: ", portion.UserID)
+		return customerrors.NewForbiddenError("User is not authorized to delete meat portion")
+	}
+
+	err = m.meatPortionRepository.DeleteMeatPortion(meat_portion_id.String())
+
+	if err != nil {
+		log.Error("Error deleting meat portion: ", err)
+		return err
+	}
+
+	return nil
 
 }
 

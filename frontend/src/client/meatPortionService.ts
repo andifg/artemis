@@ -47,6 +47,19 @@ class MeatPortionService {
     return handleApiRequest<APIResponse<MeatPortionDateList>>(url);
   }
 
+  public static DeleteMeatPortion(
+    userID: string,
+    meatPortionID: string,
+  ): Promise<void> {
+    const url = `${API.baseURL}/api/v1/user/${userID}/meat-portion/${meatPortionID}`;
+
+    const options = {
+      method: "DELETE",
+    };
+
+    return handleApiRequest<void>(url, options);
+  }
+
   public static GetVeggieStreak(userID: string): Promise<APIResponse<number>> {
     const url = `${API.baseURL}/api/v1/user/${userID}/streak`;
 
