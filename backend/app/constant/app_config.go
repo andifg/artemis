@@ -18,6 +18,7 @@ type AppConfig struct {
 	KeycloakURL              string
 	KeycloakCertPath         string
 	FrontendOrigin           string
+	LogLevel                 string
 }
 
 func lookupEnv(key string, defaultValue string) string {
@@ -44,5 +45,6 @@ func AppConfigInit() *AppConfig {
 		KeycloakURL:              lookupEnv("KEYCLOAK_URL", "http://localhost:8080"),
 		KeycloakCertPath:         lookupEnv("KEYCLOAK_CERT_PATH", "/protocol/openid-connect/certs"),
 		FrontendOrigin:           lookupEnv("FRONTEND_ORIGIN", "http://localhost:5173"),
+		LogLevel:                 lookupEnv("LOG_LEVEL", "INFO"),
 	}
 }
