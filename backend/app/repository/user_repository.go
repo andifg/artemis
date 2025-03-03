@@ -18,7 +18,6 @@ type UserRepositoryImpl struct {
 }
 
 func (u UserRepositoryImpl) CreateUser(user dao.User) (dao.User, error) {
-	fmt.Println("Inside CreateUser")
 	result := u.db.Create(&user)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrDuplicatedKey) {
