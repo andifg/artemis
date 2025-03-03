@@ -209,7 +209,7 @@ func (o *OidcManagerImpl) VerifyToken(token string) (JWT, error) {
 		return JWT{}, err
 	}
 
-	log.Info("Token verified: ", claims)
+	log.Debug("Token verified: ", claims)
 
 	jwt := JWT{}
 

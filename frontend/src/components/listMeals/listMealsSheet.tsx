@@ -33,28 +33,26 @@ function ListMealsSheet({ open, onClose }: AddMealSheetProps) {
           <LoaderIcon className="animate-spin" />
         ) : (
           <div className="list-meals-sheet-content">
-            <div style={{ overflowY: "scroll", height: "100%" }}>
-              {Object.keys(meals)
-                .sort()
-                .reverse()
-                .map((day) => {
-                  return (
-                    <>
-                      <DayHeader day={day} key={day} />
-                      {meals[day].map((portion) => {
-                        return (
-                          <Portion
-                            portion={portion}
-                            selectedForDeletion={selectedMeal}
-                            selectForDeletion={selectForDeletion}
-                            key={`list-${day}-${portion.id}`}
-                          />
-                        );
-                      })}
-                    </>
-                  );
-                })}
-            </div>
+            {Object.keys(meals)
+              .sort()
+              .reverse()
+              .map((day) => {
+                return (
+                  <>
+                    <DayHeader day={day} key={`${day}-l`} />
+                    {meals[day].map((portion) => {
+                      return (
+                        <Portion
+                          portion={portion}
+                          selectedForDeletion={selectedMeal}
+                          selectForDeletion={selectForDeletion}
+                          key={`l-${portion.id}`}
+                        />
+                      );
+                    })}
+                  </>
+                );
+              })}
           </div>
         )}
       </SheetContent>

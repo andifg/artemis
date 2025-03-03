@@ -38,6 +38,8 @@ func Init(init *config.Initialization, oidcMgr auth.OidcManager, origin string) 
 
 			v1_authorized.GET("/user/:id/meat-portion", init.MeatPortionController.GetMeatPortions)
 
+			v1_authorized.DELETE("/user/:id/meat-portion/:meatPortionId", init.MeatPortionController.DeleteMeatPortion)
+
 			v1_authorized.GET("/user/:id/streak", init.MeatPortionController.GetStreak)
 
 			v1_authorized.GET("/user/:id/average", init.MeatPortionController.GetAverage)
