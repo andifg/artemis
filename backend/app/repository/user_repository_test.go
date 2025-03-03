@@ -37,14 +37,14 @@ func initTestcontainer() func() {
 	)
 
 	if err != nil {
-		log.Printf("failed to start container: %s", err)
+		log.Error(fmt.Sprintf("failed to start container: %s", err))
 		panic(fmt.Sprintf("failed to start container: %s", err))
 	}
 
 	connectionString, err := postgresContainer.ConnectionString(ctx)
 
 	if err != nil {
-		log.Printf("failed to get connection string: %s", err)
+		log.Error(fmt.Sprintf("failed to get connection string: %s", err))
 		panic(fmt.Sprintf("failed to get connection string: %s", err))
 	}
 
