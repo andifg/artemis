@@ -27,7 +27,13 @@ type MeatPortionRepositoryImpl struct {
 func (m MeatPortionRepositoryImpl) CreateMeatPortion(meatPortion dao.MeatPortion) (dao.MeatPortion, error) {
 	result := m.db.Create(&meatPortion)
 	if result.Error != nil {
-		fmt.Println("Error: ", result.Error)
+
+		log.Error("Error creating Meat Portion: ", result.Error)
+
+		if errors.Is(result.Error, gorm.ErrDuplicatedKey) {
+			return dao.MeatPortion{}, customerrors.NewDuplicateKeyError(fmt.Sprintf("Meat Portion with ID %v already exists", meatPortion.ID))
+		}
+
 		return dao.MeatPortion{}, result.Error
 	}
 

@@ -1,17 +1,13 @@
 package customerrors
 
-import (
-	"fmt"
-)
-
 type DuplicateKeyError struct {
-	Key string
+	Message string
 }
 
 func (d DuplicateKeyError) Error() string {
-	return fmt.Sprintf("Database duplicate key error for key %s", d.Key)
+	return d.Message
 }
 
-func NewDuplicateKeyError(key string) error {
-	return &DuplicateKeyError{Key: key}
+func NewDuplicateKeyError(message string) error {
+	return &DuplicateKeyError{Message: message}
 }
