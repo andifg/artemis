@@ -205,7 +205,7 @@ func (m MeatPortionServiceImpl) GetVeggiStreak(c *gin.Context) {
 	} else {
 		now := time.Now()
 		log.Debug("Len of meat portions: ", len(meatPortions))
-		log.Debug(fmt.Printf("Newest meat portion: %v \n", meatPortions[0].Date))
+		log.Debug(fmt.Sprintf("Newest meat portion: %v \n", meatPortions[0].Date))
 		diff := now.Sub(meatPortions[0].Date)
 		streak = int(diff.Hours() / 24)
 	}
@@ -271,7 +271,7 @@ func (m MeatPortionServiceImpl) GetDailyAverage(c *gin.Context) {
 		changeRate = int(float64(averageNew-averageOld) / float64(averageOld) * 100)
 	}
 
-	log.Debug(fmt.Printf("Sum of new: %d, Sum of old %d with change rate %d%% \n", sumNew, sumOld, changeRate))
+	log.Debug(fmt.Sprintf("Sum of new: %d, Sum of old %d with change rate %d%% \n", sumNew, sumOld, changeRate))
 
 	avg := dto.AverageMeatPortions{
 		Timeframe:  dto.Timeframe(timeframe),
