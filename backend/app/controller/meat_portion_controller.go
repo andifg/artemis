@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 
@@ -84,21 +83,7 @@ func (controller MeatPortionControllerImpl) DeleteMeatPortion(c *gin.Context) {
 
 		log.Error("Error deleting meat portion: ", err)
 
-		var customErr *customerrors.NotFoundError
-
-		if errors.As(err, &customErr) {
-			c.JSON(http.StatusNotFound, gin.H{"erro": err.Error()})
-			return
-		}
-
-		var aunthErr *customerrors.ForbiddenError
-
-		if errors.As(err, &aunthErr) {
-			c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
-			return
-		}
-
-		c.JSON(http.StatusInternalServerError, gin.H{"errorr": err.Error()})
+		contextutils.HandleError(err, c)
 		return
 	}
 
