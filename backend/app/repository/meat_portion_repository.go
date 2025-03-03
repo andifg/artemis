@@ -25,7 +25,6 @@ type MeatPortionRepositoryImpl struct {
 }
 
 func (m MeatPortionRepositoryImpl) CreateMeatPortion(meatPortion dao.MeatPortion) (dao.MeatPortion, error) {
-	log.Debug(fmt.Sprintf("Creating Meat Portion: %v", meatPortion))
 	result := m.db.Create(&meatPortion)
 	if result.Error != nil {
 		fmt.Println("Error: ", result.Error)

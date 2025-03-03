@@ -4,6 +4,9 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/andifg/artemis_backend/app/constant"
+	"github.com/andifg/artemis_backend/app/domain/dao"
+	"github.com/andifg/artemis_backend/app/domain/dto"
 	"github.com/andifg/artemis_backend/app/pkg"
 	"github.com/andifg/artemis_backend/app/pkg/contextutils"
 	"github.com/andifg/artemis_backend/app/pkg/customerrors"
@@ -28,7 +31,36 @@ type MeatPortionControllerImpl struct {
 }
 
 func (controller MeatPortionControllerImpl) CreateMeatPortion(c *gin.Context) {
-	controller.meatPortionService.CreateMeatPortion(c)
+	defer pkg.PanicHandler(c)
+
+	user_id := contextutils.GetUserID(c)
+
+	var createMeatPortion dto.CreateMeatPortion
+
+	if err := c.BindJSON(&createMeatPortion); err != nil {
+		log.Error("Error binding meat portion: ", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	meatPortion := dao.MeatPortion{
+		ID:     createMeatPortion.ID,
+		Size:   createMeatPortion.Size,
+		UserID: user_id,
+		Date:   createMeatPortion.Date,
+		Note:   createMeatPortion.Note,
+	}
+
+	portion, err := controller.meatPortionService.CreateMeatPortion(meatPortion)
+
+	if err != nil {
+		log.Error("Error creating meat portion: ", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, pkg.BuildResponse(constant.Success, portion))
+
 }
 
 func (controller MeatPortionControllerImpl) GetDailyOverview(c *gin.Context) {
@@ -49,7 +81,7 @@ func (controller MeatPortionControllerImpl) DeleteMeatPortion(c *gin.Context) {
 
 	if err != nil {
 
-		log.Info("Error deleting meat portion: ", err)
+		log.Error("Error deleting meat portion: ", err)
 
 		var customErr *customerrors.NotFoundError
 
