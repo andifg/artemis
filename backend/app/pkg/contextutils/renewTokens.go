@@ -28,7 +28,7 @@ func RenewTokens(c *gin.Context, refreshToken string, oidcMgr auth.OidcManager) 
 		return
 	}
 
-	userID, err := uuid.Parse(accessToken.ID)
+	userID, err := uuid.Parse(accessToken.Subject)
 
 	if err != nil {
 		log.Error("Error parsing user ID: ", err)
