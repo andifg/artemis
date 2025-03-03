@@ -18,7 +18,7 @@ import (
 )
 
 type MeatPortionService interface {
-	CreateMeatPortion(*gin.Context)
+	CreateMeatPortion(portion dao.MeatPortion) (dao.MeatPortion, error)
 	GetDailyOverview(*gin.Context)
 	GetMeatPortionsByUserID(*gin.Context)
 	DeleteMeatPortion(uuid.UUID, uuid.UUID) error
@@ -31,41 +31,18 @@ type MeatPortionServiceImpl struct {
 	meatPortionRepository repository.MeatPortionRepository
 }
 
-func (m MeatPortionServiceImpl) CreateMeatPortion(c *gin.Context) {
-	defer pkg.PanicHandler(c)
+func (m MeatPortionServiceImpl) CreateMeatPortion(portion dao.MeatPortion) (dao.MeatPortion, error) {
 
-	user := c.Param("id")
-	user_id := uuid.MustParse(user)
+	log.Info(fmt.Sprintf("Meat Portion to be created: %v", portion))
 
-	log.Info("Create Meat Portion")
-
-	var createMeatPortion dto.CreateMeatPortion
-
-	if err := c.BindJSON(&createMeatPortion); err != nil {
-		log.Error("Error binding meat portion: ", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	meatPortion := dao.MeatPortion{
-		ID:     createMeatPortion.ID,
-		Size:   createMeatPortion.Size,
-		UserID: user_id,
-		Date:   createMeatPortion.Date,
-		Note:   createMeatPortion.Note,
-	}
-
-	log.Debug(fmt.Sprintf("Meat Portion to be created: %v", meatPortion))
-
-	usr, err := m.meatPortionRepository.CreateMeatPortion(meatPortion)
+	usr, err := m.meatPortionRepository.CreateMeatPortion(portion)
 
 	if err != nil {
 		log.Error("Error creating meat portion: ", err)
-		pkg.PanicException(constant.InvalidRequest)
-		return
+		return dao.MeatPortion{}, err
 	}
 
-	c.JSON(http.StatusCreated, pkg.BuildResponse(constant.Success, usr))
+	return usr, nil
 }
 
 func (m MeatPortionServiceImpl) GetDailyOverview(c *gin.Context) {
