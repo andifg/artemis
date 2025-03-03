@@ -14,7 +14,7 @@ func RenewTokens(c *gin.Context, refreshToken string, oidcMgr auth.OidcManager) 
 	tokens, err := oidcMgr.RefreshToken(refreshToken)
 
 	if err != nil {
-		log.Info("Error refreshing token: ", err)
+		log.Error("Error refreshing token: ", err)
 		UnauthorizedHandler(c)
 		return
 
@@ -23,7 +23,7 @@ func RenewTokens(c *gin.Context, refreshToken string, oidcMgr auth.OidcManager) 
 	accessToken, err := oidcMgr.VerifyToken(tokens.AccessToken)
 
 	if err != nil {
-		log.Info("Error verifying new access token: ", err)
+		log.Error("Error verifying new access token: ", err)
 		UnauthorizedHandler(c)
 		return
 	}
@@ -31,13 +31,14 @@ func RenewTokens(c *gin.Context, refreshToken string, oidcMgr auth.OidcManager) 
 	userID, err := uuid.Parse(accessToken.ID)
 
 	if err != nil {
-		log.Info("Error parsing user ID: ", err)
+		log.Error("Error parsing user ID: ", err)
 		UnauthorizedHandler(c)
 		return
 	}
 
 	SetUserID(c, userID)
 	log.Info("Successfully refreshed tokens")
+	log.Info("Request host: ", c.Request.Host)
 	SetTokens(c, tokens, c.Request.Host)
 	c.Next()
 

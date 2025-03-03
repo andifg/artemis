@@ -50,7 +50,7 @@ func AuthMiddleware(oidcMgr auth.OidcManager) gin.HandlerFunc {
 		userID, err := uuid.Parse(jwt.Subject)
 
 		if err != nil {
-			log.Info("Error parsing user ID: ", err)
+			log.Error("Error parsing user ID: ", err)
 			contextutils.UnauthorizedHandler(c)
 			return
 		}
