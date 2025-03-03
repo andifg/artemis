@@ -166,11 +166,16 @@ func (o *OidcManagerImpl) RefreshToken(refreshToken string) (OidcTokens, error) 
 	resp, err := http.Post(request, "application/x-www-form-urlencoded", strings.NewReader(requestBody.Encode()))
 
 	if err != nil {
-		log.Info("Error during POST request: ", err)
+		log.Error("Error during Refresh Token Request: ", err)
 		return OidcTokens{}, err
 	}
 
 	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		log.Error("Error during Refresh Token Request: ", resp.StatusCode)
+		return OidcTokens{}, fmt.Errorf("Error during Refresh Token Request: %d", resp.StatusCode)
+	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -184,6 +189,9 @@ func (o *OidcManagerImpl) RefreshToken(refreshToken string) (OidcTokens, error) 
 		log.Info("Error unmarshalling response body: ", err)
 		return OidcTokens{}, err
 	}
+
+	log.Debug("Response status code refresh token: ", resp.StatusCode)
+	log.Debug("Response body refresh token: ", string(body))
 
 	AccessToken := data["access_token"]
 	RefreshToken := data["refresh_token"]
