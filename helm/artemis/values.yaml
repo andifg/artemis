@@ -8,7 +8,7 @@ ingress:
     secretName: artemis-tls-secret
 
 backend:
-  log_level: "info"
+  log_level: "INFO"
   containerPort: 8000
   replicaCount: 1
   image:

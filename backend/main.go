@@ -7,14 +7,12 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func init() {
-	config.InitLog()
-}
-
 func main() {
 	log.Info("Starting Application")
 
 	appConfig := constant.AppConfigInit()
+
+	config.InitLog(*appConfig)
 	init := config.Init(*appConfig)
 
 	log.Info("Starting Router")

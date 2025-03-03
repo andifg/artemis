@@ -1,15 +1,14 @@
 package config
 
 import (
+	"github.com/andifg/artemis_backend/app/constant"
 	nested "github.com/antonfisher/nested-logrus-formatter"
 	log "github.com/sirupsen/logrus"
 )
 
-func InitLog() {
+func InitLog(appConfig constant.AppConfig) {
 
-	defaultLogLevel := "DEBUG"
-
-	log.SetLevel(getLoggerLevel(defaultLogLevel))
+	log.SetLevel(getLoggerLevel(appConfig.LogLevel))
 	log.SetReportCaller(false)
 	log.SetFormatter(&nested.Formatter{
 		HideKeys:        true,
@@ -27,6 +26,16 @@ func getLoggerLevel(value string) log.Level {
 		return log.DebugLevel
 	case "TRACE":
 		return log.TraceLevel
+	case "INFO":
+		return log.InfoLevel
+	case "WARN":
+		return log.WarnLevel
+	case "ERROR":
+		return log.ErrorLevel
+	case "FATAL":
+		return log.FatalLevel
+	case "PANIC":
+		return log.PanicLevel
 	default:
 		return log.InfoLevel
 	}
