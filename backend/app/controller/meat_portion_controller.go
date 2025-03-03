@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/andifg/artemis_backend/app/constant"
@@ -39,7 +40,7 @@ func (controller MeatPortionControllerImpl) CreateMeatPortion(c *gin.Context) {
 
 	if err := c.BindJSON(&createMeatPortion); err != nil {
 		log.Error("Error binding meat portion: ", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		contextutils.HandleError(customerrors.NewBadRequestError(fmt.Sprintf("Invalid Request Body: %v", err)), c)
 		return
 	}
 
@@ -55,7 +56,7 @@ func (controller MeatPortionControllerImpl) CreateMeatPortion(c *gin.Context) {
 
 	if err != nil {
 		log.Error("Error creating meat portion: ", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		contextutils.HandleError(err, c)
 		return
 	}
 

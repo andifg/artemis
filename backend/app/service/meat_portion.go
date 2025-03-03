@@ -38,7 +38,6 @@ func (m MeatPortionServiceImpl) CreateMeatPortion(portion dao.MeatPortion) (dao.
 	usr, err := m.meatPortionRepository.CreateMeatPortion(portion)
 
 	if err != nil {
-		log.Error("Error creating meat portion: ", err)
 		return dao.MeatPortion{}, err
 	}
 
