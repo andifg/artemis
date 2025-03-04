@@ -3,6 +3,7 @@ import { useClient } from "@/hooks/useClient";
 import { MeatPortionService } from "@/client/meatPortionService";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { AddMeatPortionContext } from "@/contexts/addMeatPortionContext";
+import { DeleteMeatPortionContext } from "@/contexts/deleteMeatPortionContext";
 import { MeatPortion } from "@/client/types";
 
 function useVeggieStreak() {
@@ -10,6 +11,7 @@ function useVeggieStreak() {
   const [callClientServiceMethod] = useClient();
 
   const { registerCallback } = useContext(AddMeatPortionContext);
+  const { registerDeleteCallback } = useContext(DeleteMeatPortionContext);
 
   const [streak, setStreak] = useState<number>(0);
 
@@ -27,8 +29,14 @@ function useVeggieStreak() {
     fetchStreak();
   };
 
+  const deleteMeatPortion = (_: string) => {
+    console.log("Deleting meat portion...");
+    fetchStreak();
+  };
+
   useEffect(() => {
     registerCallback(updateStreak);
+    registerDeleteCallback(deleteMeatPortion);
   }, []);
 
   useEffect(() => {

@@ -1,5 +1,6 @@
 import { getCookie } from "typescript-cookie";
 import { jwtDecode, JwtPayload } from "jwt-decode";
+import { useCentralState } from "@/state/centralState";
 
 type User = {
   username: string;
@@ -20,6 +21,8 @@ interface useAuthenticationReturn {
 }
 
 function useAuthentication(): useAuthenticationReturn {
+  const { deleteAllPortions } = useCentralState();
+
   let user: User;
 
   const id_token = getCookie("id_token");
@@ -33,6 +36,8 @@ function useAuthentication(): useAuthenticationReturn {
 
   const logout = () => {
     console.log("logout");
+
+    deleteAllPortions();
 
     if (window.location.pathname != "/") {
       console.log(window.location.pathname);

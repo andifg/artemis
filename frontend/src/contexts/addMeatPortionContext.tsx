@@ -37,7 +37,7 @@ function AddMeatPortionContextProvider({
   };
 
   useEffect(() => {
-    console.log("Current functions: ", addFunction);
+    console.log("Current add Portion callbacks: ", addFunction);
   }, [addFunction]);
 
   return (

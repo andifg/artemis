@@ -5,6 +5,7 @@ import { Timeframe, AggregatedMeatPortions, MeatPortion } from "@/client/types";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { extractDate } from "@/utils/extractDate";
 import { AddMeatPortionContext } from "@/contexts/addMeatPortionContext";
+import { DeleteMeatPortionContext } from "@/contexts/deleteMeatPortionContext";
 
 import {
   mapforWeeks,
@@ -62,6 +63,7 @@ function useMeatPortionChart({ selected }: useMeatPortionChartProps): {
   const { getUser } = useAuthentication();
   const [callClientServiceMethod] = useClient();
   const { registerCallback } = useContext(AddMeatPortionContext);
+  const { registerDeleteCallback } = useContext(DeleteMeatPortionContext);
 
   const [meatPortionMap, setMeatPortionMap] = useState<meatPortionMap>(
     getInitialData(selected),
@@ -83,8 +85,13 @@ function useMeatPortionChart({ selected }: useMeatPortionChartProps): {
     fetchAggregatedMeatPortions();
   };
 
+  const deleteMeatPortion = (_: string) => {
+    fetchAggregatedMeatPortions();
+  };
+
   useEffect(() => {
     registerCallback(updateMeatPortions);
+    registerDeleteCallback(deleteMeatPortion);
   }, []);
 
   useEffect(() => {
