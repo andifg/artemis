@@ -1,7 +1,9 @@
-import { useState, useRef, useEffect, RefObject } from "react";
+import { useState, useRef, useEffect, RefObject, useContext } from "react";
 import { useClient } from "@/hooks/useClient";
 import { useAuthentication } from "@/hooks/useAuthentication";
+import { useCentralState } from "@/state/centralState";
 import { MeatPortionService } from "@/client/meatPortionService";
+import { DeleteMeatPortionContext } from "@/contexts/deleteMeatPortionContext";
 
 type useDeleteMealReturn = {
   selectedMeal: string;
@@ -11,7 +13,9 @@ type useDeleteMealReturn = {
 function useDeleteMeal(): useDeleteMealReturn {
   const [selectedMeal, setSelectedMeal] = useState<string>("");
   const [callClientServiceMethod] = useClient();
+  const deletePortion = useCentralState((state) => state.deletePortion);
   const { getUser } = useAuthentication();
+  const { callAllCallbacks } = useContext(DeleteMeatPortionContext);
 
   const user = getUser();
 
@@ -25,6 +29,8 @@ function useDeleteMeal(): useDeleteMealReturn {
         function: MeatPortionService.DeleteMeatPortion,
         args: [user.id, selectedMeal],
       }).then(() => {
+        deletePortion(selectedMeal);
+        callAllCallbacks(selectedMeal);
         setSelectedMeal("");
       });
     }

@@ -4,6 +4,7 @@ import { MeatPortionService } from "@/client/meatPortionService";
 import { Timeframe, AverageMeatPortions, MeatPortion } from "@/client/types";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { AddMeatPortionContext } from "@/contexts/addMeatPortionContext";
+import { DeleteMeatPortionContext } from "@/contexts/deleteMeatPortionContext";
 
 type useAverageMeatPortionsProps = {
   selected: Timeframe;
@@ -19,6 +20,7 @@ function useAverageMeatPortions({
   const { getUser } = useAuthentication();
   const [callClientServiceMethod] = useClient();
   const { registerCallback } = useContext(AddMeatPortionContext);
+  const { registerDeleteCallback } = useContext(DeleteMeatPortionContext);
 
   const [averageMeatPortions, setAverageMeatPortions] =
     useState<AverageMeatPortions>({
@@ -45,8 +47,13 @@ function useAverageMeatPortions({
     fetchAverageMeatPortions();
   };
 
+  const deleteMeatPortion = (_: string) => {
+    fetchAverageMeatPortions();
+  };
+
   useEffect(() => {
     registerCallback(updateAverageMeatPortions);
+    registerDeleteCallback(deleteMeatPortion);
   }, []);
 
   useEffect(() => {
