@@ -5,6 +5,8 @@ import { Portion } from "./Portion";
 import { useListMeals } from "./useListMeals";
 import { useDeleteMeal } from "./useDeleteMeal";
 
+import { useCentralState } from "@/state/centralState";
+
 import { LoaderIcon } from "lucide-react";
 
 import {
@@ -20,27 +22,33 @@ export type AddMealSheetProps = {
 };
 
 function ListMealsSheet({ open, onClose }: AddMealSheetProps) {
-  const { meals, loading } = useListMeals({ open });
+  const { loading } = useListMeals({ open });
+
+  const portions = useCentralState((state) => state.meatPortions);
 
   const { selectedMeal, selectForDeletion } = useDeleteMeal();
 
   return (
-    <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent className="w-full list-meals-sheet-background" side="left">
+    <Sheet open={open} onOpenChange={onClose} key={"list-meals-sheet"}>
+      <SheetContent
+        className="w-full list-meals-sheet-background"
+        side="left"
+        key={"list-meals-sheet-content"}
+      >
         <SheetTitle className="text-3xl">Recent Servings</SheetTitle>
         <SheetDescription></SheetDescription>
-        {loading ? (
+        {loading && Object.keys(portions).length === 0 ? (
           <LoaderIcon className="animate-spin" />
         ) : (
           <div className="list-meals-sheet-content">
-            {Object.keys(meals)
+            {Object.keys(portions)
               .sort()
               .reverse()
               .map((day) => {
                 return (
                   <>
                     <DayHeader day={day} key={`${day}-l`} />
-                    {meals[day].map((portion) => {
+                    {portions[day].map((portion) => {
                       return (
                         <Portion
                           portion={portion}
