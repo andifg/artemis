@@ -22,6 +22,7 @@ interface useAuthenticationReturn {
 
 function useAuthentication(): useAuthenticationReturn {
   const { deleteAllPortions } = useCentralState();
+  const portions = useCentralState((state) => state.meatPortions);
 
   let user: User;
 
@@ -37,7 +38,9 @@ function useAuthentication(): useAuthenticationReturn {
   const logout = () => {
     console.log("logout");
 
-    deleteAllPortions();
+    if (Object.keys(portions).length > 0) {
+      deleteAllPortions();
+    }
 
     if (window.location.pathname != "/") {
       console.log(window.location.pathname);
@@ -66,7 +69,7 @@ function useAuthentication(): useAuthenticationReturn {
 
     // console.log("user", user);
   } else {
-    // console.log("no id_token");
+    console.log("logggggooouuttt");
     logout();
   }
 
