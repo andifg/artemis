@@ -44,6 +44,7 @@ function useAddMealForm({
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    values.date.setHours(12, 30, 0, 0);
     console.log("submit");
     console.log(values);
 
