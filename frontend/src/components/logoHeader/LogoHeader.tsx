@@ -1,5 +1,5 @@
 import "./LogoHeader.scss";
-import MyGreenDaysLogo from "../../../public/mygreendays-logo.png";
+import MyGreenDaysLogo from "/mygreendays-logo.png";
 
 type LogoHeaderProps = {
   backgroundColor?: boolean;
