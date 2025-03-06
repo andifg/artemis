@@ -1,7 +1,7 @@
 import "./Dashboard.scss";
 
 import { Layout } from "@/components/layout/layout";
-import { BottomNavigator } from "@/components/bottomNavigator/bottomNavigator";
+import { BottomNavigator } from "@/components/bottomNavigator/BottomNavigator";
 import { LogoHeader } from "@/components/logoHeader/LogoHeader";
 import { VeggieStreak } from "@/components/veggiStreak/VeggieStreak";
 import { DailyOverview } from "@/components/dailyOverview/dailyOverview";
