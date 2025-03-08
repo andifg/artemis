@@ -4,7 +4,7 @@ import { useClient } from "@/hooks/useClient";
 
 import { MeatPortionService } from "@/client/meatPortionService";
 import { useAuthentication } from "@/hooks/useAuthentication";
-import { useCentralState } from "@/state/centralState";
+import { useCentralState } from "@/hooks/useCentralState";
 
 type useListMealsProps = {
   open: boolean;

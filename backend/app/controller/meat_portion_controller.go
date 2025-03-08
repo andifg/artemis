@@ -64,7 +64,20 @@ func (controller MeatPortionControllerImpl) CreateMeatPortion(c *gin.Context) {
 }
 
 func (controller MeatPortionControllerImpl) GetDailyOverview(c *gin.Context) {
-	controller.meatPortionService.GetDailyOverview(c)
+	defer pkg.PanicHandler(c)
+
+	user_id := contextutils.GetUserID(c)
+
+	daily_overview_map, err := controller.meatPortionService.GetDailyOverview(user_id)
+
+	if err != nil {
+		log.Error("Error getting daily overview: ", err)
+		contextutils.HandleError(err, c)
+		return
+	}
+
+	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, daily_overview_map))
+
 }
 
 func (controller MeatPortionControllerImpl) GetMeatPortions(c *gin.Context) {

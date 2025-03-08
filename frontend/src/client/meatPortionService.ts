@@ -6,6 +6,7 @@ import {
   MeatPortionDateList,
   MeatPortion,
   Timeframe,
+  DailyOverviewMap,
 } from "./types";
 import { API } from "./config";
 import { handleApiRequest } from "./utils";
@@ -35,6 +36,14 @@ class MeatPortionService {
     const url = `${API.baseURL}/api/v1/user/${userID}/meat-portions`;
 
     return handleApiRequest<APIResponse<MeatPortion[]>>(url);
+  }
+
+  public static GetDailyOverview(
+    userID: string,
+  ): Promise<APIResponse<DailyOverviewMap>> {
+    const url = `${API.baseURL}/api/v1/user/${userID}/daily-overview`;
+
+    return handleApiRequest<APIResponse<DailyOverviewMap>>(url);
   }
 
   public static GetMeatPortion(

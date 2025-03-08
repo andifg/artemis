@@ -4,89 +4,50 @@ import { DeleteMeatPortionContext } from "@/contexts/deleteMeatPortionContext";
 import { useClient } from "@/hooks/useClient";
 import { MeatPortionService } from "@/client/meatPortionService";
 import { useAuthentication } from "@/hooks/useAuthentication";
+import { useCentralState } from "@/hooks/useCentralState";
 import { MeatPortion } from "@/client/types";
-import { extractDate } from "@/utils/extractDate";
-
-export type DailyOverview = {
-  [key: string]: MeatPortion | undefined;
-};
 
 function useDailyOverview() {
   const { getUser } = useAuthentication();
   const [callClientServiceMethod] = useClient();
   const user = getUser();
 
+  const setDailyOverviewMap = useCentralState(
+    (state) => state.setDailyOverviewMap,
+  );
+
+  const increasePortion = useCentralState((state) => state.increasePortion);
+
+  const decreasePortion = useCentralState((state) => state.decreasePortion);
+
   const { registerCallback } = useContext(AddMeatPortionContext);
   const { registerDeleteCallback } = useContext(DeleteMeatPortionContext);
 
-  const initializeMeatPortions = () => {
-    const meatPortions: DailyOverview = {};
+  const [loading, setLoading] = useState(true);
 
-    for (let i = 0; i < 14; i++) {
-      // Calculate the date for each iteration
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-
-      // Convert the date to a string
-      const dateString = extractDate(date);
-
-      // Add the date to the object
-      meatPortions[dateString] = undefined;
-    }
-    return meatPortions;
+  const deleteMeatPortion = (portion: MeatPortion) => {
+    console.log("Deleting single meat portion");
+    decreasePortion(portion);
   };
 
-  const [dailyOverview, setDailyOverview] = useState<DailyOverview>(
-    initializeMeatPortions(),
-  );
-
-  const updateMeatPortionsByDate = (newMeatPortions: MeatPortion[]) => {
-    setDailyOverview((meatPortions) => {
-      const updatedMeatPortions = { ...meatPortions };
-
-      newMeatPortions.forEach((newMeatPortion) => {
-        updatedMeatPortions[extractDate(new Date(newMeatPortion.date))] =
-          newMeatPortion;
-      });
-
-      return updatedMeatPortions;
-    });
-  };
-
-  const deleteMeatPortion = (meatPortionId: string) => {
-    setDailyOverview((meatPortions) => {
-      const updatedMeatPortions = { ...meatPortions };
-
-      Object.keys(updatedMeatPortions).forEach((date) => {
-        if (updatedMeatPortions[date]?.id === meatPortionId) {
-          updatedMeatPortions[date] = undefined;
-        }
-      });
-
-      return updatedMeatPortions;
-    });
-  };
-
-  const addSingleMeatPortion = (portion: MeatPortion) => {
+  const addMeatPortion = (portion: MeatPortion) => {
     console.log("Adding single meat portion");
-    updateMeatPortionsByDate([portion]);
+    increasePortion(portion);
   };
-
-  // changeFunction(()=>addSingleMeatPortion);
 
   useEffect(() => {
-    // initializeMeatPortions();
-    registerCallback(addSingleMeatPortion);
+    registerCallback(addMeatPortion);
     registerDeleteCallback(deleteMeatPortion);
     callClientServiceMethod({
-      function: MeatPortionService.GetMeatPortions,
+      function: MeatPortionService.GetDailyOverview,
       args: [user.id],
     }).then((response) => {
-      updateMeatPortionsByDate(response.data);
+      setDailyOverviewMap(response.data);
+      setLoading(false);
     });
   }, []);
 
-  return { dailyOverview };
+  return { loading };
 }
 
 export { useDailyOverview };

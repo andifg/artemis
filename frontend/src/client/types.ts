@@ -40,6 +40,14 @@ export type MeatPortionDateList = {
   [key: string]: MeatPortion[];
 };
 
+export type DailyOverview = {
+  Date: string;
+  MeatPortions: number;
+};
+
+export type DailyOverviewMap = {
+  [key: string]: DailyOverview;
+};
 export class UnauthorizedError extends Error {
   constructor() {
     super("Unauthorized");

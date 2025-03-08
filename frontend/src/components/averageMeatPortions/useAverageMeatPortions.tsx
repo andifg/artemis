@@ -47,7 +47,7 @@ function useAverageMeatPortions({
     fetchAverageMeatPortions();
   };
 
-  const deleteMeatPortion = (_: string) => {
+  const deleteMeatPortion = (_: MeatPortion) => {
     fetchAverageMeatPortions();
   };
 

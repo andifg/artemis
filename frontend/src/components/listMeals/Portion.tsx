@@ -9,8 +9,11 @@ import { MeatPortion } from "@/client/types";
 
 type PortionProps = {
   portion: MeatPortion;
-  selectedForDeletion: string;
-  selectForDeletion: (id: string, ref: RefObject<HTMLElement>) => void;
+  selectedForDeletion: MeatPortion | null;
+  selectForDeletion: (
+    portion: MeatPortion,
+    ref: RefObject<HTMLElement>,
+  ) => void;
 };
 
 const Portion = ({
@@ -21,7 +24,8 @@ const Portion = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleDeleteFirstClick = () => {
-    selectForDeletion(portion.id, inputRef);
+    console.log("Selected for deletion : ", portion);
+    selectForDeletion(portion, inputRef);
   };
 
   const getSize = (size: string) => {
@@ -43,12 +47,12 @@ const Portion = ({
       <div className="portion-size">{getSize(portion.size || "medium")}</div>
       <div className="portion-note">{portion.note && portion.note}</div>
       <div
-        className={`portion-delete-icon ${portion.id === selectedForDeletion ? "portion-confirm-delete-icon" : ""}`}
+        className={`portion-delete-icon ${portion.id === selectedForDeletion?.id ? "portion-confirm-delete-icon" : ""}`}
         ref={inputRef}
       >
         <Trash2
           strokeWidth={1}
-          stroke={portion.id === selectedForDeletion ? "white" : "black"}
+          stroke={portion.id === selectedForDeletion?.id ? "white" : "black"}
           onClick={handleDeleteFirstClick}
         />
       </div>
