@@ -1,6 +1,6 @@
 import "./meatPortionsChart.scss";
 import { Timeframe } from "@/client/types";
-import { DashboardBox } from "../dashboardBox/DashboardBox";
+import { DashboardBox } from "../DashboardBox/DashboardBox";
 import { useMeatPortionChart } from "./useMeatPortionChart";
 import {
   ChartConfig,

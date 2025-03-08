@@ -1,17 +1,17 @@
-import "./AddMealForm.scss";
+import "./addMealForm.scss";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
+} from "@/Components/ui/popover";
+import { Calendar } from "@/Components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -20,7 +20,7 @@ import {
   SelectValue,
   SelectItem,
   SelectContent,
-} from "@/components/ui/select";
+} from "@/Components/ui/select";
 
 import {
   Form,
@@ -30,8 +30,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/Components/ui/form";
+import { Input } from "@/Components/ui/input";
 
 import { useAddMealForm, formSchema } from "./useAddMealForm";
 

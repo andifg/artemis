@@ -1,4 +1,4 @@
-import "./DashboardBox.scss";
+import "./dashboardBox.scss";
 
 type DashboardBoxProps = {
   children: React.ReactNode;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { AverageMeatPortions } from "../averageMeatPortions/averageMeatPortions";
-import { MeatPortionsChart } from "../meatPortionsChart/meatPortionsChart";
+import { AverageMeatPortions } from "../AverageMeatPortions/AverageMeatPortions";
+import { MeatPortionsChart } from "../MeatPortionsChart/MeatPortionsChart";
 import { Timeframe } from "@/client/types";
 
 function AverageAndChartWrapper() {

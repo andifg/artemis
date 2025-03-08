@@ -1,4 +1,4 @@
-import "./ListMealsSheet.scss";
+import "./listMealsSheet.scss";
 
 import { DayHeader } from "./DayHeader";
 import { Portion } from "./Portion";
@@ -14,7 +14,7 @@ import {
   SheetContent,
   SheetDescription,
   SheetTitle,
-} from "@/components/ui/sheet";
+} from "@/Components/ui/sheet";
 
 export type AddMealSheetProps = {
   open: boolean;

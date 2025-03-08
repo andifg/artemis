@@ -1,6 +1,6 @@
 import "./dailyOverview.scss";
 
-import { Day } from "./day";
+import { Day } from "./Day";
 import { useState, useRef, useEffect } from "react";
 import { useDailyOverview } from "./useDailyOverview";
 
@@ -30,7 +30,7 @@ function DailyOverview() {
       <div className="daily-overview-wrapper">
         <div>{selectedDate.toDateString()}</div>
         <div className="daily-overview" ref={dailyOverviewRef}>
-          {!loading && (
+          {(!loading || Object.keys(dailyOverviewMap).length != 0) && (
             <div
               className="daily-overview-slider"
               style={{

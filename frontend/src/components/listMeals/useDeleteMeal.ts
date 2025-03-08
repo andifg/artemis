@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, RefObject, useContext } from "react";
 import { useClient } from "@/hooks/useClient";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { useCentralState } from "@/hooks/useCentralState";
-import { MeatPortionService } from "@/client/meatPortionService";
+import { MeatPortionService } from "@/client/MeatPortionService";
 import { DeleteMeatPortionContext } from "@/contexts/deleteMeatPortionContext";
 import { MeatPortion } from "@/client/types";
 

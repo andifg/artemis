@@ -1,4 +1,4 @@
-import "./Portion.scss";
+import "./portion.scss";
 
 import { RefObject, useRef } from "react";
 

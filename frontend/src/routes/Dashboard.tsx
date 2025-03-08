@@ -1,11 +1,11 @@
-import "./Dashboard.scss";
+import "./dashboard.scss";
 
-import { Layout } from "@/components/layout/layout";
-import { BottomNavigator } from "@/components/bottomNavigator/BottomNavigator";
-import { LogoHeader } from "@/components/logoHeader/LogoHeader";
-import { VeggieStreak } from "@/components/veggiStreak/VeggieStreak";
-import { DailyOverview } from "@/components/dailyOverview/dailyOverview";
-import { AverageAndChartWrapper } from "@/components/averageAndChartWrapper/averageAndChartWrapper";
+import { Layout } from "@/Components/Layout/Layout";
+import { BottomNavigator } from "@/Components/BottomNavigator/BottomNavigator";
+import { LogoHeader } from "@/Components/LogoHeader/LogoHeader";
+import { VeggieStreak } from "@/Components/VeggiStreak/VeggieStreak";
+import { DailyOverview } from "@/Components/DailyOverview/DailyOverview";
+import { AverageAndChartWrapper } from "@/Components/AverageAndChartWrapper/AverageAndChartWrapper";
 import { AddMeatPortionContextProvider } from "@/contexts/addMeatPortionContext";
 import { DeleteMeatPortionContextProvider } from "@/contexts/deleteMeatPortionContext";
 

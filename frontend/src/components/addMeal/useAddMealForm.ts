@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { AddMeatPortionContext } from "@/contexts/addMeatPortionContext";
 
 import { useClient } from "@/hooks/useClient";
-import { MeatPortionService } from "@/client/meatPortionService";
+import { MeatPortionService } from "@/client/MeatPortionService";
 import { BodyCreateMeatPortion } from "@/client/types";
 import { useAuthentication } from "@/hooks/useAuthentication";
 
