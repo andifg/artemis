@@ -19,7 +19,7 @@ import (
 
 type MeatPortionService interface {
 	CreateMeatPortion(portion dao.MeatPortion) (dao.MeatPortion, error)
-	GetDailyOverview(*gin.Context)
+	GetDailyOverview(userId uuid.UUID) (dto.DailyOverviewMap, error)
 	GetMeatPortionsByUserID(*gin.Context)
 	DeleteMeatPortion(uuid.UUID, uuid.UUID) error
 	GetVeggiStreak(*gin.Context)
@@ -44,27 +44,43 @@ func (m MeatPortionServiceImpl) CreateMeatPortion(portion dao.MeatPortion) (dao.
 	return usr, nil
 }
 
-func (m MeatPortionServiceImpl) GetDailyOverview(c *gin.Context) {
-	defer pkg.PanicHandler(c)
-	user := c.Param("id")
-	user_id := uuid.MustParse(user)
+func (m MeatPortionServiceImpl) GetDailyOverview(userId uuid.UUID) (dto.DailyOverviewMap, error) {
 
 	log.Info("Fetch Meat Portions for Daily Overview")
 
-	var meatPortions []dao.MeatPortion
-
 	twoWeeksAgo := time.Now().AddDate(0, 0, -14)
 
-	meatPortions, err := m.meatPortionRepository.GetMeatPortionsByUserID(user_id.String(), &twoWeeksAgo, nil)
+	meatPortions, err := m.meatPortionRepository.GetMeatPortions(userId.String(), 0, 0, &twoWeeksAgo)
 
 	if err != nil {
 		log.Error("Error getting meat portions: ", err)
-		pkg.PanicException(constant.InvalidRequest)
-		return
+		return nil, err
 	}
 
-	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, meatPortions))
+	response_map := dto.DailyOverviewMap{}
 
+	for i := 0; i < 14; i++ {
+		date_string := time.Now().AddDate(0, 0, -i).Format("2006-01-02")
+		date := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()-i, 12, 0, 0, 0, time.Local)
+		response_map[date_string] = dto.DayOverview{
+			Date:         date,
+			MeatPortions: 0,
+		}
+
+	}
+
+	for _, portion := range meatPortions {
+
+		date_string := portion.Date.Format("2006-01-02")
+
+		if val, ok := response_map[date_string]; ok {
+			val.MeatPortions++
+			response_map[date_string] = val
+		}
+
+	}
+
+	return response_map, nil
 }
 
 func (m MeatPortionServiceImpl) GetMeatPortionsByUserID(c *gin.Context) {
@@ -106,7 +122,7 @@ func (m MeatPortionServiceImpl) GetMeatPortionsByUserID(c *gin.Context) {
 
 	var meatPortions []dao.MeatPortion
 
-	meatPortions, errr := m.meatPortionRepository.GetMeatPortions(user_id.String(), page, size)
+	meatPortions, errr := m.meatPortionRepository.GetMeatPortions(user_id.String(), page, size, nil)
 
 	if errr != nil {
 		log.Error("Error getting meat portions: ", err)
@@ -168,7 +184,7 @@ func (m MeatPortionServiceImpl) GetVeggiStreak(c *gin.Context) {
 
 	limit := 1
 
-	meatPortions, err := m.meatPortionRepository.GetMeatPortionsByUserID(user_id.String(), nil, &limit)
+	meatPortions, err := m.meatPortionRepository.GetMeatPortions(user_id.String(), 0, limit, nil)
 
 	if err != nil {
 		log.Error("Error getting meat portions: ", err)
@@ -219,7 +235,7 @@ func (m MeatPortionServiceImpl) GetDailyAverage(c *gin.Context) {
 		pkg.PanicException(constant.InvalidRequest)
 	}
 
-	meatPortions, err := m.meatPortionRepository.GetMeatPortionsByUserID(user_id.String(), &cutoff, nil)
+	meatPortions, err := m.meatPortionRepository.GetMeatPortions(user_id.String(), 0, 0, &cutoff)
 
 	if err != nil {
 		log.Error("Error getting meat portions: ", err)

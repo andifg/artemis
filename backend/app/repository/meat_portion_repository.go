@@ -13,9 +13,8 @@ import (
 
 type MeatPortionRepository interface {
 	CreateMeatPortion(meatPortion dao.MeatPortion) (dao.MeatPortion, error)
-	GetMeatPortionsByUserID(userID string, cutOffDay *time.Time, limit *int) ([]dao.MeatPortion, error)
 	GetMeatPortionById(meatPortionID string) (dao.MeatPortion, error)
-	GetMeatPortions(userID string, page int, limit int) ([]dao.MeatPortion, error)
+	GetMeatPortions(userID string, page int, limit int, cutOffDay *time.Time) ([]dao.MeatPortion, error)
 	DeleteMeatPortion(meatPortionID string) error
 	GetAggregatedMeatPortionsByTimeframe(userID string, timeframe dao.Timeframe) ([]dao.AggregatedMeatPortions, error)
 }
@@ -99,7 +98,7 @@ func (m MeatPortionRepositoryImpl) DeleteMeatPortion(meatPortionID string) error
 	return nil
 }
 
-func (m MeatPortionRepositoryImpl) GetMeatPortions(userID string, page int, limit int) ([]dao.MeatPortion, error) {
+func (m MeatPortionRepositoryImpl) GetMeatPortions(userID string, page int, limit int, cutOffDay *time.Time) ([]dao.MeatPortion, error) {
 
 	log.Debug(fmt.Sprintf("Getting Meat Portion by user ID: %v for page %d", userID, page))
 
@@ -113,6 +112,10 @@ func (m MeatPortionRepositoryImpl) GetMeatPortions(userID string, page int, limi
 
 	if limit != 0 {
 		query = query.Limit(limit)
+	}
+
+	if cutOffDay != nil {
+		query = query.Where("date >= ?", cutOffDay)
 	}
 
 	result := query.Find(&meatPortions)

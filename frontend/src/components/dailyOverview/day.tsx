@@ -19,7 +19,7 @@ function getFirstCharacterOfWeekday(date: Date): string {
 }
 
 function Day({ date, meatConsumed, select, selectedDate }: DayProps) {
-  const isInactive = date > new Date();
+  const isInactive = date > new Date(new Date().setHours(23, 59, 59, 999));
   const isSelected = date.toDateString() == selectedDate.toDateString();
 
   const selectDate = () => {

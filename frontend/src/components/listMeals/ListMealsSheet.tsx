@@ -5,7 +5,7 @@ import { Portion } from "./Portion";
 import { useListMeals } from "./useListMeals";
 import { useDeleteMeal } from "./useDeleteMeal";
 
-import { useCentralState } from "@/state/centralState";
+import { useCentralState } from "@/hooks/useCentralState";
 
 import { LoaderIcon } from "lucide-react";
 

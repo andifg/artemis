@@ -29,7 +29,7 @@ function useVeggieStreak() {
     fetchStreak();
   };
 
-  const deleteMeatPortion = (_: string) => {
+  const deleteMeatPortion = (_: MeatPortion) => {
     console.log("Deleting meat portion...");
     fetchStreak();
   };

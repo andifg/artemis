@@ -85,7 +85,7 @@ function useMeatPortionChart({ selected }: useMeatPortionChartProps): {
     fetchAggregatedMeatPortions();
   };
 
-  const deleteMeatPortion = (_: string) => {
+  const deleteMeatPortion = (_: MeatPortion) => {
     fetchAggregatedMeatPortions();
   };
 

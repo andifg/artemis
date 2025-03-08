@@ -1,6 +1,6 @@
 import { getCookie } from "typescript-cookie";
 import { jwtDecode, JwtPayload } from "jwt-decode";
-import { useCentralState } from "@/state/centralState";
+import { useCentralState } from "@/hooks/useCentralState";
 
 type User = {
   username: string;
@@ -21,8 +21,11 @@ interface useAuthenticationReturn {
 }
 
 function useAuthentication(): useAuthenticationReturn {
-  const { deleteAllPortions } = useCentralState();
+  const { setPortions } = useCentralState();
   const portions = useCentralState((state) => state.meatPortions);
+
+  const { setDailyOverviewMap } = useCentralState();
+  const dailyOverviewMap = useCentralState((state) => state.dailyOverviewMap);
 
   let user: User;
 
@@ -39,7 +42,11 @@ function useAuthentication(): useAuthenticationReturn {
     console.log("logout");
 
     if (Object.keys(portions).length > 0) {
-      deleteAllPortions();
+      setPortions({});
+    }
+
+    if (Object.keys(dailyOverviewMap).length > 0) {
+      setDailyOverviewMap({});
     }
 
     if (window.location.pathname != "/") {

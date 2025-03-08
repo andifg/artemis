@@ -1,15 +1,13 @@
-import { create } from "zustand";
-
 import { MeatPortionDateList } from "@/client/types";
+import { StateCreator } from "zustand";
 
-interface CentralState {
+export interface MeatPortionSlice {
   meatPortions: MeatPortionDateList;
   setPortions: (portions: MeatPortionDateList) => void;
   deletePortion: (portionId: string) => void;
-  deleteAllPortions: () => void;
 }
 
-const useCentralState = create<CentralState>((set) => ({
+const meatPortionSlice: StateCreator<MeatPortionSlice> = (set) => ({
   meatPortions: {},
   setPortions: (portions) => set({ meatPortions: portions }),
   deletePortion: (portionId) =>
@@ -25,7 +23,6 @@ const useCentralState = create<CentralState>((set) => ({
 
       return { meatPortions: updatedMeatPortions };
     }),
-  deleteAllPortions: () => set({ meatPortions: {} }),
-}));
+});
 
-export { useCentralState };
+export { meatPortionSlice };
