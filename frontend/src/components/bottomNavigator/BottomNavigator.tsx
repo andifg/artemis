@@ -1,4 +1,4 @@
-import "./bottomNavigator.scss";
+import "./BottomNavigator.scss";
 import TestSvg from "../../assets/meat.svg";
 import { AddMealSheet } from "@/components/addMeal/AddMealSheet";
 import { ListMealsSheet } from "../listMeals/ListMealsSheet";
