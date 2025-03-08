@@ -1,6 +1,6 @@
 import "./averageMeatPortions.scss";
 import React from "react";
-import { DashboardBox } from "../dashboardBox/DashboardBox";
+import { DashboardBox } from "../DashboardBox/DashboardBox";
 import { TrendingUp } from "lucide-react";
 import { useAverageMeatPortions } from "./useAverageMeatPortions";
 import { Timeframe } from "@/client/types";

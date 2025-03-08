@@ -1,5 +1,5 @@
-import "./VeggieStreak.scss";
-import { DashboardBox } from "../dashboardBox/DashboardBox";
+import "./veggieStreak.scss";
+import { DashboardBox } from "../DashboardBox/DashboardBox";
 import FireLogo from "../../assets/fire.svg";
 import { useVeggieStreak } from "./useVeggieStreak";
 

@@ -1,4 +1,4 @@
-import "./DayHeader.scss";
+import "./dayHeader.scss";
 
 type DayHeaderProps = {
   day: string;

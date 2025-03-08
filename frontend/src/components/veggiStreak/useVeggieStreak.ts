@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { useClient } from "@/hooks/useClient";
-import { MeatPortionService } from "@/client/meatPortionService";
+import { MeatPortionService } from "@/client/MeatPortionService";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { AddMeatPortionContext } from "@/contexts/addMeatPortionContext";
 import { DeleteMeatPortionContext } from "@/contexts/deleteMeatPortionContext";

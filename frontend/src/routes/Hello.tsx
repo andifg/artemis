@@ -1,7 +1,7 @@
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { Heart, Activity, BarChart } from "lucide-react";
-import { LogoHeader } from "@/components/logoHeader/LogoHeader";
-import { FeatureCard } from "@/components/featureCard/FeatureCard";
+import { LogoHeader } from "@/Components/LogoHeader/LogoHeader";
+import { FeatureCard } from "@/Components/FeatureCard/FeatureCard";
 
 function Hello() {
   const { initiateLogin, checkIfUserCookiesExist } = useAuthentication();

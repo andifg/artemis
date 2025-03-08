@@ -1,11 +1,11 @@
-import "./AddMealSheet.scss";
+import "./addMealSheet.scss";
 
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetTitle,
-} from "@/components/ui/sheet";
+} from "@/Components/ui/sheet";
 import { AddMealForm } from "./AddMealForm";
 
 export type AddMealSheetProps = {

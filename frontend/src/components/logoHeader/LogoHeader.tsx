@@ -1,4 +1,4 @@
-import "./LogoHeader.scss";
+import "./logoHeader.scss";
 import MyGreenDaysLogo from "/mygreendays-logo.png";
 
 type LogoHeaderProps = {
