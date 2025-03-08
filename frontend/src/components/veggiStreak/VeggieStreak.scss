@@ -12,3 +12,10 @@
   height: 50px;
   margin-right: 10px;
 }
+
+@media (max-height: 768px) {
+  .veggie-streak {
+    margin-top: 2px;
+    margin-bottom: 2px;
+  }
+}
