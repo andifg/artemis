@@ -1,4 +1,4 @@
-import { getCookie } from "typescript-cookie";
+import { getCookie, removeCookie } from "typescript-cookie";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { useCentralState } from "@/hooks/useCentralState";
 
@@ -52,6 +52,8 @@ function useAuthentication(): useAuthenticationReturn {
     if (window.location.pathname != "/") {
       console.log(window.location.pathname);
       console.log("redirecting to /");
+
+      removeCookie("id_token");
 
       window.location.href = "/";
     }
