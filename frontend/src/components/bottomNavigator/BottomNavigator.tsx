@@ -25,13 +25,13 @@ function BottomNavigator() {
             <List onClick={toggleList} color="black" />
           </div>
         </div>
-        <div className="bottom-navigator-child bottom-navigator-middle">
+        <div className="bottom-navigator-middle">
           <div className="bottom-navigator-circle">
             <img
               src={TestSvg}
               alt="test"
               onClick={toggleAddModal}
-              style={{ width: "50px" }}
+              style={{ width: "32px" }}
             />
           </div>
         </div>

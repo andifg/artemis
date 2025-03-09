@@ -1,26 +1,21 @@
 .bottom-navigator {
-  position: fixed;
-  bottom: 0;
-  left: 0;
+  align-self: flex-end;
+  margin-top: auto;
+  position: relative;
   width: 100%;
   background-color: var(--primary-color);
   color: white;
   display: flex;
   align-items: center;
-  padding: 10px 0;
-  border-radius: 50% 50% 0px 0px;
-  min-height: 80px;
+  padding-bottom: 30px;
+  padding-top: 5px;
   display: flex;
   justify-content: space-between;
 }
 
 .bottom-navigator-circle {
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%); /* Center the circle horizontally */
-  width: 100px; /* Circle diameter */
-  height: 100px; /* Circle diameter */
+  width: 46px; /* Circle diameter */
+  height: 46px; /* Circle diameter */
   background-color: var(--secondary-color);
   border-radius: 50%; /* Makes the div a circle */
   display: flex;
@@ -35,20 +30,29 @@
 }
 
 .bottom-navigator-left {
+  // align-self: flex-start;
   display: flex;
   justify-content: center;
   position: relative;
-  top: -10px;
+  // top: -10px;
 }
 
 .bottom-navigator-middle {
-  flex: 0 0 auto;
-  width: 100px; /* Circle diameter */
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 46px;
   min-height: 1px;
 }
 
 .bottom-navigator-list-wrapper {
-  background-color: var(--secondary-color);
-  padding: 10px;
+  // background-color: var(--secondary-color);
+  // padding: 10px;
   border-radius: 50%;
+}
+
+@media (max-height: 768px) {
+  .bottom-navigator {
+    padding-bottom: 0px;
+  }
 }
