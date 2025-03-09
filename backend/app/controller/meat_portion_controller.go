@@ -21,7 +21,6 @@ type MeatPortionController interface {
 	GetDailyOverview(c *gin.Context)
 	GetMeatPortions(c *gin.Context)
 	DeleteMeatPortion(c *gin.Context)
-	GetStreak(c *gin.Context)
 	GetAverage(c *gin.Context)
 	GetAggregatedMeatPortionsByTimeframe(c *gin.Context)
 }
@@ -101,10 +100,6 @@ func (controller MeatPortionControllerImpl) DeleteMeatPortion(c *gin.Context) {
 	}
 
 	c.Status(http.StatusNoContent)
-}
-
-func (controller MeatPortionControllerImpl) GetStreak(c *gin.Context) {
-	controller.meatPortionService.GetVeggiStreak(c)
 }
 
 func (controller MeatPortionControllerImpl) GetAverage(c *gin.Context) {

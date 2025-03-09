@@ -3,47 +3,69 @@ import { useClient } from "@/hooks/useClient";
 import { MeatPortionService } from "@/client/MeatPortionService";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { AddMeatPortionContext } from "@/contexts/addMeatPortionContext";
-import { DeleteMeatPortionContext } from "@/contexts/deleteMeatPortionContext";
 import { MeatPortion } from "@/client/types";
+import { useCentralState } from "@/hooks/useCentralState";
 
-function useVeggieStreak() {
+interface useVeggieStreakReturn {
+  loading: boolean;
+  streak: number;
+}
+
+function useVeggieStreak(): useVeggieStreakReturn {
   const { getUser } = useAuthentication();
+  const user = getUser();
   const [callClientServiceMethod] = useClient();
 
   const { registerCallback } = useContext(AddMeatPortionContext);
-  const { registerDeleteCallback } = useContext(DeleteMeatPortionContext);
 
   const [streak, setStreak] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const { setPortions, meatPortions, addPortion } = useCentralState();
+
+  const addMeatPortion = (portion: MeatPortion) => {
+    addPortion(portion);
+  };
 
   const fetchStreak = () => {
     callClientServiceMethod({
-      function: MeatPortionService.GetVeggieStreak,
-      args: [getUser().id],
-    }).then((data) => {
-      setStreak(data.data);
+      function: MeatPortionService.GetMeatPortion,
+      args: [user.id, 1, 30],
+    }).then((response) => {
+      setPortions(response.data);
+      setLoading(false);
     });
   };
 
-  const updateStreak = (_: MeatPortion) => {
-    console.log("Updating streak...");
-    fetchStreak();
-  };
+  useEffect(() => {
+    const newestDateString = Object.keys(meatPortions).sort().reverse()[0];
 
-  const deleteMeatPortion = (_: MeatPortion) => {
-    console.log("Deleting meat portion...");
-    fetchStreak();
-  };
+    if (!newestDateString) {
+      setStreak(0);
+      return;
+    }
+
+    console.log("Current data: ", meatPortions);
+    const newestDate = new Date(newestDateString);
+
+    const now = new Date();
+
+    newestDate.setHours(0, 0, 0, 0);
+    now.setHours(0, 0, 0, 0);
+
+    const diffTime = now.getTime() - newestDate.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    setStreak(diffDays);
+  }, [meatPortions]);
 
   useEffect(() => {
-    registerCallback(updateStreak);
-    registerDeleteCallback(deleteMeatPortion);
+    registerCallback(addMeatPortion);
+    fetchStreak();
   }, []);
 
-  useEffect(() => {
-    fetchStreak();
-  });
-
   return {
+    loading,
     streak,
   };
 }
