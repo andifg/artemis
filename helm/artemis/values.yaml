@@ -28,6 +28,11 @@ backend:
 
 
 postgresql:
+  # Problems with updating statefulset
+  # primary:
+  #   persistence:
+  #     labels:
+  #       backup-pvc-snapshot-to-s3: "true"
   auth:
     existingSecret: artemis-database-access
     database: "artemis"
@@ -109,6 +114,13 @@ keycloak:
         userPasswordKey: admin-password
         adminPasswordKey: admin-password
 
+backup:
+  enabled: true
+  openshiftAdpNamespace: openshift-adp
+  schedule: '0 5 * * 1'
+  # Name of an existing Openshift ADP storage location
+  adpStorageLocationName: 'aws-s3'
+  ttl: 672h
 
 serviceAccount:
   create: true
