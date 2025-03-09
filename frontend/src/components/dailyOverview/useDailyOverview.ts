@@ -26,12 +26,10 @@ function useDailyOverview() {
   const [loading, setLoading] = useState(true);
 
   const deleteMeatPortion = (portion: MeatPortion) => {
-    console.log("Deleting single meat portion");
     decreasePortion(portion);
   };
 
   const addMeatPortion = (portion: MeatPortion) => {
-    console.log("Adding single meat portion");
     increasePortion(portion);
   };
 

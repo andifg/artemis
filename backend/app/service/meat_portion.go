@@ -22,7 +22,6 @@ type MeatPortionService interface {
 	GetDailyOverview(userId uuid.UUID) (dto.DailyOverviewMap, error)
 	GetMeatPortionsByUserID(*gin.Context)
 	DeleteMeatPortion(uuid.UUID, uuid.UUID) error
-	GetVeggiStreak(*gin.Context)
 	GetDailyAverage(*gin.Context)
 	GetAggregatedMeatPortionsByTimeframe(*gin.Context)
 }
@@ -167,42 +166,6 @@ func (m MeatPortionServiceImpl) DeleteMeatPortion(meat_portion_id uuid.UUID, use
 	}
 
 	return nil
-
-}
-
-func (m MeatPortionServiceImpl) GetVeggiStreak(c *gin.Context) {
-	defer pkg.PanicHandler(c)
-
-	user := c.Param("id")
-	user_id := uuid.MustParse(user)
-
-	log.Info("Fetching Meat Portions for Veggi Streak")
-
-	var meatPortions []dao.MeatPortion
-
-	var streak int
-
-	limit := 1
-
-	meatPortions, err := m.meatPortionRepository.GetMeatPortions(user_id.String(), 0, limit, nil)
-
-	if err != nil {
-		log.Error("Error getting meat portions: ", err)
-		pkg.PanicException(constant.InvalidRequest)
-		return
-	}
-
-	if len(meatPortions) == 0 {
-		streak = 0
-	} else {
-		now := time.Now()
-		log.Debug("Len of meat portions: ", len(meatPortions))
-		log.Debug(fmt.Sprintf("Newest meat portion: %v \n", meatPortions[0].Date))
-		diff := now.Sub(meatPortions[0].Date)
-		streak = int(diff.Hours() / 24)
-	}
-
-	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, streak))
 
 }
 

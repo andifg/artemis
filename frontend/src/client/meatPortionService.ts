@@ -69,12 +69,6 @@ class MeatPortionService {
     return handleApiRequest<void>(url, options);
   }
 
-  public static GetVeggieStreak(userID: string): Promise<APIResponse<number>> {
-    const url = `${API.baseURL}/api/v1/user/${userID}/streak`;
-
-    return handleApiRequest<APIResponse<number>>(url);
-  }
-
   public static GetAverageMeatPortions(
     userID: string,
     timeframe: Timeframe,
