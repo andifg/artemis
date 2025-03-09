@@ -4,6 +4,9 @@ metadata:
   name: {{ .Values.keycloak.postgresql.primary.persistence.existingClaim }}
   labels:
     {{- include "artemis.labels" . | nindent 4 }}
+    {{- if .Values.backup.enabled }}
+    backup-pvc-snapshot-to-s3: "true"
+    {{- end }}
 spec:
   accessModes:
     - ReadWriteOnce
