@@ -1,0 +1,16 @@
+.time-frame-selector {
+  display: flex;
+  flex-direction: row;
+  border-radius: 5px;
+  background-color: var(--background-color);
+  padding-left: 1px;
+  padding-right: 1px;
+}
+.time-frame-selector-item {
+  padding-left: 1px;
+  padding-right: 1px;
+}
+
+.time-frame-selector-selected {
+  font-weight: 800;
+}

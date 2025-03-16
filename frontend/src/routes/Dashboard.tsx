@@ -5,7 +5,8 @@ import { BottomNavigator } from "@/Components/BottomNavigator/BottomNavigator";
 import { LogoHeader } from "@/Components/LogoHeader/LogoHeader";
 import { VeggieStreak } from "@/Components/VeggiStreak/VeggieStreak";
 import { DailyOverview } from "@/Components/DailyOverview/DailyOverview";
-import { AverageAndChartWrapper } from "@/Components/AverageAndChartWrapper/AverageAndChartWrapper";
+import { AverageMeatPortions } from "@/Components/AverageMeatPortions/AverageMeatPortions";
+import { MeatPortionsChart } from "@/Components/MeatPortionsChart/MeatPortionsChart";
 import { AddMeatPortionContextProvider } from "@/contexts/addMeatPortionContext";
 import { DeleteMeatPortionContextProvider } from "@/contexts/deleteMeatPortionContext";
 
@@ -19,7 +20,8 @@ function Dashboard() {
             <div className="dashboard-main">
               <DailyOverview />
               <VeggieStreak />
-              <AverageAndChartWrapper />
+              <AverageMeatPortions />
+              <MeatPortionsChart />
             </div>
             <BottomNavigator />
           </DeleteMeatPortionContextProvider>

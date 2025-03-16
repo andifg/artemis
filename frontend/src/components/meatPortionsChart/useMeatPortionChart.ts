@@ -6,6 +6,7 @@ import { useAuthentication } from "@/hooks/useAuthentication";
 import { extractDate } from "@/utils/extractDate";
 import { AddMeatPortionContext } from "@/contexts/addMeatPortionContext";
 import { DeleteMeatPortionContext } from "@/contexts/deleteMeatPortionContext";
+import { useCentralState } from "@/hooks/useCentralState";
 
 import {
   mapforWeeks,
@@ -53,29 +54,26 @@ const updateMap = (map: meatPortionMap, data: AggregatedMeatPortions[]) => {
   return map;
 };
 
-type useMeatPortionChartProps = {
-  selected: Timeframe;
-};
-
-function useMeatPortionChart({ selected }: useMeatPortionChartProps): {
+function useMeatPortionChart(): {
   meatPortionMap: meatPortionMap;
 } {
   const { getUser } = useAuthentication();
   const [callClientServiceMethod] = useClient();
   const { registerCallback } = useContext(AddMeatPortionContext);
   const { registerDeleteCallback } = useContext(DeleteMeatPortionContext);
+  const { timeFrame } = useCentralState();
 
   const [meatPortionMap, setMeatPortionMap] = useState<meatPortionMap>(
-    getInitialData(selected),
+    getInitialData(timeFrame),
   );
 
   const fetchAggregatedMeatPortions = () => {
     callClientServiceMethod({
       function: MeatPortionService.GetAggregatedMeatPortions,
-      args: [getUser().id, selected],
+      args: [getUser().id, timeFrame],
     }).then((data) => {
       console.log("Meat portion chart data: ", data);
-      const initialMap = getInitialData(selected);
+      const initialMap = getInitialData(timeFrame);
       console.log("inital chart data: ", initialMap);
       setMeatPortionMap(updateMap(initialMap, data.data));
     });
@@ -96,7 +94,7 @@ function useMeatPortionChart({ selected }: useMeatPortionChartProps): {
 
   useEffect(() => {
     fetchAggregatedMeatPortions();
-  }, [selected]);
+  }, [timeFrame]);
 
   return { meatPortionMap };
 }

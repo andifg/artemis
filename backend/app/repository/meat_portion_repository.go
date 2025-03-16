@@ -82,7 +82,8 @@ func (m MeatPortionRepositoryImpl) GetMeatPortionById(meatPortionID string) (dao
 		return dao.MeatPortion{}, result.Error
 	}
 
-	log.Debug("Meat Portion found: ", meatPortion)
+	// log.Debug("Meat Portion found: ", meatPortion)
+	log.Debug(fmt.Printf("Meat Portion found: %v", meatPortion))
 	return meatPortion, nil
 }
 

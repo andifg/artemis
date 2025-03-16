@@ -48,20 +48,3 @@
 .average-meat-portions-diff-zero {
   background-color: var(--background-color);
 }
-
-.average-meat-portions-header-selector {
-  display: flex;
-  flex-direction: row;
-  border-radius: 5px;
-  background-color: var(--background-color);
-  padding-left: 1px;
-  padding-right: 1px;
-}
-.average-meat-portions-header-selector-item {
-  padding-left: 1px;
-  padding-right: 1px;
-}
-
-.average-meat-portions-header-selector-item-selected {
-  font-weight: 800;
-}

@@ -1,7 +1,7 @@
 import "./meatPortionsChart.scss";
-import { Timeframe } from "@/client/types";
 import { DashboardBox } from "../DashboardBox/DashboardBox";
 import { useMeatPortionChart } from "./useMeatPortionChart";
+import { TimeFrameSelector } from "../TimeframeSelector/TimeFrameSelector";
 import {
   ChartConfig,
   ChartContainer,
@@ -18,21 +18,20 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-type MeatPortionsChartProps = {
-  selected: Timeframe;
-};
-
-function MeatPortionsChart({ selected }: MeatPortionsChartProps) {
-  const { meatPortionMap } = useMeatPortionChart({ selected });
+function MeatPortionsChart() {
+  const { meatPortionMap } = useMeatPortionChart();
 
   return (
     <DashboardBox>
       <div className="meat-portions-chart-wrapper">
-        <div className="meat-portions-chart-title-wrapper">
-          <ChartNoAxesColumn />
-          <div className="meat-portions-chart-title-title">
-            Total Meat Portions
+        <div className="meat-portions-chart-title">
+          <div className="meat-portions-chart-title-left">
+            <ChartNoAxesColumn />
+            <div className="meat-portions-chart-title-title">
+              Total Meat Portions
+            </div>
           </div>
+          <TimeFrameSelector />
         </div>
         <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
           <BarChart
