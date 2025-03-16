@@ -1,38 +1,29 @@
 import { useClient } from "@/hooks/useClient";
 import { useEffect, useState, useContext } from "react";
 import { MeatPortionService } from "@/client/MeatPortionService";
-import { Timeframe, AverageMeatPortions, MeatPortion } from "@/client/types";
+import { MeatPortion } from "@/client/types";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { AddMeatPortionContext } from "@/contexts/addMeatPortionContext";
 import { DeleteMeatPortionContext } from "@/contexts/deleteMeatPortionContext";
-
-type useAverageMeatPortionsProps = {
-  selected: Timeframe;
-};
+import { useCentralState } from "@/hooks/useCentralState";
 
 type useAverageMeatPortionsReturn = {
-  averageMeatPortions: AverageMeatPortions;
+  loading: boolean;
 };
 
-function useAverageMeatPortions({
-  selected,
-}: useAverageMeatPortionsProps): useAverageMeatPortionsReturn {
+function useAverageMeatPortions(): useAverageMeatPortionsReturn {
   const { getUser } = useAuthentication();
   const [callClientServiceMethod] = useClient();
   const { registerCallback } = useContext(AddMeatPortionContext);
   const { registerDeleteCallback } = useContext(DeleteMeatPortionContext);
-
-  const [averageMeatPortions, setAverageMeatPortions] =
-    useState<AverageMeatPortions>({
-      Timeframe: "week",
-      Value: 0,
-      ChangeRate: 0,
-    });
+  const { timeFrame, setAverageMeatPortions } = useCentralState();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const fetchAverageMeatPortions = () => {
+    setLoading(true);
     callClientServiceMethod({
       function: MeatPortionService.GetAverageMeatPortions,
-      args: [getUser().id, selected],
+      args: [getUser().id, timeFrame],
     }).then((data) => {
       console.log("data average", data.data);
       setAverageMeatPortions({
@@ -40,6 +31,7 @@ function useAverageMeatPortions({
         Value: data.data.Value,
         ChangeRate: data.data.ChangeRate,
       });
+      setLoading(false);
     });
   };
 
@@ -58,10 +50,10 @@ function useAverageMeatPortions({
 
   useEffect(() => {
     fetchAverageMeatPortions();
-  }, [selected]);
+  }, [timeFrame]);
 
   return {
-    averageMeatPortions,
+    loading,
   };
 }
 

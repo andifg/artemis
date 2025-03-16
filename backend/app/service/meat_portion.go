@@ -22,7 +22,7 @@ type MeatPortionService interface {
 	GetDailyOverview(userId uuid.UUID) (dto.DailyOverviewMap, error)
 	GetMeatPortionsByUserID(*gin.Context)
 	DeleteMeatPortion(uuid.UUID, uuid.UUID) error
-	GetDailyAverage(*gin.Context)
+	GetWeeklyAverage(uuid.UUID, string) (dto.AverageMeatPortions, error)
 	GetAggregatedMeatPortionsByTimeframe(*gin.Context)
 }
 
@@ -169,41 +169,48 @@ func (m MeatPortionServiceImpl) DeleteMeatPortion(meat_portion_id uuid.UUID, use
 
 }
 
-func (m MeatPortionServiceImpl) GetDailyAverage(c *gin.Context) {
-	defer pkg.PanicHandler(c)
-	user := c.Param("id")
-	user_id := uuid.MustParse(user)
-
-	timeframe := c.Query("timeframe")
+func (m MeatPortionServiceImpl) GetWeeklyAverage(userId uuid.UUID, timeframe string) (dto.AverageMeatPortions, error) {
 
 	var cutoff time.Time
 	var middleTime time.Time
-	var weeks int64
+	var weeksNew int64
+	var weeksOld int64
+
+	var today time.Time = time.Now()
 
 	switch {
 	case timeframe == "week":
-		cutoff = time.Now().AddDate(0, 0, -14)
-		middleTime = time.Now().AddDate(0, 0, -7)
-		weeks = 1
+		weekdaySub := int(today.Weekday())
+		if weekdaySub == 0 {
+			weekdaySub = 7
+		}
+		cutoff = time.Date(today.Year(), today.Month(), (today.Day() - weekdaySub - 6), 0, 0, 0, 0, time.Local)
+		middleTime = time.Date(today.Year(), today.Month(), today.Day()-weekdaySub+1, 0, 0, 0, 0, time.Local)
+		weeksNew = 1
+		weeksOld = 1
 	case timeframe == "month":
-		cutoff = time.Now().AddDate(0, -2, 0)
-		middleTime = time.Now().AddDate(0, -1, 0)
-		weeks = 4
+		middleTime = time.Date(today.Year(), (today.Month()-1)/3*3+1, 1, 0, 0, 0, 0, time.Local)
+		cutoff = middleTime.AddDate(0, -3, 0)
+		weeksNew = int64(today.Day()) / 7
+		weeksOld = int64(time.Date(today.Year(), today.Month(), -1, 0, 0, 0, 0, time.Local).Day()) / 7
 	case timeframe == "quarter":
-		cutoff = time.Now().AddDate(0, -12, 0)
-		middleTime = time.Now().AddDate(0, -6, 0)
-		weeks = 24
+		middleTime = time.Date(today.Year(), (today.Month()-1)/3*3+1, 1, 0, 0, 0, 0, time.Local)
+		cutoff = middleTime.AddDate(0, -3, 0)
+		weeksNew = int64(today.Sub(middleTime).Hours()/24) / 7
+		weeksOld = int64(middleTime.Sub(cutoff).Hours()/24) / 7
 	default:
 		log.Error("Invalid timeframe value selected")
-		pkg.PanicException(constant.InvalidRequest)
+		return dto.AverageMeatPortions{}, customerrors.NewBadRequestError("Invalid timeframe value selected")
 	}
 
-	meatPortions, err := m.meatPortionRepository.GetMeatPortions(user_id.String(), 0, 0, &cutoff)
+	log.Debug("CutOff: ", cutoff)
+	log.Debug("MiddleTime: ", middleTime)
+
+	meatPortions, err := m.meatPortionRepository.GetMeatPortions(userId.String(), 0, 0, &cutoff)
 
 	if err != nil {
 		log.Error("Error getting meat portions: ", err)
-		pkg.PanicException(constant.InvalidRequest)
-		return
+		return dto.AverageMeatPortions{}, err
 	}
 
 	var sumNew int64
@@ -217,8 +224,8 @@ func (m MeatPortionServiceImpl) GetDailyAverage(c *gin.Context) {
 		}
 	}
 
-	averageNew := float64(sumNew / weeks)
-	averageOld := float64(sumOld / weeks)
+	averageNew := float64(sumNew / weeksNew)
+	averageOld := float64(sumOld / weeksOld)
 
 	changeRate := 0
 
@@ -226,7 +233,7 @@ func (m MeatPortionServiceImpl) GetDailyAverage(c *gin.Context) {
 		changeRate = int(float64(averageNew-averageOld) / float64(averageOld) * 100)
 	}
 
-	log.Debug(fmt.Sprintf("Sum of new: %d, Sum of old %d with change rate %d%% \n", sumNew, sumOld, changeRate))
+	log.Info(fmt.Sprintf("Sum of new: %d with average %f of weeks %d, Sum of old %d with average %f and weeks %d and total change rate %d%% \n", sumNew, averageNew, weeksNew, sumOld, averageOld, weeksOld, changeRate))
 
 	avg := dto.AverageMeatPortions{
 		Timeframe:  dto.Timeframe(timeframe),
@@ -234,7 +241,7 @@ func (m MeatPortionServiceImpl) GetDailyAverage(c *gin.Context) {
 		ChangeRate: int64(changeRate),
 	}
 
-	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, avg))
+	return avg, nil
 }
 
 func (m MeatPortionServiceImpl) GetAggregatedMeatPortionsByTimeframe(c *gin.Context) {

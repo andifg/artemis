@@ -1,32 +1,21 @@
 import "./averageMeatPortions.scss";
-import React from "react";
 import { DashboardBox } from "../DashboardBox/DashboardBox";
 import { TrendingUp } from "lucide-react";
 import { useAverageMeatPortions } from "./useAverageMeatPortions";
-import { Timeframe } from "@/client/types";
+import { useCentralState } from "@/hooks/useCentralState";
+import { AverageMeatPortionsValues } from "./AverageMeatPortionsValues";
 
-// type AverageMeatPortionsTime = "W" | "M" | "6M";
+import { TimeFrameSelector } from "../TimeframeSelector/TimeFrameSelector";
 
-type AverageMeatPortionsProps = {
-  selected: Timeframe;
-  setSelected: React.Dispatch<React.SetStateAction<Timeframe>>;
-};
+function AverageMeatPortions() {
+  const {
+    timeFrame,
+    averageMonthlyMeatPortions,
+    averageQuarterlyMeatPortions,
+    averageWeeklyMeatPortions,
+  } = useCentralState();
 
-type TimeFrameMap = {
-  [key in Timeframe]: string;
-};
-
-function AverageMeatPortions({
-  selected,
-  setSelected,
-}: AverageMeatPortionsProps) {
-  const timeFrameMap: TimeFrameMap = {
-    week: "W",
-    month: "M",
-    quarter: "Q",
-  };
-
-  const { averageMeatPortions } = useAverageMeatPortions({ selected });
+  useAverageMeatPortions();
 
   return (
     <DashboardBox>
@@ -39,29 +28,18 @@ function AverageMeatPortions({
             </div>
           </div>
 
-          <div className="average-meat-portions-header-selector">
-            {Object.entries(timeFrameMap).map(([key, value]) => (
-              <div
-                key={key}
-                className={`average-meat-portions-header-selector-item ${key == selected ? "average-meat-portions-header-selector-item-selected" : ""}`}
-                onClick={() => setSelected(key as Timeframe)}
-              >
-                {value}
-              </div>
-            ))}
-          </div>
+          <TimeFrameSelector />
         </div>
 
-        <div className="average-meat-portions-value-header">
-          <div className="average-meat-portions-value">
-            {averageMeatPortions.Value}
-          </div>
-          <div
-            className={`average-meat-portions-diff ${averageMeatPortions.ChangeRate < 0 && "average-meat-portions-diff-negative"} ${averageMeatPortions.ChangeRate == 0 && "average-meat-portions-diff-zero"}`}
-          >
-            {averageMeatPortions.ChangeRate}%
-          </div>
-        </div>
+        <AverageMeatPortionsValues
+          averageMeatPortions={
+            timeFrame == "week"
+              ? averageWeeklyMeatPortions
+              : timeFrame == "month"
+                ? averageMonthlyMeatPortions
+                : averageQuarterlyMeatPortions
+          }
+        />
       </div>
     </DashboardBox>
   );

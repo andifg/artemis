@@ -5,7 +5,13 @@
   padding: 10px;
 }
 
-.meat-portions-chart-title-wrapper {
+.meat-portions-chart-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.meat-portions-chart-title-left {
   display: inline-flex;
   font-size: 1rem;
   align-items: center;

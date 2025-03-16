@@ -103,7 +103,20 @@ func (controller MeatPortionControllerImpl) DeleteMeatPortion(c *gin.Context) {
 }
 
 func (controller MeatPortionControllerImpl) GetAverage(c *gin.Context) {
-	controller.meatPortionService.GetDailyAverage(c)
+	defer pkg.PanicHandler(c)
+	user_id := contextutils.GetUserID(c)
+
+	timeframe := c.Query("timeframe")
+
+	averageData, err := controller.meatPortionService.GetWeeklyAverage(user_id, timeframe)
+
+	if err != nil {
+		log.Error("Error getting average: ", err)
+		contextutils.HandleError(err, c)
+		return
+	}
+
+	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, averageData))
 
 }
 
