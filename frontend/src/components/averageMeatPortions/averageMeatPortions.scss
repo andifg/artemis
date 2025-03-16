@@ -48,3 +48,8 @@
 .average-meat-portions-diff-zero {
   background-color: var(--background-color);
 }
+
+.average-meat-portions-diff-positive {
+  background-color: var(--danger);
+  color: white;
+}

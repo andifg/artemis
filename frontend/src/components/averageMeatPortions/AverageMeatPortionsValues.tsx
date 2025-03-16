@@ -13,7 +13,7 @@ const AverageMeatPortionsValues = ({
         {averageMeatPortions == undefined ? 0 : averageMeatPortions.Value}
       </div>
       <div
-        className={`average-meat-portions-diff ${averageMeatPortions && averageMeatPortions.ChangeRate < 0 && "average-meat-portions-diff-negative"} ${averageMeatPortions && averageMeatPortions.ChangeRate == 0 && "average-meat-portions-diff-zero"}`}
+        className={`average-meat-portions-diff ${averageMeatPortions && averageMeatPortions.ChangeRate < 0 && "average-meat-portions-diff-negative"} ${averageMeatPortions && averageMeatPortions.ChangeRate == 0 && "average-meat-portions-diff-zero"} ${averageMeatPortions && averageMeatPortions.ChangeRate > 0 && "average-meat-portions-diff-positive"}`}
       >
         {averageMeatPortions == undefined ? 0 : averageMeatPortions.ChangeRate}%
       </div>
