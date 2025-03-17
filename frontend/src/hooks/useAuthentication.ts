@@ -49,12 +49,11 @@ function useAuthentication(): useAuthenticationReturn {
       setDailyOverviewMap({});
     }
 
+    removeCookie("id_token");
+
     if (window.location.pathname != "/") {
       console.log(window.location.pathname);
       console.log("redirecting to /");
-
-      removeCookie("id_token");
-
       window.location.href = "/";
     }
   };
