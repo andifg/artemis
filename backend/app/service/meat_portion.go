@@ -23,7 +23,7 @@ type MeatPortionService interface {
 	GetMeatPortionsByUserID(*gin.Context)
 	DeleteMeatPortion(uuid.UUID, uuid.UUID) error
 	GetWeeklyAverage(uuid.UUID, string) (dto.AverageMeatPortions, error)
-	GetAggregatedMeatPortionsByTimeframe(*gin.Context)
+	GetAggregatedMeatPortionsByTimeframe(uuid.UUID, dto.Timeframe) ([]dao.AggregatedMeatPortions, error)
 }
 
 type MeatPortionServiceImpl struct {
@@ -244,20 +244,9 @@ func (m MeatPortionServiceImpl) GetWeeklyAverage(userId uuid.UUID, timeframe str
 	return avg, nil
 }
 
-func (m MeatPortionServiceImpl) GetAggregatedMeatPortionsByTimeframe(c *gin.Context) {
-	defer pkg.PanicHandler(c)
-	user := c.Param("id")
-	user_id := uuid.MustParse(user)
+func (m MeatPortionServiceImpl) GetAggregatedMeatPortionsByTimeframe(user_id uuid.UUID, timeframe dto.Timeframe) ([]dao.AggregatedMeatPortions, error) {
 
-	timeframe := c.Query("timeframe")
-
-	log.Debug(fmt.Sprintf("TIMEFRAME: %s", timeframe))
-
-	if timeframe != "week" && timeframe != "month" && timeframe != "quarter" {
-		log.Error(fmt.Sprintf("Invalid timeframe value selected: %s", timeframe))
-		pkg.PanicException(constant.InvalidRequest)
-		return
-	}
+	log.Info(fmt.Sprintf("Getting Aggregated Meat Portion by user ID: %v, timeframe: %v", user_id, timeframe))
 
 	var aggregatedMeatPortions []dao.AggregatedMeatPortions
 
@@ -265,11 +254,10 @@ func (m MeatPortionServiceImpl) GetAggregatedMeatPortionsByTimeframe(c *gin.Cont
 
 	if err != nil {
 		log.Error("Error getting aggregated meat portions: ", err)
-		pkg.PanicException(constant.InvalidRequest)
-		return
+		return []dao.AggregatedMeatPortions{}, err
 	}
 
-	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, aggregatedMeatPortions))
+	return aggregatedMeatPortions, nil
 }
 
 func NewMeatPortionService(meatPortionRepository repository.MeatPortionRepository) MeatPortionService {
