@@ -133,26 +133,51 @@ func (m MeatPortionRepositoryImpl) GetAggregatedMeatPortionsByTimeframe(userID s
 	log.Debug(fmt.Sprintf("Getting Aggregated Meat Portion by user ID: %v, timeframe: %v", userID, timeframe))
 
 	var aggregatedMeatPortions []dao.AggregatedMeatPortions
+	var intervalMax int64 = 5
+	var intervalStep int64 = 1
+	var intervalEntity string
 
 	switch timeframe {
 	case dao.Week:
 		timeframe = "week"
+		intervalEntity = "week"
 	case dao.Month:
 		timeframe = "month"
+		intervalEntity = "month"
 	case dao.Quarter:
 		timeframe = "quarter"
+		intervalEntity = "month"
+		intervalMax = 15
+		intervalStep = 3
 	}
 
-	query := m.db.Model(&dao.MeatPortion{}).Select("date_trunc(?, date) as timeframe_start, count(*) as total, ? as timeframe", timeframe, timeframe).
-		Where("user_id = ?", userID).Group("timeframe_start").Order("timeframe_start desc").Limit(6)
+	queryStr := fmt.Sprintf(`
+	WITH time_series AS (
+    SELECT generate_series(
+        date_trunc('%s', NOW()) - INTERVAL '%d %ss',
+        date_trunc('%s', NOW()),
+        INTERVAL '%d %s'
+    ) AS timeframe_start
+	)
+	SELECT ts.timeframe_start, COALESCE(mp.total, 0) AS total, '%s' AS timeframe
+	FROM time_series ts
+	LEFT JOIN (
+	SELECT date_trunc('%s', date) AS timeframe_start, COUNT(*) AS total
+	FROM meat_portions
+	WHERE user_id = '%s'
+	GROUP BY timeframe_start
+	) mp ON ts.timeframe_start = mp.timeframe_start
+	ORDER BY ts.timeframe_start DESC;
+	`, timeframe, intervalMax, intervalEntity, timeframe, intervalStep, intervalEntity, timeframe, timeframe, userID)
 
-	result := query.Find(&aggregatedMeatPortions)
-	if result.Error != nil {
-		fmt.Println("Error: ", result.Error)
-		return []dao.AggregatedMeatPortions{}, result.Error
+	query := m.db.Raw(queryStr).Scan(&aggregatedMeatPortions)
+
+	if query.Error != nil {
+		log.Error("Error retrieving aggregated meat portions: ", query.Error)
+		return nil, query.Error
 	}
 
-	log.Debug("Aggregated Meat Portion found: ", aggregatedMeatPortions)
+	log.Debug("Aggregated Meat Portions found: ", aggregatedMeatPortions)
 	return aggregatedMeatPortions, nil
 }
 

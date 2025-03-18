@@ -121,7 +121,23 @@ func (controller MeatPortionControllerImpl) GetAverage(c *gin.Context) {
 }
 
 func (controller MeatPortionControllerImpl) GetAggregatedMeatPortionsByTimeframe(c *gin.Context) {
-	controller.meatPortionService.GetAggregatedMeatPortionsByTimeframe(c)
+	defer pkg.PanicHandler(c)
+	user := c.Param("id")
+	user_id := uuid.MustParse(user)
+
+	timeframe := c.Query("timeframe")
+
+	log.Debug(fmt.Sprintf("TIMEFRAME: %s", timeframe))
+
+	aggreatedMeatPortion, err := controller.meatPortionService.GetAggregatedMeatPortionsByTimeframe(user_id, dto.Timeframe(timeframe))
+
+	if err != nil {
+		log.Error("Error getting aggregated meat portions: ", err)
+		contextutils.HandleError(err, c)
+		return
+	}
+
+	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, aggreatedMeatPortion))
 }
 
 func NewMeatPortionController(s service.MeatPortionService) MeatPortionController {
