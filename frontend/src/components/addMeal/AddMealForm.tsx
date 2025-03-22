@@ -4,6 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
+import { useCentralState } from "@/hooks/useCentralState";
 
 import { Button } from "@/Components/ui/button";
 import {
@@ -42,6 +43,8 @@ type AddMealFormProps = {
 function AddMealForm({ onClose }: AddMealFormProps) {
   const { onSubmit } = useAddMealForm({ onClose });
 
+  const { selectedDate } = useCentralState();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -53,7 +56,7 @@ function AddMealForm({ onClose }: AddMealFormProps) {
           <FormField
             control={form.control}
             name="date"
-            defaultValue={new Date()}
+            defaultValue={selectedDate}
             render={({ field }) => (
               <FormItem className="add-meal-form-item">
                 <FormLabel>Select Date</FormLabel>

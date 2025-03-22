@@ -1,16 +1,14 @@
 import "./day.scss";
 import ChickenLeg from "../../assets/chicken-leg.svg";
 import Brocoli from "../../assets/broccoli.svg";
+import { useCentralState } from "@/hooks/useCentralState";
 
 export type DailyOverviewEntry = {
   date: Date;
   meatConsumed: boolean;
 };
 
-type DayProps = DailyOverviewEntry & {
-  selectedDate: Date;
-  select: (date: Date) => void;
-};
+type DayProps = DailyOverviewEntry;
 
 function getFirstCharacterOfWeekday(date: Date): string {
   const weekdays = ["S", "M", "T", "W", "T", "F", "S"];
@@ -18,13 +16,15 @@ function getFirstCharacterOfWeekday(date: Date): string {
   return weekdays[dayIndex];
 }
 
-function Day({ date, meatConsumed, select, selectedDate }: DayProps) {
+function Day({ date, meatConsumed }: DayProps) {
+  const { setSelectedDate, selectedDate } = useCentralState();
+
   const isInactive = date > new Date(new Date().setHours(23, 59, 59, 999));
   const isSelected = date.toDateString() == selectedDate.toDateString();
 
   const selectDate = () => {
-    if (date <= new Date()) {
-      select(date);
+    if (date <= new Date(new Date().setHours(23, 59, 59, 999))) {
+      setSelectedDate(date);
     }
   };
 
