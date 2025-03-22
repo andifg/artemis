@@ -1,22 +1,16 @@
 import "./dailyOverview.scss";
 
 import { Day } from "./Day";
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useDailyOverview } from "./useDailyOverview";
 
 import { useCentralState } from "@/hooks/useCentralState";
 
 function DailyOverview() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const dailyOverviewRef = useRef<HTMLDivElement>(null);
 
-  const dailyOverviewMap = useCentralState((state) => state.dailyOverviewMap);
-
+  const { dailyOverviewMap, selectedDate } = useCentralState();
   const { loading } = useDailyOverview();
-
-  const changeSelectedDate = (date: Date) => {
-    setSelectedDate(date);
-  };
 
   useEffect(() => {
     if (dailyOverviewRef.current) {
@@ -45,8 +39,6 @@ function DailyOverview() {
                     meatConsumed={
                       dailyOverviewMap[key].MeatPortions > 0 ? true : false
                     }
-                    select={changeSelectedDate}
-                    selectedDate={selectedDate}
                   />
                 );
               })}
