@@ -2,10 +2,6 @@ package service
 
 import (
 	"fmt"
-	"net/http"
-	"strconv"
-	"time"
-
 	"github.com/andifg/artemis_backend/app/constant"
 	"github.com/andifg/artemis_backend/app/domain/dao"
 	"github.com/andifg/artemis_backend/app/domain/dto"
@@ -15,6 +11,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
+	"math"
+	"net/http"
+	"strconv"
+	"time"
 )
 
 type MeatPortionService interface {
@@ -189,8 +189,8 @@ func (m MeatPortionServiceImpl) GetWeeklyAverage(userId uuid.UUID, timeframe str
 		weeksNew = 1
 		weeksOld = 1
 	case timeframe == "month":
-		middleTime = time.Date(today.Year(), (today.Month()-1)/3*3+1, 1, 0, 0, 0, 0, time.Local)
-		cutoff = middleTime.AddDate(0, -3, 0)
+		middleTime = time.Date(today.Year(), today.Month(), 1, 0, 0, 0, 0, time.Local)
+		cutoff = middleTime.AddDate(0, -1, 0)
 		weeksNew = int64(today.Day()) / 7
 		weeksOld = int64(time.Date(today.Year(), today.Month(), -1, 0, 0, 0, 0, time.Local).Day()) / 7
 	case timeframe == "quarter":
@@ -224,8 +224,8 @@ func (m MeatPortionServiceImpl) GetWeeklyAverage(userId uuid.UUID, timeframe str
 		}
 	}
 
-	averageNew := float64(sumNew / weeksNew)
-	averageOld := float64(sumOld / weeksOld)
+	averageNew := float64(sumNew) / float64(weeksNew)
+	averageOld := float64(sumOld) / float64(weeksOld)
 
 	changeRate := 0
 
@@ -233,11 +233,11 @@ func (m MeatPortionServiceImpl) GetWeeklyAverage(userId uuid.UUID, timeframe str
 		changeRate = int(float64(averageNew-averageOld) / float64(averageOld) * 100)
 	}
 
-	log.Info(fmt.Sprintf("Sum of new: %d with average %f of weeks %d, Sum of old %d with average %f and weeks %d and total change rate %d%% \n", sumNew, averageNew, weeksNew, sumOld, averageOld, weeksOld, changeRate))
+	log.Info(fmt.Sprintf("Sum of new: %d with average %f of weeks %d, Sum of old %d with average %f and weeks %d and total change rate %d%% ", sumNew, averageNew, weeksNew, sumOld, averageOld, weeksOld, changeRate))
 
 	avg := dto.AverageMeatPortions{
 		Timeframe:  dto.Timeframe(timeframe),
-		Value:      int64(averageNew),
+		Value:      int64(math.Round(averageNew)),
 		ChangeRate: int64(changeRate),
 	}
 
