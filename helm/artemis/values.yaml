@@ -117,6 +117,7 @@ keycloak:
 backup:
   enabled: true
   openshiftAdpNamespace: openshift-adp
+  scheduleName: 'artemis-backup'
   schedule: '0 5 * * 1'
   # Name of an existing Openshift ADP storage location
   adpStorageLocationName: 'aws-s3'

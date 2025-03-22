@@ -3,7 +3,7 @@
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Values.backup.scheduleName }}
   namespace: {{ .Values.backup.openshiftAdpNamespace }}
 spec:
   schedule: {{ .Values.backup.schedule | quote }}
