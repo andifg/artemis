@@ -21,3 +21,7 @@ keycloak:
           # Make sure its same as ingress.hostname
           - auth.mygreendays.de
         secretName: keycloak-tls
+
+backend:
+  enabled: true
+  scheduleName: 'artemis-prod-backup'
