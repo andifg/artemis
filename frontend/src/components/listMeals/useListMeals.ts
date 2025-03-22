@@ -6,11 +6,7 @@ import { MeatPortionService } from "@/client/MeatPortionService";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { useCentralState } from "@/hooks/useCentralState";
 
-type useListMealsProps = {
-  open: boolean;
-};
-
-function useListMeals({ open }: useListMealsProps) {
+function useListMeals() {
   const [loading, setLoading] = useState<boolean>(true);
   const [callClientServiceMethod] = useClient();
   const { getUser } = useAuthentication();
@@ -19,10 +15,6 @@ function useListMeals({ open }: useListMealsProps) {
   const { setPortions } = useCentralState();
 
   useEffect(() => {
-    if (!open) {
-      return;
-    }
-
     callClientServiceMethod({
       function: MeatPortionService.GetMeatPortion,
       args: [user.id, 1, 30],
@@ -30,7 +22,7 @@ function useListMeals({ open }: useListMealsProps) {
       setPortions(response.data);
       setLoading(false);
     });
-  }, [open]);
+  }, []);
 
   return { loading };
 }

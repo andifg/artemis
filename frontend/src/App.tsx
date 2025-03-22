@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import "./index.css";
 import { Dashboard } from "./routes/Dashboard.tsx";
+import { List } from "./routes/List.tsx";
 import Hello from "./routes/Hello.tsx";
 
 const App = () => {
@@ -8,6 +9,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/list" element={<List />} />
         <Route path="*" element={<Hello />} />
       </Routes>
     </BrowserRouter>

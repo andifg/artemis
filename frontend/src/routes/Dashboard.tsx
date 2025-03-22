@@ -1,6 +1,4 @@
-import "./dashboard.scss";
-
-import { Layout } from "@/Components/Layout/Layout";
+import { MainLayout } from "@/Components/Layout/MainLayout";
 import { BottomNavigator } from "@/Components/BottomNavigator/BottomNavigator";
 import { LogoHeader } from "@/Components/LogoHeader/LogoHeader";
 import { VeggieStreak } from "@/Components/VeggiStreak/VeggieStreak";
@@ -12,22 +10,22 @@ import { DeleteMeatPortionContextProvider } from "@/contexts/deleteMeatPortionCo
 
 function Dashboard() {
   return (
-    <>
-      <Layout>
-        <LogoHeader />
-        <AddMeatPortionContextProvider>
-          <DeleteMeatPortionContextProvider>
-            <div className="dashboard-main">
+    <AddMeatPortionContextProvider>
+      <DeleteMeatPortionContextProvider>
+        <MainLayout
+          header={<LogoHeader />}
+          mainArea={
+            <>
               <DailyOverview />
               <VeggieStreak />
               <AverageMeatPortions />
               <MeatPortionsChart />
-            </div>
-            <BottomNavigator />
-          </DeleteMeatPortionContextProvider>
-        </AddMeatPortionContextProvider>
-      </Layout>
-    </>
+            </>
+          }
+          footer={<BottomNavigator />}
+        />
+      </DeleteMeatPortionContextProvider>
+    </AddMeatPortionContextProvider>
   );
 }
 
