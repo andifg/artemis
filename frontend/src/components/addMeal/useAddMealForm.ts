@@ -59,6 +59,7 @@ function useAddMealForm({
         date: values.date.toISOString(),
         id: currentUUID,
         size: values.portionSize,
+        note: values.notes,
       });
 
       onClose();
