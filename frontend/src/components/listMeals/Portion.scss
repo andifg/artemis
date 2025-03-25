@@ -13,7 +13,7 @@
 .portion-icon {
   height: 24px;
   width: auto;
-  margin-right: 5px;
+  margin-left: 5px;
 }
 
 .portion-delete-icon {
@@ -39,10 +39,11 @@
 .portion-size {
   background-color: var(--secondary-color);
   padding: 2px 5px 2px 5px;
+  margin-left: 10px;
   border-radius: 4px;
 }
 
 .portion-note {
   width: 65%;
-  margin-left: 5px;
+  margin-left: 10px;
 }
