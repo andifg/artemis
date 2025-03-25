@@ -50,6 +50,9 @@ function useAuthentication(): useAuthenticationReturn {
     }
 
     removeCookie("id_token");
+    // Make sure id_token is removed as well on test system as subdomain
+    // cookies sometimes share the main domain cookies
+    removeCookie("id_token");
 
     if (window.location.pathname != "/") {
       console.log(window.location.pathname);
