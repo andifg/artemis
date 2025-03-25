@@ -1,4 +1,4 @@
-import "./addMealForm.scss";
+import "./MealForm.scss";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,10 +43,15 @@ type AddMealFormProps = {
 function AddMealForm({ onClose }: AddMealFormProps) {
   const { onSubmit } = useAddMealForm({ onClose });
 
-  const { selectedDate } = useCentralState();
+  const { selectedDate, editPortion } = useCentralState();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      date: editPortion ? new Date(editPortion.date) : selectedDate,
+      portionSize: editPortion?.size || "medium",
+      notes: editPortion?.note || "",
+    },
   });
 
   return (
@@ -56,9 +61,9 @@ function AddMealForm({ onClose }: AddMealFormProps) {
           <FormField
             control={form.control}
             name="date"
-            defaultValue={selectedDate}
+            // defaultValue={selectedDate}
             render={({ field }) => (
-              <FormItem className="add-meal-form-item">
+              <FormItem className="meal-form-item">
                 <FormLabel>Select Date</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -66,7 +71,7 @@ function AddMealForm({ onClose }: AddMealFormProps) {
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-full text-left font-normal add-meal-form-field-button",
+                          "w-full text-left font-normal meal-form-field-button",
                           !field.value && "text-muted-foreground",
                         )}
                       >
@@ -99,9 +104,9 @@ function AddMealForm({ onClose }: AddMealFormProps) {
           <FormField
             control={form.control}
             name="portionSize"
-            defaultValue="medium"
+            // defaultValue="medium"
             render={({ field }) => (
-              <FormItem className="add-meal-form-item">
+              <FormItem className="meal-form-item">
                 <FormLabel>Portion Size</FormLabel>
                 <Select
                   onValueChange={field.onChange}
@@ -125,8 +130,9 @@ function AddMealForm({ onClose }: AddMealFormProps) {
           <FormField
             control={form.control}
             name="notes"
+            // defaultValue="Schnitzel"
             render={({ field }) => (
-              <FormItem className="add-meal-form-item">
+              <FormItem className="meal-form-item">
                 <FormLabel>Notes</FormLabel>
                 <FormControl>
                   <Input placeholder="..." {...field} />
@@ -137,7 +143,7 @@ function AddMealForm({ onClose }: AddMealFormProps) {
           />
         </form>
       </Form>
-      <Button form="1000" className="add-meal-form-submit-button" type="submit">
+      <Button form="1000" className="meal-form-submit-button" type="submit">
         Submit
       </Button>
     </>

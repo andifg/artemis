@@ -18,6 +18,7 @@ import (
 
 type MeatPortionController interface {
 	CreateMeatPortion(c *gin.Context)
+	UpdateMeatPortion(c *gin.Context)
 	GetDailyOverview(c *gin.Context)
 	GetMeatPortions(c *gin.Context)
 	DeleteMeatPortion(c *gin.Context)
@@ -59,6 +60,41 @@ func (controller MeatPortionControllerImpl) CreateMeatPortion(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, pkg.BuildResponse(constant.Success, portion))
+
+}
+
+func (controller MeatPortionControllerImpl) UpdateMeatPortion(c *gin.Context) {
+	defer pkg.PanicHandler(c)
+
+	user_id := contextutils.GetUserID(c)
+
+	portion_id := uuid.MustParse(c.Param("meatPortionId"))
+
+	var updatePortion dto.UpdateMeatPortion
+
+	if err := c.BindJSON(&updatePortion); err != nil {
+		log.Error("Error binding meat portion: ", err)
+		contextutils.HandleError(customerrors.NewBadRequestError(fmt.Sprintf("Invalid Request Body: %v", err)), c)
+		return
+	}
+
+	meatPortion := dao.MeatPortion{
+		ID:     portion_id,
+		Size:   updatePortion.Size,
+		UserID: user_id,
+		Date:   updatePortion.Date,
+		Note:   updatePortion.Note,
+	}
+
+	portion, err := controller.meatPortionService.UpdateMeatPortion(meatPortion)
+
+	if err != nil {
+		log.Error("Error updating meat portion: ", err)
+		contextutils.HandleError(err, c)
+		return
+	}
+
+	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, portion))
 
 }
 

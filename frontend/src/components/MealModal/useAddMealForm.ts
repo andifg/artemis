@@ -7,6 +7,7 @@ import { useClient } from "@/hooks/useClient";
 import { MeatPortionService } from "@/client/MeatPortionService";
 import { BodyCreateMeatPortion } from "@/client/types";
 import { useAuthentication } from "@/hooks/useAuthentication";
+import { useCentralState } from "@/hooks/useCentralState";
 
 const formSchema = z.object({
   date: z.date(),
@@ -26,14 +27,12 @@ function useAddMealForm({
   onClose,
 }: useAddMealFormProps): useAddMealFormReturn {
   const { getUser } = useAuthentication();
-
+  const [callClientServiceMethod] = useClient();
   const { callAllCallbacks } = useContext(AddMeatPortionContext);
+  const { editPortion, addPortion, deletePortion } = useCentralState();
 
   const user = getUser();
-
   const currentUUID = uuidv4();
-
-  const [callClientServiceMethod] = useClient();
 
   const sendData = async (body: BodyCreateMeatPortion) => {
     const response = await callClientServiceMethod({
@@ -41,6 +40,29 @@ function useAddMealForm({
       args: [body, user.id],
     });
     console.log("Response from post: ", response);
+    callAllCallbacks({
+      user_id: user.id,
+      date: body.date.toISOString(),
+      id: currentUUID,
+      size: body.size,
+      note: body.note,
+    });
+  };
+
+  const updateData = async (body: BodyCreateMeatPortion, portionId: string) => {
+    const response = await callClientServiceMethod({
+      function: MeatPortionService.UpdateMeatPortion,
+      args: [body, user.id, portionId],
+    });
+    console.log("Response from update: ", response);
+    deletePortion(portionId);
+    addPortion({
+      id: portionId,
+      user_id: user.id,
+      size: body.size,
+      note: body.note,
+      date: body.date.toISOString(),
+    });
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -48,22 +70,28 @@ function useAddMealForm({
     console.log("submit");
     console.log(values);
 
-    sendData({
-      size: values.portionSize,
-      ID: currentUUID,
-      date: values.date,
-      note: values.notes,
-    }).then(() => {
-      callAllCallbacks({
-        user_id: user.id,
-        date: values.date.toISOString(),
-        id: currentUUID,
-        size: values.portionSize,
-        note: values.notes,
-      });
-
+    async function handleSubmidt() {
+      if (editPortion) {
+        await updateData(
+          {
+            size: values.portionSize,
+            ID: editPortion.id,
+            date: values.date,
+            note: values.notes,
+          },
+          editPortion.id,
+        );
+      } else {
+        await sendData({
+          size: values.portionSize,
+          ID: currentUUID,
+          date: values.date,
+          note: values.notes,
+        });
+      }
       onClose();
-    });
+    }
+    handleSubmidt();
   }
 
   return { onSubmit };

@@ -19,6 +19,7 @@ import (
 
 type MeatPortionService interface {
 	CreateMeatPortion(portion dao.MeatPortion) (dao.MeatPortion, error)
+	UpdateMeatPortion(portion dao.MeatPortion) (dao.MeatPortion, error)
 	GetDailyOverview(userId uuid.UUID) (dto.DailyOverviewMap, error)
 	GetMeatPortionsByUserID(*gin.Context)
 	DeleteMeatPortion(uuid.UUID, uuid.UUID) error
@@ -37,6 +38,20 @@ func (m MeatPortionServiceImpl) CreateMeatPortion(portion dao.MeatPortion) (dao.
 	usr, err := m.meatPortionRepository.CreateMeatPortion(portion)
 
 	if err != nil {
+		return dao.MeatPortion{}, err
+	}
+
+	return usr, nil
+}
+
+func (m MeatPortionServiceImpl) UpdateMeatPortion(portion dao.MeatPortion) (dao.MeatPortion, error) {
+
+	log.Info(fmt.Sprintf("Meat Portion to be updated: %v", portion))
+
+	usr, err := m.meatPortionRepository.UpdateMeatPortion(portion)
+
+	if err != nil {
+		log.Error("Error updating meat portion: ", err)
 		return dao.MeatPortion{}, err
 	}
 

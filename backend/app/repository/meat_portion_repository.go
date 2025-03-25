@@ -13,6 +13,7 @@ import (
 
 type MeatPortionRepository interface {
 	CreateMeatPortion(meatPortion dao.MeatPortion) (dao.MeatPortion, error)
+	UpdateMeatPortion(meatPortion dao.MeatPortion) (dao.MeatPortion, error)
 	GetMeatPortionById(meatPortionID string) (dao.MeatPortion, error)
 	GetMeatPortions(userID string, page int, limit int, cutOffDay *time.Time) ([]dao.MeatPortion, error)
 	DeleteMeatPortion(meatPortionID string) error
@@ -37,6 +38,24 @@ func (m MeatPortionRepositoryImpl) CreateMeatPortion(meatPortion dao.MeatPortion
 	}
 
 	log.Debug("Meat Portion created: ", meatPortion)
+	return meatPortion, nil
+}
+
+func (m MeatPortionRepositoryImpl) UpdateMeatPortion(meatPortion dao.MeatPortion) (dao.MeatPortion, error) {
+
+	if err := m.db.First(&dao.MeatPortion{}, meatPortion.ID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return dao.MeatPortion{}, customerrors.NewNotFoundError(meatPortion.ID.String())
+		}
+		return dao.MeatPortion{}, err // Return other database errors
+	}
+
+	result := m.db.Save(&meatPortion)
+	if result.Error != nil {
+		return dao.MeatPortion{}, result.Error
+	}
+
+	log.Debug("Meat Portion updated: ", meatPortion)
 	return meatPortion, nil
 }
 

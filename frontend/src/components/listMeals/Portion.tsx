@@ -3,7 +3,10 @@ import "./portion.scss";
 import { RefObject, useRef } from "react";
 
 import { Trash2 } from "lucide-react";
+import { Pencil } from "lucide-react";
 import ChickenLeg from "../../assets/chicken-leg.svg";
+
+import { useCentralState } from "@/hooks/useCentralState";
 
 import { MeatPortion } from "@/client/types";
 
@@ -22,6 +25,8 @@ const Portion = ({
   selectForDeletion,
 }: PortionProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { setEditPortion } = useCentralState();
 
   const handleDeleteFirstClick = () => {
     console.log("Selected for deletion : ", portion);
@@ -46,6 +51,13 @@ const Portion = ({
       <img src={ChickenLeg} alt="chicken leg" className="portion-icon" />
       <div className="portion-size">{getSize(portion.size || "medium")}</div>
       <div className="portion-note">{portion.note && portion.note}</div>
+      <div className="portion-edit-icon">
+        <Pencil
+          strokeWidth={1}
+          stroke="black"
+          onClick={() => setEditPortion(portion)}
+        />
+      </div>
       <div
         className={`portion-delete-icon ${portion.id === selectedForDeletion?.id ? "portion-confirm-delete-icon" : ""}`}
         ref={inputRef}

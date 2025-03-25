@@ -6,6 +6,8 @@ export interface MeatPortionSlice {
   setPortions: (portions: MeatPortionDateList) => void;
   addPortion: (portion: MeatPortion) => void;
   deletePortion: (portionId: string) => void;
+  editPortion: MeatPortion | null;
+  setEditPortion: (portion: MeatPortion | null) => void;
 }
 
 const meatPortionSlice: StateCreator<MeatPortionSlice> = (set) => ({
@@ -37,6 +39,8 @@ const meatPortionSlice: StateCreator<MeatPortionSlice> = (set) => ({
 
       return { meatPortions: updatedMeatPortions };
     }),
+  editPortion: null,
+  setEditPortion: (portion) => set({ editPortion: portion }),
 });
 
 export { meatPortionSlice };
