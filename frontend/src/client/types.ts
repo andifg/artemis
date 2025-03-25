@@ -7,6 +7,12 @@ export type BodyCreateMeatPortion = {
   note?: string;
 };
 
+export type BodyUpdateMeatPortion = {
+  size?: MeatPortionSize;
+  date?: Date;
+  note?: string;
+};
+
 export type MeatPortion = {
   size?: MeatPortionSize;
   id: string;

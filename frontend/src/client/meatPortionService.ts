@@ -30,6 +30,25 @@ class MeatPortionService {
     return handleApiRequest<MeatPortion>(url, options);
   }
 
+  public static UpdateMeatPortion(
+    bodyUpdateMeatPortion: BodyCreateMeatPortion,
+    userID: string,
+    meatPortionID: string,
+  ): Promise<MeatPortion> {
+    const url = `${API.baseURL}/api/v1/user/${userID}/meat-portions/${meatPortionID}`;
+
+    const options = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(bodyUpdateMeatPortion),
+    };
+
+    return handleApiRequest<MeatPortion>(url, options);
+  }
+
   public static GetMeatPortions(
     userID: string,
   ): Promise<APIResponse<MeatPortion[]>> {

@@ -1,18 +1,26 @@
 import "./bottomNavigator.scss";
 import TestSvg from "../../assets/meat.svg";
-import { AddMealSheet } from "@/Components/AddMeal/AddMealSheet";
+import { MealModal } from "@/Components/MealModal/MealModal";
 import { useState } from "react";
 import { List } from "lucide-react";
 import { House } from "lucide-react";
 import { useLocation, Link } from "react-router";
+import { useCentralState } from "@/hooks/useCentralState";
 
 function BottomNavigator() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
 
+  const { setEditPortion } = useCentralState();
+
   const location = useLocation();
 
-  const toggleAddModal = () => {
-    setOpenAddModal((prev) => !prev);
+  const openModal = () => {
+    setOpenAddModal(true);
+  };
+
+  const closeModal = () => {
+    setEditPortion(null);
+    setOpenAddModal(false);
   };
 
   return (
@@ -39,14 +47,14 @@ function BottomNavigator() {
             <img
               src={TestSvg}
               alt="test"
-              onClick={toggleAddModal}
+              onClick={openModal}
               style={{ width: "32px" }}
             />
           </div>
         </div>
         <div className="bottom-navigator-right bottom-navigator-child"></div>
       </div>
-      <AddMealSheet open={openAddModal} onClose={toggleAddModal} />
+      <MealModal open={openAddModal} onClose={closeModal} />
     </div>
   );
 }
