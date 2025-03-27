@@ -1,12 +1,17 @@
 import React, { createContext, useEffect } from "react";
-import { MeatPortion } from "@/client/types";
+import { MeatPortion, Timeframe } from "@/client/types";
 
 const AddMeatPortionContext = createContext<{
-  callAllCallbacks: (meatPortion: MeatPortion) => void;
-  registerCallback: (callback: (meatPortion: MeatPortion) => void) => void;
+  callAddCallbacks: (
+    meatPortion: MeatPortion,
+    timeFrameToCatch: Timeframe,
+  ) => void;
+  registerAddCallback: (
+    callback: (meatPortion: MeatPortion, timeFrameToCatch: Timeframe) => void,
+  ) => void;
 }>({
-  callAllCallbacks: () => {},
-  registerCallback: () => {},
+  callAddCallbacks: () => {},
+  registerAddCallback: () => {},
 });
 
 function AddMeatPortionContextProvider({
@@ -15,10 +20,12 @@ function AddMeatPortionContextProvider({
   children: React.ReactNode;
 }) {
   const [addFunction, setAddFunction] = React.useState<
-    ((meatPortion: MeatPortion) => void)[]
+    ((meatPortion: MeatPortion, timeFrameToCatch: Timeframe) => void)[]
   >([]);
 
-  const registerCallback = (callback: (meatPortion: MeatPortion) => void) => {
+  const registerCallback = (
+    callback: (meatPortion: MeatPortion, timeFrameToCatch: Timeframe) => void,
+  ) => {
     setAddFunction((prevFunctions) => {
       const isAlreadyRegistered = prevFunctions.some((fn) => fn === callback);
 
@@ -30,9 +37,12 @@ function AddMeatPortionContextProvider({
     });
   };
 
-  const callAllCallbacks = (meatPortion: MeatPortion) => {
+  const callAllCallbacks = (
+    meatPortion: MeatPortion,
+    timeFrameToCatch: Timeframe,
+  ) => {
     addFunction.forEach((callback) => {
-      callback(meatPortion);
+      callback(meatPortion, timeFrameToCatch);
     });
   };
 
@@ -43,8 +53,8 @@ function AddMeatPortionContextProvider({
   return (
     <AddMeatPortionContext.Provider
       value={{
-        callAllCallbacks: callAllCallbacks,
-        registerCallback: registerCallback,
+        callAddCallbacks: callAllCallbacks,
+        registerAddCallback: registerCallback,
       }}
     >
       {children}

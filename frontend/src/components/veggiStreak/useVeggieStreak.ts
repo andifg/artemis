@@ -3,7 +3,7 @@ import { useClient } from "@/hooks/useClient";
 import { MeatPortionService } from "@/client/MeatPortionService";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { AddMeatPortionContext } from "@/contexts/addMeatPortionContext";
-import { MeatPortion } from "@/client/types";
+import { MeatPortion, Timeframe } from "@/client/types";
 import { useCentralState } from "@/hooks/useCentralState";
 
 interface useVeggieStreakReturn {
@@ -16,14 +16,14 @@ function useVeggieStreak(): useVeggieStreakReturn {
   const user = getUser();
   const [callClientServiceMethod] = useClient();
 
-  const { registerCallback } = useContext(AddMeatPortionContext);
+  const { registerAddCallback } = useContext(AddMeatPortionContext);
 
   const [streak, setStreak] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
 
   const { setPortions, meatPortions, addPortion } = useCentralState();
 
-  const addMeatPortion = (portion: MeatPortion) => {
+  const addMeatPortion = (portion: MeatPortion, _: Timeframe) => {
     addPortion(portion);
   };
 
@@ -60,7 +60,7 @@ function useVeggieStreak(): useVeggieStreakReturn {
   }, [meatPortions]);
 
   useEffect(() => {
-    registerCallback(addMeatPortion);
+    registerAddCallback(addMeatPortion);
     fetchStreak();
   }, []);
 

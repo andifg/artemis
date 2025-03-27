@@ -1,11 +1,16 @@
-import { MeatPortion } from "@/client/types";
+import { MeatPortion, Timeframe } from "@/client/types";
 import { createContext, useState, useEffect } from "react";
 
 const DeleteMeatPortionContext = createContext<{
-  callAllCallbacks: (portion: MeatPortion) => void;
-  registerDeleteCallback: (callback: (portion: MeatPortion) => void) => void;
+  callDeleteCallbacks: (
+    portion: MeatPortion,
+    timeFrameToCatch: Timeframe,
+  ) => void;
+  registerDeleteCallback: (
+    callback: (portion: MeatPortion, timeFrameToCatch: Timeframe) => void,
+  ) => void;
 }>({
-  callAllCallbacks: () => {},
+  callDeleteCallbacks: () => {},
   registerDeleteCallback: () => {},
 });
 
@@ -15,10 +20,12 @@ function DeleteMeatPortionContextProvider({
   children: React.ReactNode;
 }) {
   const [deleteFunctions, setDeleteFunctions] = useState<
-    ((portion: MeatPortion) => void)[]
+    ((portion: MeatPortion, timeFrameToCatch: Timeframe) => void)[]
   >([]);
 
-  const registerDeleteCallback = (callback: (portion: MeatPortion) => void) => {
+  const registerDeleteCallback = (
+    callback: (portion: MeatPortion, timeFrameToCatch: Timeframe) => void,
+  ) => {
     setDeleteFunctions((prevFunctions) => {
       const isAlreadyRegistered = prevFunctions.some((fn) => fn === callback);
 
@@ -30,9 +37,12 @@ function DeleteMeatPortionContextProvider({
     });
   };
 
-  const callAllCallbacks = (portion: MeatPortion) => {
+  const callDeleteCallbacks = (
+    portion: MeatPortion,
+    timeFrameToCatch: Timeframe,
+  ) => {
     deleteFunctions.forEach((callback) => {
-      callback(portion);
+      callback(portion, timeFrameToCatch);
     });
   };
 
@@ -43,7 +53,7 @@ function DeleteMeatPortionContextProvider({
   return (
     <DeleteMeatPortionContext.Provider
       value={{
-        callAllCallbacks: callAllCallbacks,
+        callDeleteCallbacks: callDeleteCallbacks,
         registerDeleteCallback: registerDeleteCallback,
       }}
     >
