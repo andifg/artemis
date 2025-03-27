@@ -28,8 +28,9 @@ function useAddMealForm({
 }: useAddMealFormProps): useAddMealFormReturn {
   const { getUser } = useAuthentication();
   const [callClientServiceMethod] = useClient();
-  const { callAllCallbacks } = useContext(AddMeatPortionContext);
-  const { editPortion, addPortion, deletePortion } = useCentralState();
+  const { callAddCallbacks } = useContext(AddMeatPortionContext);
+  const { editPortion, addPortion, deletePortion, timeFrame } =
+    useCentralState();
 
   const user = getUser();
   const currentUUID = uuidv4();
@@ -40,13 +41,16 @@ function useAddMealForm({
       args: [body, user.id],
     });
     console.log("Response from post: ", response);
-    callAllCallbacks({
-      user_id: user.id,
-      date: body.date.toISOString(),
-      id: currentUUID,
-      size: body.size,
-      note: body.note,
-    });
+    callAddCallbacks(
+      {
+        user_id: user.id,
+        date: body.date.toISOString(),
+        id: currentUUID,
+        size: body.size,
+        note: body.note,
+      },
+      timeFrame,
+    );
   };
 
   const updateData = async (body: BodyCreateMeatPortion, portionId: string) => {

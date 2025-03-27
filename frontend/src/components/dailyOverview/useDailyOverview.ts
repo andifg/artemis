@@ -5,7 +5,7 @@ import { useClient } from "@/hooks/useClient";
 import { MeatPortionService } from "@/client/MeatPortionService";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { useCentralState } from "@/hooks/useCentralState";
-import { MeatPortion } from "@/client/types";
+import { MeatPortion, Timeframe } from "@/client/types";
 
 function useDailyOverview() {
   const { getUser } = useAuthentication();
@@ -20,7 +20,7 @@ function useDailyOverview() {
 
   const decreasePortion = useCentralState((state) => state.decreasePortion);
 
-  const { registerCallback } = useContext(AddMeatPortionContext);
+  const { registerAddCallback } = useContext(AddMeatPortionContext);
   const { registerDeleteCallback } = useContext(DeleteMeatPortionContext);
 
   const [loading, setLoading] = useState(true);
@@ -29,12 +29,12 @@ function useDailyOverview() {
     decreasePortion(portion);
   };
 
-  const addMeatPortion = (portion: MeatPortion) => {
+  const addMeatPortion = (portion: MeatPortion, _: Timeframe) => {
     increasePortion(portion);
   };
 
   useEffect(() => {
-    registerCallback(addMeatPortion);
+    registerAddCallback(addMeatPortion);
     registerDeleteCallback(deleteMeatPortion);
     callClientServiceMethod({
       function: MeatPortionService.GetDailyOverview,

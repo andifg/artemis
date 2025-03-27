@@ -17,9 +17,10 @@ type useDeleteMealReturn = {
 function useDeleteMeal(): useDeleteMealReturn {
   const [selectedMeal, setSelectedMeal] = useState<MeatPortion | null>(null);
   const [callClientServiceMethod] = useClient();
-  const deletePortion = useCentralState((state) => state.deletePortion);
+  // const deletePortion = useCentralState((state) => state.deletePortion);
+  const { deletePortion, timeFrame } = useCentralState();
   const { getUser } = useAuthentication();
-  const { callAllCallbacks } = useContext(DeleteMeatPortionContext);
+  const { callDeleteCallbacks } = useContext(DeleteMeatPortionContext);
 
   const user = getUser();
 
@@ -37,7 +38,7 @@ function useDeleteMeal(): useDeleteMealReturn {
         args: [user.id, selectedMeal.id],
       }).then(() => {
         deletePortion(selectedMeal.id);
-        callAllCallbacks(selectedMeal);
+        callDeleteCallbacks(selectedMeal, timeFrame);
         setSelectedMeal(null);
       });
     }

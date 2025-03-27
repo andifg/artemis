@@ -20,10 +20,10 @@ const ListMeals = () => {
 
   const { selectedMeal, selectForDeletion } = useDeleteMeal();
 
-  const { registerCallback } = useContext(AddMeatPortionContext);
+  const { registerAddCallback } = useContext(AddMeatPortionContext);
 
   useEffect(() => {
-    registerCallback(addPortion);
+    registerAddCallback(addPortion);
   }, []);
 
   return (
