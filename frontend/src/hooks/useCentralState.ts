@@ -13,16 +13,20 @@ import {
   AggregateTimeFramesSlice,
 } from "@/state/aggregateTimeframesSclice";
 
+import { settingsSlice, SettingsSlice } from "@/state/settingsSlice";
+
 const useCentralState = create<
   DailyOverviewSlice &
     MeatPortionSlice &
     AverageTimeFramesSlice &
-    AggregateTimeFramesSlice
+    AggregateTimeFramesSlice &
+    SettingsSlice
 >()((...a) => ({
   ...dailyOverviewSlice(...a),
   ...meatPortionSlice(...a),
   ...averageTimeFrameSlice(...a),
   ...aggregateTimeframesSlice(...a),
+  ...settingsSlice(...a),
 }));
 
 export { useCentralState };
