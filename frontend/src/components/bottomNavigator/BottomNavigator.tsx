@@ -2,10 +2,12 @@ import "./bottomNavigator.scss";
 import TestSvg from "../../assets/meat.svg";
 import { MealModal } from "@/Components/MealModal/MealModal";
 import { useState } from "react";
-import { List } from "lucide-react";
+import { AlignJustify } from "lucide-react";
 import { House } from "lucide-react";
 import { useLocation, Link } from "react-router";
 import { useCentralState } from "@/hooks/useCentralState";
+import { CircleUserRound } from "lucide-react";
+import { Trophy } from "lucide-react";
 
 function BottomNavigator() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
@@ -38,7 +40,7 @@ function BottomNavigator() {
             className={`bottom-navigator-side-item ${location.pathname.includes("list") ? "bottom-navigator-selected" : ""}`}
           >
             <Link to="/list">
-              <List color="black" strokeWidth={2} />
+              <AlignJustify color="black" strokeWidth={1.5} />
             </Link>
           </div>
         </div>
@@ -52,7 +54,22 @@ function BottomNavigator() {
             />
           </div>
         </div>
-        <div className="bottom-navigator-right bottom-navigator-child"></div>
+        <div className="bottom-navigator-child">
+          <div
+            className={`bottom-navigator-side-item ${location.pathname.includes("trophys") ? "bottom-navigator-selected" : ""}`}
+          >
+            <Link to="/trophys">
+              <Trophy strokeWidth={1.5} color="black" />
+            </Link>
+          </div>
+          <div
+            className={`bottom-navigator-side-item ${location.pathname.includes("account") ? "bottom-navigator-selected" : ""}`}
+          >
+            <Link to="/account">
+              <CircleUserRound strokeWidth={1.5} color="black" />
+            </Link>
+          </div>
+        </div>
       </div>
       <MealModal open={openAddModal} onClose={closeModal} />
     </div>

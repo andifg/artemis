@@ -3,6 +3,8 @@ import "./index.css";
 import { Dashboard } from "./routes/Dashboard.tsx";
 import { List } from "./routes/List.tsx";
 import Hello from "./routes/Hello.tsx";
+import { Account } from "./routes/Account.tsx";
+import { Trophys } from "./routes/Trophys.tsx";
 
 const App = () => {
   return (
@@ -10,6 +12,8 @@ const App = () => {
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/list" element={<List />} />
+        <Route path="/trophys" element={<Trophys />} />
+        <Route path="/account" element={<Account />} />
         <Route path="*" element={<Hello />} />
       </Routes>
     </BrowserRouter>
