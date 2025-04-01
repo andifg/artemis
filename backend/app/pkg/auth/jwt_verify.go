@@ -167,13 +167,16 @@ func (o *OidcManagerImpl) RefreshToken(refreshToken string) (OidcTokens, error) 
 
 	if err != nil {
 		log.Error("Error during Refresh Token Request: ", err)
+		log.Debug("Request body: ", requestBody.Encode())
 		return OidcTokens{}, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
+		bodyBytes, _ := io.ReadAll(resp.Body)
 		log.Error("Error during Refresh Token Request: ", resp.StatusCode)
+		log.Debug("Response body: ", string(bodyBytes))
 		return OidcTokens{}, fmt.Errorf("Error during Refresh Token Request: %d", resp.StatusCode)
 	}
 

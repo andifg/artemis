@@ -1,12 +1,12 @@
 import { StateCreator } from "zustand";
 
 export interface SettingsSlice {
-  meatPortionWeeklyTarget: number;
+  meatPortionWeeklyTarget: number | undefined;
   setMeatPortionWeeklyTarget: (newTarget: number) => void;
 }
 
 const settingsSlice: StateCreator<SettingsSlice> = (set) => ({
-  meatPortionWeeklyTarget: 2,
+  meatPortionWeeklyTarget: undefined,
   setMeatPortionWeeklyTarget: (newTarget) =>
     set({
       meatPortionWeeklyTarget: newTarget,

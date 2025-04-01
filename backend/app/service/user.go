@@ -1,20 +1,26 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/andifg/artemis_backend/app/constant"
 	"github.com/andifg/artemis_backend/app/domain/dao"
+	"github.com/andifg/artemis_backend/app/domain/dto"
 	"github.com/andifg/artemis_backend/app/pkg"
 	"github.com/andifg/artemis_backend/app/pkg/contextutils"
 	"github.com/andifg/artemis_backend/app/repository"
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"github.com/google/uuid"
 
 	log "github.com/sirupsen/logrus"
 )
 
 type UserService interface {
 	CreateUser(*gin.Context)
+	PatchUser(userID uuid.UUID, user dto.UpdateUser) (dao.User, error)
 	GetAllUsers(*gin.Context)
+	GetUser(userID uuid.UUID) (dao.User, error)
+	GetUserByID(userID uuid.UUID) (dao.User, error)
 }
 
 type UserServiceImpl struct {
@@ -40,6 +46,58 @@ func (u UserServiceImpl) CreateUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, usr))
+}
+
+func (u UserServiceImpl) GetUser(userID uuid.UUID) (dao.User, error) {
+
+	log.Info("Get User by ID: ", userID)
+
+	res, err := u.userRepository.GetUserByID(userID)
+
+	if err != nil {
+		log.Error("Error getting user: ", err)
+		return dao.User{}, err
+	}
+
+	return res, nil
+}
+
+func (u UserServiceImpl) PatchUser(userID uuid.UUID, updateUser dto.UpdateUser) (dao.User, error) {
+	log.Info("Patch User")
+
+	usr, err := u.userRepository.GetUserByID(userID)
+	if err != nil {
+		log.Error("Error getting user: ", err)
+		return dao.User{}, err
+	}
+
+	if updateUser.WeeklyMeatPortionTarget != nil {
+		usr.WeeklyMeatPortionTarget = *updateUser.WeeklyMeatPortionTarget
+	}
+
+	err = u.userRepository.UpdateUser(usr)
+
+	if err != nil {
+		return dao.User{}, err
+	}
+
+	log.Info("User updated successfully: ", usr)
+
+	return usr, nil
+
+}
+
+func (u UserServiceImpl) GetUserByID(userID uuid.UUID) (dao.User, error) {
+
+	log.Info("Get User by ID: ", userID)
+
+	res, err := u.userRepository.GetUserByID(userID)
+
+	if err != nil {
+		return dao.User{}, err
+	}
+
+	return res, nil
 }
 
 func (u UserServiceImpl) GetAllUsers(c *gin.Context) {
