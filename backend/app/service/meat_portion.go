@@ -239,8 +239,15 @@ func (m MeatPortionServiceImpl) GetWeeklyAverage(userId uuid.UUID, timeframe str
 		}
 	}
 
-	averageNew := float64(sumNew) / float64(weeksNew)
-	averageOld := float64(sumOld) / float64(weeksOld)
+	var averageNew float64 = 0
+	var averageOld float64 = 0
+
+	if weeksNew != 0 {
+		averageNew = float64(sumNew) / float64(weeksNew)
+	}
+	if weeksOld != 0 {
+		averageOld = float64(sumOld) / float64(weeksOld)
+	}
 
 	changeRate := 0
 
