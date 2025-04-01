@@ -1,3 +1,15 @@
+export type User = {
+  id: string;
+  username: string;
+  weeklyMeatPortionTarget: number;
+  meatPortions: MeatPortion[];
+};
+
+export type BodyUpdateUser = {
+  id: string;
+  weeklyMeatPortionTarget: number;
+};
+
 export type MeatPortionSize = "small" | "medium" | "large";
 
 export type BodyCreateMeatPortion = {
