@@ -18,7 +18,7 @@ const aggregateTimeframesSlice: StateCreator<AggregateTimeFramesSlice> = (
   aggregatedMonthlyMeatPortions: undefined,
   aggregatedQuarterlyMeatPortions: undefined,
   setAggregatedMeatPortions: (aggregatedMeatPortions) => {
-    switch (aggregatedMeatPortions[0].Timeframe) {
+    switch (aggregatedMeatPortions[0].timeframe) {
       case "week":
         set({ aggregatedWeeklyMeatPortions: aggregatedMeatPortions });
         break;

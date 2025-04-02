@@ -74,9 +74,7 @@ const MeatPortionBarChartContainer = <T,>({
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
       <BarChart
         accessibilityLayer
-        data={data?.sort((a, b) =>
-          a.TimeframeStart.localeCompare(b.TimeframeStart),
-        )}
+        data={data?.sort((a, b) => a.timeframe.localeCompare(b.timeframe))}
         margin={{ top: 30, left: 0 }}
       >
         <CartesianGrid vertical={false} />
@@ -89,13 +87,13 @@ const MeatPortionBarChartContainer = <T,>({
         />
         <YAxis width={25} allowDecimals={false} />
         <Bar
-          dataKey="Total"
+          dataKey="total"
           name="Total Portions"
           fill="var(--meat-color)"
           radius={4}
         >
           <LabelList
-            dataKey="Total"
+            dataKey="total"
             position="insideTop"
             // style={{ fill: "white" }}
             content={renderCustomizedLabel}
