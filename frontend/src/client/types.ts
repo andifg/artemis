@@ -48,10 +48,10 @@ export type AverageMeatPortions = {
 };
 
 export type AggregatedMeatPortions = {
-  Timeframe: Timeframe;
-  Total: number;
-  TimeframeStart: string;
-  CalendarWeek?: number;
+  timeframe: Timeframe;
+  total: number;
+  timeframe_start: string;
+  meat_target: number;
 };
 
 export type MeatPortionDateList = {

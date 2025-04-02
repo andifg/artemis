@@ -24,7 +24,7 @@ function MeatPortionsChart() {
         return {
           data: aggregatedWeeklyMeatPortions,
           dataKey: (entry: AggregatedMeatPortions) => {
-            const date = new Date(entry.TimeframeStart);
+            const date = new Date(entry.timeframe_start);
             return `W${getCalendarWeek(date)}`;
           },
         };
@@ -32,7 +32,7 @@ function MeatPortionsChart() {
         return {
           data: aggregatedMonthlyMeatPortions,
           dataKey: (entry: AggregatedMeatPortions) => {
-            const date = new Date(entry.TimeframeStart);
+            const date = new Date(entry.timeframe_start);
             return `${date.toLocaleString("default", { month: "short" })}`;
           },
         };
@@ -40,7 +40,7 @@ function MeatPortionsChart() {
         return {
           data: aggregatedQuarterlyMeatPortions,
           dataKey: (entry: AggregatedMeatPortions) => {
-            const date = new Date(entry.TimeframeStart);
+            const date = new Date(entry.timeframe_start);
             return `Q${Math.ceil((date.getMonth() + 1) / 3)}`;
           },
         };
@@ -52,7 +52,7 @@ function MeatPortionsChart() {
   const { data, dataKey } = getDataAndKey(timeFrame);
 
   const sortedData =
-    data?.sort((a, b) => a.TimeframeStart.localeCompare(b.TimeframeStart)) ||
+    data?.sort((a, b) => a.timeframe_start.localeCompare(b.timeframe_start)) ||
     [];
 
   useEffect(() => {

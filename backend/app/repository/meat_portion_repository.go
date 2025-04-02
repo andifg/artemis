@@ -176,18 +176,22 @@ func (m MeatPortionRepositoryImpl) GetAggregatedMeatPortionsByTimeframe(userID s
         date_trunc('%s', NOW()) - INTERVAL '%d %ss',
         date_trunc('%s', NOW()),
         INTERVAL '%d %s'
-    ) AS timeframe_start
+    ) AS timeframe_start,
+	'%s'::uuid AS user_id
 	)
-	SELECT ts.timeframe_start, COALESCE(mp.total, 0) AS total, '%s' AS timeframe
+	SELECT ts.timeframe_start, COALESCE(mp.total, 0) AS total, '%s' AS timeframe, users.meattarget AS test, users.meattarget as meat_target
 	FROM time_series ts
 	LEFT JOIN (
-	SELECT date_trunc('%s', date) AS timeframe_start, COUNT(*) AS total
+	SELECT date_trunc('%s', date) AS timeframe_start, COUNT(*) AS total, user_id
 	FROM meat_portions
 	WHERE user_id = '%s'
-	GROUP BY timeframe_start
+	GROUP BY timeframe_start, user_id
 	) mp ON ts.timeframe_start = mp.timeframe_start
+	LEFT JOIN users ON users.id = ts.user_id
 	ORDER BY ts.timeframe_start DESC;
-	`, timeframe, intervalMax, intervalEntity, timeframe, intervalStep, intervalEntity, timeframe, timeframe, userID)
+	`, timeframe, intervalMax, intervalEntity, timeframe, intervalStep, intervalEntity, userID, timeframe, timeframe, userID)
+
+	log.Debug("Query: ", queryStr)
 
 	query := m.db.Raw(queryStr).Scan(&aggregatedMeatPortions)
 

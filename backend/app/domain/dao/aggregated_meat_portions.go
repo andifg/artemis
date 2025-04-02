@@ -13,7 +13,8 @@ const (
 )
 
 type AggregatedMeatPortions struct {
-	Timeframe      Timeframe
-	TimeframeStart time.Time
-	Total          int64
+	Timeframe      Timeframe `json:"timeframe"`
+	TimeframeStart time.Time `json:"timeframe_start"`
+	Total          int64     `json:"total"`
+	MeatTarget     int64     `json:"meat_target"`
 }
