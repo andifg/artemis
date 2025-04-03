@@ -3,11 +3,13 @@ import { ChartConfig, ChartContainer } from "../ui/chart";
 import { CategoricalChartProps } from "recharts/types/chart/generateCategoricalChart";
 import {
   Bar,
-  BarChart,
+  Line,
   XAxis,
   LabelList,
+  Legend,
   YAxis,
   CartesianGrid,
+  ComposedChart,
 } from "recharts";
 import { DataKey } from "recharts/types/util/types";
 import { AggregatedMeatPortions } from "@/client/types";
@@ -55,8 +57,8 @@ const MeatPortionBarChartContainer = <T,>({
           <g>
             <text
               x={Number(x) + Number(width) / 2}
-              y={Number(y) - 8}
-              fill="#3E721D"
+              y={Number(y) + 8}
+              fill="white"
               textAnchor="middle"
               dominantBaseline="middle"
             >
@@ -72,7 +74,7 @@ const MeatPortionBarChartContainer = <T,>({
     <Skeleton className="min-h-[200px] w-full m-2 self-center" />
   ) : (
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-      <BarChart
+      <ComposedChart
         accessibilityLayer
         data={data?.sort((a, b) => a.timeframe.localeCompare(b.timeframe))}
         margin={{ top: 30, left: 0 }}
@@ -88,7 +90,7 @@ const MeatPortionBarChartContainer = <T,>({
         <YAxis width={25} allowDecimals={false} />
         <Bar
           dataKey="total"
-          name="Total Portions"
+          name="Portions"
           fill="var(--meat-color)"
           radius={4}
         >
@@ -99,7 +101,16 @@ const MeatPortionBarChartContainer = <T,>({
             content={renderCustomizedLabel}
           />
         </Bar>
-      </BarChart>
+        <Line
+          name="Meat Portion Target"
+          type="monotone"
+          dataKey="meat_target"
+          stroke="#b44b47"
+          strokeWidth={2}
+          dot={false}
+        />
+        <Legend />
+      </ComposedChart>
     </ChartContainer>
   );
 };
