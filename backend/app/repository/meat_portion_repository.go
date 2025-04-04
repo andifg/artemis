@@ -155,6 +155,7 @@ func (m MeatPortionRepositoryImpl) GetAggregatedMeatPortionsByTimeframe(userID s
 	var intervalMax int64 = 5
 	var intervalStep int64 = 1
 	var intervalEntity string
+	var weekMuliplier float64 = 1
 
 	switch timeframe {
 	case dao.Week:
@@ -163,11 +164,13 @@ func (m MeatPortionRepositoryImpl) GetAggregatedMeatPortionsByTimeframe(userID s
 	case dao.Month:
 		timeframe = "month"
 		intervalEntity = "month"
+		weekMuliplier = 4.34524
 	case dao.Quarter:
 		timeframe = "quarter"
 		intervalEntity = "month"
 		intervalMax = 15
 		intervalStep = 3
+		weekMuliplier = 13
 	}
 
 	queryStr := fmt.Sprintf(`
@@ -179,7 +182,7 @@ func (m MeatPortionRepositoryImpl) GetAggregatedMeatPortionsByTimeframe(userID s
     ) AS timeframe_start,
 	'%s'::uuid AS user_id
 	)
-	SELECT ts.timeframe_start, COALESCE(mp.total, 0) AS total, '%s' AS timeframe, users.meattarget AS test, users.meattarget as meat_target
+	SELECT ts.timeframe_start, COALESCE(mp.total, 0) AS total, '%s' AS timeframe, CAST(ROUND(users.meattarget * %f, 2) as INT) as meat_target
 	FROM time_series ts
 	LEFT JOIN (
 	SELECT date_trunc('%s', date) AS timeframe_start, COUNT(*) AS total, user_id
@@ -189,7 +192,7 @@ func (m MeatPortionRepositoryImpl) GetAggregatedMeatPortionsByTimeframe(userID s
 	) mp ON ts.timeframe_start = mp.timeframe_start
 	LEFT JOIN users ON users.id = ts.user_id
 	ORDER BY ts.timeframe_start DESC;
-	`, timeframe, intervalMax, intervalEntity, timeframe, intervalStep, intervalEntity, userID, timeframe, timeframe, userID)
+	`, timeframe, intervalMax, intervalEntity, timeframe, intervalStep, intervalEntity, userID, timeframe, weekMuliplier, timeframe, userID)
 
 	log.Debug("Query: ", queryStr)
 
