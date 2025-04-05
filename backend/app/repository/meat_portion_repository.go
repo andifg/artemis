@@ -194,7 +194,7 @@ func (m MeatPortionRepositoryImpl) GetAggregatedMeatPortionsByTimeframe(userID s
 	ORDER BY ts.timeframe_start DESC;
 	`, timeframe, intervalMax, intervalEntity, timeframe, intervalStep, intervalEntity, userID, timeframe, weekMuliplier, timeframe, userID)
 
-	log.Debug("Query: ", queryStr)
+	log.Debug("Portion Chart Query: ", queryStr)
 
 	query := m.db.Raw(queryStr).Scan(&aggregatedMeatPortions)
 

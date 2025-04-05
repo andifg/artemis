@@ -78,6 +78,8 @@ func (svc *AuthServiceImpl) Login(c *gin.Context) {
 	// compiler fix for unused variable
 	_ = addedUser
 
+	log.Debugf("Set cookies for user %s and domain %s", userID, c.Request.Host)
+
 	contextutils.SetUserID(c, userID)
 	contextutils.SetTokens(c, tokens, c.Request.Host)
 
