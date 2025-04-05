@@ -22,7 +22,7 @@ function AverageMeatPortions() {
       <div className="average-meat-portions">
         <div className="average-meat-portions-header">
           <div className="average-meat-portions-header-title">
-            <TrendingUp />
+            <TrendingUp color="var(--secondary-color)" />
             <div className="average-meat-portions-header-title-title">
               Average Weekly Meat Portions
             </div>

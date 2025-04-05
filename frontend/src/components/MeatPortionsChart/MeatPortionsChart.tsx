@@ -67,7 +67,7 @@ function MeatPortionsChart() {
       <div className="meat-portions-chart-wrapper">
         <div className="meat-portions-chart-title">
           <div className="meat-portions-chart-title-left">
-            <ChartNoAxesColumn />
+            <ChartNoAxesColumn color="var(--secondary-color)" />
             <div className="meat-portions-chart-title-title">
               Total Meat Portions
             </div>

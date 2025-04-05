@@ -1,5 +1,6 @@
 import "./logoHeader.scss";
 import MyGreenDaysLogo from "/mygreendays-logo.png";
+import MyGreenDaysLogoGreen from "/mygreendays-logo-green.png";
 
 type LogoHeaderProps = {
   backgroundColor?: boolean;
@@ -13,7 +14,7 @@ function LogoHeader({ backgroundColor = true }: LogoHeaderProps) {
       }
     >
       <img
-        src={MyGreenDaysLogo}
+        src={backgroundColor ? MyGreenDaysLogoGreen : MyGreenDaysLogo}
         alt="test"
         style={{
           height: "40px",

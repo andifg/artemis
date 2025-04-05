@@ -13,8 +13,8 @@ export default defineConfig({
         name: "MyGreenDays",
         short_name: "MGD",
         description: "A simple and intuitive meat consumption tracker.",
-        theme_color: "#f7dcdc",
-        background_color: "#f7dcdc",
+        theme_color: "#ffffff",
+        background_color: "#ffffff",
         icons: [
           {
             src: "pwa-64x64.png",

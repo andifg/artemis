@@ -5,13 +5,17 @@
 /* ... */
 @layer base {
   :root {
-    --primary-color: #fff1f1;
+    --primary-color: #edf2eb;
 
-    --secondary-color: #f7dcdc;
+    --secondary-color: #6b855b;
+
+    --accent-dark: #ffffff;
 
     --background-color: #ffffff;
 
-    --meat-color: #af6518;
+    --text-primary: #646464;
+
+    --text-contrast: #ffffff;
 
     --danger: #8b0000;
 

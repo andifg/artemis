@@ -34,7 +34,7 @@ function BottomNavigator() {
           <Link to="/dashboard">
             <House
               strokeWidth={1.5}
-              color="black"
+              // color="black"
               className="buttom-navigator-icon"
             />
           </Link>
@@ -44,17 +44,13 @@ function BottomNavigator() {
           className={`bottom-navigator-child ${location.pathname.includes("list") ? "bottom-navigator-selected" : ""}`}
         >
           <Link to="/list">
-            <AlignJustify
-              color="black"
-              strokeWidth={1.5}
-              className="buttom-navigator-icon"
-            />
+            <AlignJustify strokeWidth={1.5} className="buttom-navigator-icon" />
           </Link>
         </div>
 
         <div className={`bottom-navigator-child`}>
           <CirclePlus
-            color="black"
+            color="var(--text-primary)"
             strokeWidth={1.5}
             onClick={openModal}
             width={28}
@@ -66,11 +62,7 @@ function BottomNavigator() {
           className={`bottom-navigator-child ${location.pathname.includes("trophys") ? "bottom-navigator-selected" : ""}`}
         >
           <Link to="/trophys">
-            <Trophy
-              strokeWidth={1.5}
-              color="black"
-              className="buttom-navigator-icon"
-            />
+            <Trophy strokeWidth={1.5} className="buttom-navigator-icon" />
           </Link>
         </div>
 
@@ -80,7 +72,6 @@ function BottomNavigator() {
           <Link to="/account">
             <CircleUserRound
               strokeWidth={1.5}
-              color="black"
               className="buttom-navigator-icon"
             />
           </Link>
