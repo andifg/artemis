@@ -12,11 +12,9 @@ func SetTokens(c *gin.Context, tokens auth.OidcTokens, domain string) {
 
 	if regexp.MustCompile(`(?i)\blocalhost\b`).MatchString(domain) {
 		secure = false
-
 	}
-
-	c.SetCookie("access_token", tokens.AccessToken, 2592000, "/", domain, secure, true)
-	c.SetCookie("refresh_token", tokens.RefreshToken, 2592000, "/", domain, secure, true)
-	c.SetCookie("id_token", tokens.IdToken, 2592000, "/", domain, secure, false)
+	c.SetCookie("access_token", tokens.AccessToken, 2592000, "/", "", secure, true)
+	c.SetCookie("refresh_token", tokens.RefreshToken, 2592000, "/", "", secure, true)
+	c.SetCookie("id_token", tokens.IdToken, 2592000, "/", "", secure, false)
 
 }
