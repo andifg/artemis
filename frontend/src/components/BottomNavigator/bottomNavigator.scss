@@ -1,5 +1,5 @@
 .bottom-navigator-wrapper {
-  background-color: var(--primary-color);
+  background-color: var(--background-color);
   height: 100%;
 }
 
@@ -8,13 +8,14 @@
   margin-top: auto;
   position: relative;
   width: 100%;
-  background-color: var(--primary-color);
+  background-color: var(--background-color);
   display: flex;
   align-items: center;
   padding-bottom: auto;
   padding-top: 3px;
   display: flex;
   justify-content: space-around;
+  border-top: 1px solid var(--primary-color);
 }
 
 .bottom-navigator-child {
@@ -24,7 +25,8 @@
   min-width: 40px;
   display: flex;
   justify-content: center;
-  border-top: 2px solid var(--primary-color);
+  border-top: 2px solid var(--background-color);
+  color: var(--text-primary);
 }
 
 .buttom-navigator-icon {
@@ -34,6 +36,7 @@
 
 .bottom-navigator-selected {
   border-top: 2px solid var(--secondary-color);
+  color: var(--secondary-color);
 }
 
 @media (max-height: 768px) {

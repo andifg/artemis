@@ -12,7 +12,7 @@ function VeggieStreak() {
         <div className="veggie-streak-icon">
           <img src={FireLogo} alt="fire" />
         </div>
-        <div className="veggie-streak-text text-primary">
+        <div className="veggie-streak-text">
           {(!loading || streak != 0) && streak} Days Veggie Streak
         </div>
       </div>

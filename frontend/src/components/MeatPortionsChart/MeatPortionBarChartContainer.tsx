@@ -91,13 +91,12 @@ const MeatPortionBarChartContainer = <T,>({
         <Bar
           dataKey="total"
           name="Portions"
-          fill="var(--meat-color)"
+          fill="var(--secondary-color)"
           radius={4}
         >
           <LabelList
             dataKey="total"
             position="insideTop"
-            // style={{ fill: "white" }}
             content={renderCustomizedLabel}
           />
         </Bar>
@@ -105,7 +104,7 @@ const MeatPortionBarChartContainer = <T,>({
           name="Meat Portion Target"
           type="monotone"
           dataKey="meat_target"
-          stroke="#b44b47"
+          stroke="var(--secondary-color)"
           strokeWidth={2}
           dot={false}
         />
