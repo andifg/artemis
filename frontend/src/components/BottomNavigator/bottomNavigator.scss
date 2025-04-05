@@ -9,50 +9,27 @@
   position: relative;
   width: 100%;
   background-color: var(--primary-color);
-  color: white;
   display: flex;
   align-items: center;
   padding-bottom: auto;
-  padding-top: 5px;
+  padding-top: 3px;
   display: flex;
-  justify-content: space-between;
-}
-
-.bottom-navigator-circle {
-  width: 46px; /* Circle diameter */
-  height: 46px; /* Circle diameter */
-  background-color: var(--secondary-color);
-  border-radius: 50%; /* Makes the div a circle */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-around;
 }
 
 .bottom-navigator-child {
-  flex: 1;
+  padding-top: 10px;
   text-align: center;
   min-height: 1px;
-  align-self: stretch;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-}
-
-.bottom-navigator-middle {
+  min-width: 40px;
   display: flex;
   justify-content: center;
-  position: relative;
-  width: 46px;
-  min-height: 1px;
+  border-top: 2px solid var(--primary-color);
 }
 
-.bottom-navigator-side-item {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 45px;
-  box-sizing: border-box;
-  border-top: 2px solid var(--primary-color);
+.buttom-navigator-icon {
+  width: 24px;
+  height: 24px;
 }
 
 .bottom-navigator-selected {
