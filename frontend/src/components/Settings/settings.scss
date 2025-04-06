@@ -5,11 +5,6 @@
   width: calc(100% - 20px);
 }
 
-.settings-logout-button {
-  background-color: var(--primary-color);
-  width: 100%;
-  margin-top: 8px;
-}
 .account-settings-slider-header {
   display: flex;
 }
@@ -48,8 +43,11 @@
   text-align: center;
 }
 
-.settings-logout-button:hover {
-  background-color: var(--primary-color);
+.settings-logout-button {
+  color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  width: 100%;
+  margin-top: 8px;
 }
 
 .info-wrapper {
