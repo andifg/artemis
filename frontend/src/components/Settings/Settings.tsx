@@ -8,6 +8,7 @@ import { Slider } from "../ui/slider";
 import { useCentralState } from "@/hooks/useCentralState";
 import { useSaveSlider } from "./useSaveSlider";
 import { Skeleton } from "../ui/skeleton";
+import { LogOut } from 'lucide-react';
 
 const Settings = () => {
   const { logout } = useAuthentication();
@@ -60,10 +61,11 @@ const Settings = () => {
         </div>
 
         <Button
-          className="settings-logout-button text-black font-semibold"
+          className="settings-logout-button"
           onClick={logOut}
+          variant={"outline"}
         >
-          Logout
+          Logout  <LogOut />
         </Button>
       </div>
       <div>
