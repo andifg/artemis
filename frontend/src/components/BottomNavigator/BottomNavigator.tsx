@@ -31,7 +31,7 @@ function BottomNavigator() {
         <div
           className={`bottom-navigator-child ${location.pathname.includes("dashboard") ? "bottom-navigator-selected" : ""}`}
         >
-          <Link to="/dashboard">
+          <Link to="/dashboard" className="buttom-navigator-link">
             <House
               strokeWidth={1.5}
               // color="black"
@@ -43,25 +43,26 @@ function BottomNavigator() {
         <div
           className={`bottom-navigator-child ${location.pathname.includes("list") ? "bottom-navigator-selected" : ""}`}
         >
-          <Link to="/list">
+          <Link to="/list" className="buttom-navigator-link">
             <AlignJustify strokeWidth={1.5} className="buttom-navigator-icon" />
           </Link>
         </div>
 
-        <div className={`bottom-navigator-child`}>
-          <CirclePlus
-            color="var(--text-primary)"
-            strokeWidth={1.5}
-            onClick={openModal}
-            width={28}
-            height={28}
-          />
+        <div className={`bottom-navigator-child `}>
+          <div className="buttom-navigator-link" onClick={openModal}>
+            <CirclePlus
+              color="var(--text-primary)"
+              strokeWidth={1.5}
+              width={28}
+              height={28}
+            />
+          </div>
         </div>
 
         <div
           className={`bottom-navigator-child ${location.pathname.includes("trophys") ? "bottom-navigator-selected" : ""}`}
         >
-          <Link to="/trophys">
+          <Link to="/trophys" className="buttom-navigator-link">
             <Trophy strokeWidth={1.5} className="buttom-navigator-icon" />
           </Link>
         </div>
@@ -69,7 +70,7 @@ function BottomNavigator() {
         <div
           className={`bottom-navigator-child ${location.pathname.includes("account") ? "bottom-navigator-selected" : ""}`}
         >
-          <Link to="/account">
+          <Link to="/account" className="buttom-navigator-link">
             <CircleUserRound
               strokeWidth={1.5}
               className="buttom-navigator-icon"
