@@ -31,12 +31,8 @@ function BottomNavigator() {
         <div
           className={`bottom-navigator-child ${location.pathname.includes("dashboard") ? "bottom-navigator-selected" : ""}`}
         >
-          <Link to="/dashboard" className="buttom-navigator-link">
-            <House
-              strokeWidth={1.5}
-              // color="black"
-              className="buttom-navigator-icon"
-            />
+          <Link to="/dashboard" className="bottom-navigator-link">
+            <House strokeWidth={1.5} className="bottom-navigator-icon" />
             Overview
           </Link>
         </div>
@@ -44,14 +40,14 @@ function BottomNavigator() {
         <div
           className={`bottom-navigator-child ${location.pathname.includes("list") ? "bottom-navigator-selected" : ""}`}
         >
-          <Link to="/list" className="buttom-navigator-link">
-            <AlignJustify strokeWidth={1.5} className="buttom-navigator-icon" />
+          <Link to="/list" className="bottom-navigator-link">
+            <AlignJustify strokeWidth={1.5} className="bottom-navigator-icon" />
             Servings
           </Link>
         </div>
 
         <div className={`bottom-navigator-child `}>
-          <div className="buttom-navigator-link" onClick={openModal}>
+          <div className="bottom-navigator-link" onClick={openModal}>
             <CirclePlus
               color="var(--text-primary)"
               strokeWidth={1.5}
@@ -65,8 +61,8 @@ function BottomNavigator() {
         <div
           className={`bottom-navigator-child ${location.pathname.includes("trophys") ? "bottom-navigator-selected" : ""}`}
         >
-          <Link to="/trophys" className="buttom-navigator-link">
-            <Trophy strokeWidth={1.5} className="buttom-navigator-icon" />
+          <Link to="/trophys" className="bottom-navigator-link">
+            <Trophy strokeWidth={1.5} className="bottom-navigator-icon" />
             Trophies
           </Link>
         </div>
@@ -74,10 +70,10 @@ function BottomNavigator() {
         <div
           className={`bottom-navigator-child ${location.pathname.includes("account") ? "bottom-navigator-selected" : ""}`}
         >
-          <Link to="/account" className="buttom-navigator-link">
+          <Link to="/account" className="bottom-navigator-link">
             <CircleUserRound
               strokeWidth={1.5}
-              className="buttom-navigator-icon"
+              className="bottom-navigator-icon"
             />
             Account
           </Link>
