@@ -37,6 +37,7 @@ function BottomNavigator() {
               // color="black"
               className="buttom-navigator-icon"
             />
+            Overview
           </Link>
         </div>
 
@@ -45,6 +46,7 @@ function BottomNavigator() {
         >
           <Link to="/list" className="buttom-navigator-link">
             <AlignJustify strokeWidth={1.5} className="buttom-navigator-icon" />
+            Servings
           </Link>
         </div>
 
@@ -53,9 +55,10 @@ function BottomNavigator() {
             <CirclePlus
               color="var(--text-primary)"
               strokeWidth={1.5}
-              width={28}
-              height={28}
+              width={24}
+              height={24}
             />
+            Record
           </div>
         </div>
 
@@ -64,6 +67,7 @@ function BottomNavigator() {
         >
           <Link to="/trophys" className="buttom-navigator-link">
             <Trophy strokeWidth={1.5} className="buttom-navigator-icon" />
+            Trophies
           </Link>
         </div>
 
@@ -75,6 +79,7 @@ function BottomNavigator() {
               strokeWidth={1.5}
               className="buttom-navigator-icon"
             />
+            Account
           </Link>
         </div>
       </div>
