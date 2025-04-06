@@ -20,12 +20,12 @@ function MealModal({ open, onClose }: AddMealSheetProps) {
 
   return (
     <Sheet open={open || editPortion != null} onOpenChange={onClose}>
-      <SheetContent className="w-full meal-sheet-background" side="left">
-        <SheetTitle className="text-3xl">
+      <SheetContent className="h-full" side="bottom">
+        <SheetTitle className="meal-sheet-title">
           {editPortion ? "Edit Meat Serving" : "Add Meat Serving"}
         </SheetTitle>
         <SheetDescription>
-          {editPortion ? "Edit your meal" : "Add a new meal"}
+          {/* {editPortion ? "Edit your meal" : "Add a new meal"} */}
         </SheetDescription>
         <div className="meal-sheet-content">
           <AddMealForm onClose={onClose} />

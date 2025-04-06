@@ -64,14 +64,14 @@ function AddMealForm({ onClose }: AddMealFormProps) {
             // defaultValue={selectedDate}
             render={({ field }) => (
               <FormItem className="meal-form-item">
-                <FormLabel>Select Date</FormLabel>
+                <FormLabel className="form-color">Select Date</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-full text-left font-normal meal-form-field-button",
+                          "w-full text-left form-color font-normal meal-form-field-button",
                           !field.value && "text-muted-foreground",
                         )}
                       >
@@ -107,17 +107,17 @@ function AddMealForm({ onClose }: AddMealFormProps) {
             // defaultValue="medium"
             render={({ field }) => (
               <FormItem className="meal-form-item">
-                <FormLabel>Portion Size</FormLabel>
+                <FormLabel className="form-color">Portion Size</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="form-color">
                       <SelectValue placeholder="Select portion size" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent className="form-color">
                     <SelectItem value="small">small</SelectItem>
                     <SelectItem value="medium">medium</SelectItem>
                     <SelectItem value="large">large</SelectItem>
@@ -133,9 +133,9 @@ function AddMealForm({ onClose }: AddMealFormProps) {
             // defaultValue="Schnitzel"
             render={({ field }) => (
               <FormItem className="meal-form-item">
-                <FormLabel>Notes</FormLabel>
+                <FormLabel className="form-color">Notes</FormLabel>
                 <FormControl>
-                  <Input placeholder="..." {...field} />
+                  <Input className="form-color" placeholder="..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -143,7 +143,12 @@ function AddMealForm({ onClose }: AddMealFormProps) {
           />
         </form>
       </Form>
-      <Button form="1000" className="meal-form-submit-button" type="submit">
+      <Button
+        form="1000"
+        className="meal-form-submit-button"
+        type="submit"
+        variant={"outline"}
+      >
         Submit
       </Button>
     </>

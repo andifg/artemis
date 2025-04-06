@@ -6,6 +6,11 @@
   padding: 10px 0px 10px 0px;
 }
 
-.meal-form-field-button {
-  background-color: var(--primary-color);
+.meal-form-submit-button {
+  border-color: var(--secondary-color);
+  color: var(--secondary-color);
+}
+
+.form-color {
+  color: var(--text-primary);
 }
