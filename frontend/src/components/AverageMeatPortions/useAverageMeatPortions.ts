@@ -1,10 +1,10 @@
 import { useClient } from "@/hooks/useClient";
 import { useEffect, useState, useContext } from "react";
-import { MeatPortionService } from "@/client/MeatPortionService";
-import { MeatPortion, Timeframe } from "@/client/types";
+import { ServingService } from "@/client/ServingService";
+import { Serving, Timeframe } from "@/client/types";
 import { useAuthentication } from "@/hooks/useAuthentication";
-import { AddMeatPortionContext } from "@/contexts/addMeatPortionContext";
-import { DeleteMeatPortionContext } from "@/contexts/deleteMeatPortionContext";
+import { AddServingContext } from "@/contexts/addServingContext";
+import { DeleteServingContext } from "@/contexts/deleteServingContext";
 import { useCentralState } from "@/hooks/useCentralState";
 
 type useAverageMeatPortionsReturn = {
@@ -14,19 +14,19 @@ type useAverageMeatPortionsReturn = {
 function useAverageMeatPortions(): useAverageMeatPortionsReturn {
   const { getUser } = useAuthentication();
   const [callClientServiceMethod] = useClient();
-  const { registerAddCallback } = useContext(AddMeatPortionContext);
-  const { registerDeleteCallback } = useContext(DeleteMeatPortionContext);
-  const { timeFrame, setAverageMeatPortions } = useCentralState();
+  const { registerAddCallback } = useContext(AddServingContext);
+  const { registerDeleteCallback } = useContext(DeleteServingContext);
+  const { timeFrame, setAverageServings } = useCentralState();
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchAverageMeatPortions = (timeFrameToCatch: Timeframe) => {
     setLoading(true);
     callClientServiceMethod({
-      function: MeatPortionService.GetAverageMeatPortions,
+      function: ServingService.GetAverageServings,
       args: [getUser().id, timeFrameToCatch],
     }).then((data) => {
       console.log("data average", data.data);
-      setAverageMeatPortions({
+      setAverageServings({
         Timeframe: data.data.Timeframe,
         Value: data.data.Value,
         ChangeRate: data.data.ChangeRate,
@@ -36,13 +36,13 @@ function useAverageMeatPortions(): useAverageMeatPortionsReturn {
   };
 
   const updateAverageMeatPortions = (
-    _: MeatPortion,
+    _: Serving,
     timeFrameToCatch: Timeframe,
   ) => {
     fetchAverageMeatPortions(timeFrameToCatch);
   };
 
-  const deleteMeatPortion = (_: MeatPortion, timeFrameToCatch: Timeframe) => {
+  const deleteMeatPortion = (_: Serving, timeFrameToCatch: Timeframe) => {
     fetchAverageMeatPortions(timeFrameToCatch);
   };
 

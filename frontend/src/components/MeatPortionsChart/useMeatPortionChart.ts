@@ -1,10 +1,10 @@
 import { useClient } from "@/hooks/useClient";
 import { useEffect, useState, useContext } from "react";
-import { MeatPortionService } from "@/client/MeatPortionService";
-import { MeatPortion, Timeframe } from "@/client/types";
+import { ServingService } from "@/client/ServingService";
+import { Serving, Timeframe } from "@/client/types";
 import { useAuthentication } from "@/hooks/useAuthentication";
-import { AddMeatPortionContext } from "@/contexts/addMeatPortionContext";
-import { DeleteMeatPortionContext } from "@/contexts/deleteMeatPortionContext";
+import { AddServingContext } from "@/contexts/addServingContext";
+import { DeleteServingContext } from "@/contexts/deleteServingContext";
 import { useCentralState } from "@/hooks/useCentralState";
 
 function useMeatPortionChart(): {
@@ -12,9 +12,9 @@ function useMeatPortionChart(): {
 } {
   const { getUser } = useAuthentication();
   const [callClientServiceMethod] = useClient();
-  const { registerAddCallback } = useContext(AddMeatPortionContext);
-  const { registerDeleteCallback } = useContext(DeleteMeatPortionContext);
-  const { timeFrame, setAggregatedMeatPortions } = useCentralState();
+  const { registerAddCallback } = useContext(AddServingContext);
+  const { registerDeleteCallback } = useContext(DeleteServingContext);
+  const { timeFrame, setAggregatedServings } = useCentralState();
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchAggregatedMeatPortions = (timeFrameToFetch: Timeframe) => {
@@ -24,21 +24,21 @@ function useMeatPortionChart(): {
       timeFrameToFetch,
     );
     callClientServiceMethod({
-      function: MeatPortionService.GetAggregatedMeatPortions,
+      function: ServingService.GetAggregatedServings,
       args: [getUser().id, timeFrameToFetch],
     }).then((data) => {
       console.log("Meat portion chart data: ", data);
-      setAggregatedMeatPortions(data.data);
+      setAggregatedServings(data.data);
       setLoading(false);
     });
   };
 
-  const updateMeatPortions = (_: MeatPortion, timeFrameToFetch: Timeframe) => {
+  const updateMeatPortions = (_: Serving, timeFrameToFetch: Timeframe) => {
     console.log("1: Updating meat portions for timeframe: ", timeFrameToFetch);
     fetchAggregatedMeatPortions(timeFrameToFetch);
   };
 
-  const deleteMeatPortion = (_: MeatPortion, timeFrameToFetch: Timeframe) => {
+  const deleteMeatPortion = (_: Serving, timeFrameToFetch: Timeframe) => {
     fetchAggregatedMeatPortions(timeFrameToFetch);
   };
 

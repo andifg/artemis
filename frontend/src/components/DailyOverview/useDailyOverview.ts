@@ -1,11 +1,11 @@
 import { useEffect, useState, useContext } from "react";
-import { AddMeatPortionContext } from "@/contexts/addMeatPortionContext";
-import { DeleteMeatPortionContext } from "@/contexts/deleteMeatPortionContext";
+import { AddServingContext } from "@/contexts/addServingContext";
+import { DeleteServingContext } from "@/contexts/deleteServingContext";
 import { useClient } from "@/hooks/useClient";
-import { MeatPortionService } from "@/client/MeatPortionService";
+import { ServingService } from "@/client/ServingService";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { useCentralState } from "@/hooks/useCentralState";
-import { MeatPortion, Timeframe } from "@/client/types";
+import { Serving, Timeframe } from "@/client/types";
 
 function useDailyOverview() {
   const { getUser } = useAuthentication();
@@ -20,24 +20,24 @@ function useDailyOverview() {
 
   const decreasePortion = useCentralState((state) => state.decreasePortion);
 
-  const { registerAddCallback } = useContext(AddMeatPortionContext);
-  const { registerDeleteCallback } = useContext(DeleteMeatPortionContext);
+  const { registerAddCallback } = useContext(AddServingContext);
+  const { registerDeleteCallback } = useContext(DeleteServingContext);
 
   const [loading, setLoading] = useState(true);
 
-  const deleteMeatPortion = (portion: MeatPortion) => {
+  const deleteServing = (portion: Serving) => {
     decreasePortion(portion);
   };
 
-  const addMeatPortion = (portion: MeatPortion, _: Timeframe) => {
+  const addServing = (portion: Serving, _: Timeframe) => {
     increasePortion(portion);
   };
 
   useEffect(() => {
-    registerAddCallback(addMeatPortion);
-    registerDeleteCallback(deleteMeatPortion);
+    registerAddCallback(addServing);
+    registerDeleteCallback(deleteServing);
     callClientServiceMethod({
-      function: MeatPortionService.GetDailyOverview,
+      function: ServingService.GetDailyOverview,
       args: [user.id],
     }).then((response) => {
       setDailyOverviewMap(response.data);

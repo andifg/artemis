@@ -1,14 +1,12 @@
-import { AggregatedMeatPortions } from "@/client/types";
+import { AggregatedServings } from "@/client/types";
 
 import { StateCreator } from "zustand";
 
 export interface AggregateTimeFramesSlice {
-  aggregatedWeeklyMeatPortions: AggregatedMeatPortions[] | undefined;
-  aggregatedMonthlyMeatPortions: AggregatedMeatPortions[] | undefined;
-  aggregatedQuarterlyMeatPortions: AggregatedMeatPortions[] | undefined;
-  setAggregatedMeatPortions: (
-    aggregatedMeatPortions: AggregatedMeatPortions[],
-  ) => void;
+  aggregatedWeeklyMeatPortions: AggregatedServings[] | undefined;
+  aggregatedMonthlyMeatPortions: AggregatedServings[] | undefined;
+  aggregatedQuarterlyMeatPortions: AggregatedServings[] | undefined;
+  setAggregatedServings: (aggregatedMeatPortions: AggregatedServings[]) => void;
 }
 
 const aggregateTimeframesSlice: StateCreator<AggregateTimeFramesSlice> = (
@@ -17,7 +15,7 @@ const aggregateTimeframesSlice: StateCreator<AggregateTimeFramesSlice> = (
   aggregatedWeeklyMeatPortions: undefined,
   aggregatedMonthlyMeatPortions: undefined,
   aggregatedQuarterlyMeatPortions: undefined,
-  setAggregatedMeatPortions: (aggregatedMeatPortions) => {
+  setAggregatedServings: (aggregatedMeatPortions) => {
     switch (aggregatedMeatPortions[0].timeframe) {
       case "week":
         set({ aggregatedWeeklyMeatPortions: aggregatedMeatPortions });

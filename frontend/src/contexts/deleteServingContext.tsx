@@ -1,30 +1,27 @@
-import { MeatPortion, Timeframe } from "@/client/types";
+import { Serving, Timeframe } from "@/client/types";
 import { createContext, useState, useEffect } from "react";
 
-const DeleteMeatPortionContext = createContext<{
-  callDeleteCallbacks: (
-    portion: MeatPortion,
-    timeFrameToCatch: Timeframe,
-  ) => void;
+const DeleteServingContext = createContext<{
+  callDeleteCallbacks: (serving: Serving, timeFrameToCatch: Timeframe) => void;
   registerDeleteCallback: (
-    callback: (portion: MeatPortion, timeFrameToCatch: Timeframe) => void,
+    callback: (serving: Serving, timeFrameToCatch: Timeframe) => void,
   ) => void;
 }>({
   callDeleteCallbacks: () => {},
   registerDeleteCallback: () => {},
 });
 
-function DeleteMeatPortionContextProvider({
+function DeleteServingContextProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const [deleteFunctions, setDeleteFunctions] = useState<
-    ((portion: MeatPortion, timeFrameToCatch: Timeframe) => void)[]
+    ((serving: Serving, timeFrameToCatch: Timeframe) => void)[]
   >([]);
 
   const registerDeleteCallback = (
-    callback: (portion: MeatPortion, timeFrameToCatch: Timeframe) => void,
+    callback: (serving: Serving, timeFrameToCatch: Timeframe) => void,
   ) => {
     setDeleteFunctions((prevFunctions) => {
       const isAlreadyRegistered = prevFunctions.some((fn) => fn === callback);
@@ -38,11 +35,11 @@ function DeleteMeatPortionContextProvider({
   };
 
   const callDeleteCallbacks = (
-    portion: MeatPortion,
+    serving: Serving,
     timeFrameToCatch: Timeframe,
   ) => {
     deleteFunctions.forEach((callback) => {
-      callback(portion, timeFrameToCatch);
+      callback(serving, timeFrameToCatch);
     });
   };
 
@@ -51,15 +48,15 @@ function DeleteMeatPortionContextProvider({
   }, [deleteFunctions]);
 
   return (
-    <DeleteMeatPortionContext.Provider
+    <DeleteServingContext.Provider
       value={{
         callDeleteCallbacks: callDeleteCallbacks,
         registerDeleteCallback: registerDeleteCallback,
       }}
     >
       {children}
-    </DeleteMeatPortionContext.Provider>
+    </DeleteServingContext.Provider>
   );
 }
 
-export { DeleteMeatPortionContext, DeleteMeatPortionContextProvider };
+export { DeleteServingContext, DeleteServingContextProvider };

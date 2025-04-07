@@ -2,59 +2,53 @@ import { useState, useRef, useEffect, RefObject, useContext } from "react";
 import { useClient } from "@/hooks/useClient";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { useCentralState } from "@/hooks/useCentralState";
-import { MeatPortionService } from "@/client/MeatPortionService";
-import { DeleteMeatPortionContext } from "@/contexts/deleteMeatPortionContext";
-import { MeatPortion } from "@/client/types";
+import { ServingService } from "@/client/ServingService";
+import { DeleteServingContext } from "@/contexts/deleteServingContext";
+import { Serving } from "@/client/types";
 
 type useDeleteMealReturn = {
-  selectedMeal: MeatPortion | null;
-  selectForDeletion: (
-    portion: MeatPortion,
-    ref: RefObject<HTMLElement>,
-  ) => void;
+  selectedServing: Serving | null;
+  selectForDeletion: (portion: Serving, ref: RefObject<HTMLElement>) => void;
 };
 
-function useDeleteMeal(): useDeleteMealReturn {
-  const [selectedMeal, setSelectedMeal] = useState<MeatPortion | null>(null);
+function useDeleteServing(): useDeleteMealReturn {
+  const [selectedServing, setSelectedMeal] = useState<Serving | null>(null);
   const [callClientServiceMethod] = useClient();
   // const deletePortion = useCentralState((state) => state.deletePortion);
-  const { deletePortion, timeFrame } = useCentralState();
+  const { deleteServing, timeFrame } = useCentralState();
   const { getUser } = useAuthentication();
-  const { callDeleteCallbacks } = useContext(DeleteMeatPortionContext);
+  const { callDeleteCallbacks } = useContext(DeleteServingContext);
 
   const user = getUser();
 
   const refObject = useRef<HTMLElement | null>(null);
 
   const handleClick = (e: MouseEvent) => {
-    if (selectedMeal === null) {
+    if (selectedServing === null) {
       return;
     }
     if (refObject.current && !refObject.current.contains(e.target as Node)) {
       setSelectedMeal(null);
     } else {
       callClientServiceMethod({
-        function: MeatPortionService.DeleteMeatPortion,
-        args: [user.id, selectedMeal.id],
+        function: ServingService.DeleteServing,
+        args: [user.id, selectedServing.id],
       }).then(() => {
-        deletePortion(selectedMeal.id);
-        callDeleteCallbacks(selectedMeal, timeFrame);
+        deleteServing(selectedServing.id);
+        callDeleteCallbacks(selectedServing, timeFrame);
         setSelectedMeal(null);
       });
     }
   };
 
-  const selectForDeletion = (
-    portion: MeatPortion,
-    ref: RefObject<HTMLElement>,
-  ) => {
+  const selectForDeletion = (portion: Serving, ref: RefObject<HTMLElement>) => {
     setSelectedMeal(portion);
     refObject.current = ref.current;
   };
 
   useEffect(() => {
     setTimeout(() => {
-      if (selectedMeal !== null) {
+      if (selectedServing !== null) {
         document.addEventListener("click", handleClick);
       } else {
         document.removeEventListener("click", handleClick);
@@ -64,9 +58,9 @@ function useDeleteMeal(): useDeleteMealReturn {
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, [selectedMeal]);
+  }, [selectedServing]);
 
-  return { selectedMeal, selectForDeletion };
+  return { selectedServing, selectForDeletion };
 }
 
-export { useDeleteMeal };
+export { useDeleteServing };

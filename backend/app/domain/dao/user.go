@@ -12,8 +12,8 @@ type BaseModel struct {
 
 type User struct {
 	BaseModel
-	ID                      uuid.UUID     `gorm:"column:id; type:uuid; primary_key; not null" json:"id" binding:"required"`
-	Username                string        `gorm:"column:username; not null" json:"username" binding:"required"`
-	WeeklyMeatPortionTarget int64         `gorm:"column:meattarget; default:5;" json:"weeklyMeatPortionTarget"`
-	MeatPortions            []MeatPortion `json:"meatPortions"`
+	ID                      uuid.UUID `gorm:"column:id; type:uuid; primary_key; not null" json:"id" binding:"required"`
+	Username                string    `gorm:"column:username; not null" json:"username" binding:"required"`
+	WeeklyMeatPortionTarget int64     `gorm:"column:meattarget; default:5;" json:"weeklyMeatPortionTarget"`
+	Servings                []Serving `json:"meatPortions"`
 }

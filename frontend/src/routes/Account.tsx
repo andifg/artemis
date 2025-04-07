@@ -1,6 +1,6 @@
 import { BottomNavigator } from "@/Components/BottomNavigator/BottomNavigator";
-import { AddMeatPortionContextProvider } from "@/contexts/addMeatPortionContext";
-import { DeleteMeatPortionContextProvider } from "@/contexts/deleteMeatPortionContext";
+import { AddServingContextProvider } from "@/contexts/addServingContext";
+import { DeleteServingContextProvider } from "@/contexts/deleteServingContext";
 import { GenericHeader } from "@/Components/GenericHeader/GenericHeader";
 import { MainLayout } from "@/Components/Layout/MainLayout";
 import { useAuthentication } from "@/hooks/useAuthentication";
@@ -11,8 +11,8 @@ const Account = () => {
   const user = getUser();
 
   return (
-    <AddMeatPortionContextProvider>
-      <DeleteMeatPortionContextProvider>
+    <AddServingContextProvider>
+      <DeleteServingContextProvider>
         <MainLayout
           header={<GenericHeader header={`Hello ${user.username}`} />}
           mainArea={
@@ -22,8 +22,8 @@ const Account = () => {
           }
           footer={<BottomNavigator />}
         />
-      </DeleteMeatPortionContextProvider>
-    </AddMeatPortionContextProvider>
+      </DeleteServingContextProvider>
+    </AddServingContextProvider>
   );
 };
 

@@ -17,54 +17,54 @@ import (
 	"time"
 )
 
-type MeatPortionService interface {
-	CreateMeatPortion(portion dao.MeatPortion) (dao.MeatPortion, error)
-	UpdateMeatPortion(portion dao.MeatPortion) (dao.MeatPortion, error)
+type ServingService interface {
+	CreateServing(portion dao.Serving) (dao.Serving, error)
+	UpdateServing(portion dao.Serving) (dao.Serving, error)
 	GetDailyOverview(userId uuid.UUID) (dto.DailyOverviewMap, error)
-	GetMeatPortionsByUserID(*gin.Context)
-	DeleteMeatPortion(uuid.UUID, uuid.UUID) error
-	GetWeeklyAverage(uuid.UUID, string) (dto.AverageMeatPortions, error)
-	GetAggregatedMeatPortionsByTimeframe(uuid.UUID, dto.Timeframe) ([]dao.AggregatedMeatPortions, error)
+	GetServingsByUserID(*gin.Context)
+	DeleteServing(uuid.UUID, uuid.UUID) error
+	GetWeeklyAverage(uuid.UUID, string) (dto.AverageServings, error)
+	GetAggregatedServingsByTimeframe(uuid.UUID, dto.Timeframe) ([]dto.AggregatedServings, error)
 }
 
-type MeatPortionServiceImpl struct {
-	meatPortionRepository repository.MeatPortionRepository
+type ServingServiceImpl struct {
+	meatPortionRepository repository.ServingRepository
 }
 
-func (m MeatPortionServiceImpl) CreateMeatPortion(portion dao.MeatPortion) (dao.MeatPortion, error) {
+func (m ServingServiceImpl) CreateServing(portion dao.Serving) (dao.Serving, error) {
 
 	log.Info(fmt.Sprintf("Meat Portion to be created: %v", portion))
 
-	usr, err := m.meatPortionRepository.CreateMeatPortion(portion)
+	usr, err := m.meatPortionRepository.CreateServing(portion)
 
 	if err != nil {
-		return dao.MeatPortion{}, err
+		return dao.Serving{}, err
 	}
 
 	return usr, nil
 }
 
-func (m MeatPortionServiceImpl) UpdateMeatPortion(portion dao.MeatPortion) (dao.MeatPortion, error) {
+func (m ServingServiceImpl) UpdateServing(portion dao.Serving) (dao.Serving, error) {
 
 	log.Info(fmt.Sprintf("Meat Portion to be updated: %v", portion))
 
-	usr, err := m.meatPortionRepository.UpdateMeatPortion(portion)
+	usr, err := m.meatPortionRepository.UpdateServing(portion)
 
 	if err != nil {
 		log.Error("Error updating meat portion: ", err)
-		return dao.MeatPortion{}, err
+		return dao.Serving{}, err
 	}
 
 	return usr, nil
 }
 
-func (m MeatPortionServiceImpl) GetDailyOverview(userId uuid.UUID) (dto.DailyOverviewMap, error) {
+func (m ServingServiceImpl) GetDailyOverview(userId uuid.UUID) (dto.DailyOverviewMap, error) {
 
 	log.Info("Fetch Meat Portions for Daily Overview")
 
 	twoWeeksAgo := time.Now().AddDate(0, 0, -14)
 
-	meatPortions, err := m.meatPortionRepository.GetMeatPortions(userId.String(), 0, 0, &twoWeeksAgo)
+	meatPortions, err := m.meatPortionRepository.GetServings(userId.String(), 0, 0, &twoWeeksAgo)
 
 	if err != nil {
 		log.Error("Error getting meat portions: ", err)
@@ -97,7 +97,7 @@ func (m MeatPortionServiceImpl) GetDailyOverview(userId uuid.UUID) (dto.DailyOve
 	return response_map, nil
 }
 
-func (m MeatPortionServiceImpl) GetMeatPortionsByUserID(c *gin.Context) {
+func (m ServingServiceImpl) GetServingsByUserID(c *gin.Context) {
 
 	defer pkg.PanicHandler(c)
 
@@ -134,9 +134,9 @@ func (m MeatPortionServiceImpl) GetMeatPortionsByUserID(c *gin.Context) {
 
 	log.Info("Fetching Meat Portion List")
 
-	var meatPortions []dao.MeatPortion
+	var meatPortions []dao.Serving
 
-	meatPortions, errr := m.meatPortionRepository.GetMeatPortions(user_id.String(), page, size, nil)
+	meatPortions, errr := m.meatPortionRepository.GetServings(user_id.String(), page, size, nil)
 
 	if errr != nil {
 		log.Error("Error getting meat portions: ", err)
@@ -144,7 +144,7 @@ func (m MeatPortionServiceImpl) GetMeatPortionsByUserID(c *gin.Context) {
 		return
 	}
 
-	response_map := dto.MeatPortionTimeframe{}
+	response_map := dto.ServingTimeframe{}
 
 	for _, portion := range meatPortions {
 		date := portion.Date.Format("2006-01-02")
@@ -157,11 +157,11 @@ func (m MeatPortionServiceImpl) GetMeatPortionsByUserID(c *gin.Context) {
 
 }
 
-func (m MeatPortionServiceImpl) DeleteMeatPortion(meat_portion_id uuid.UUID, user_id uuid.UUID) error {
+func (m ServingServiceImpl) DeleteServing(meat_portion_id uuid.UUID, user_id uuid.UUID) error {
 
 	log.Info("Delete Meat Portion with ID: ", meat_portion_id)
 
-	portion, err := m.meatPortionRepository.GetMeatPortionById(meat_portion_id.String())
+	portion, err := m.meatPortionRepository.GetServingById(meat_portion_id.String())
 
 	if err != nil {
 		log.Error("Error getting meat portion: d ", err)
@@ -173,7 +173,7 @@ func (m MeatPortionServiceImpl) DeleteMeatPortion(meat_portion_id uuid.UUID, use
 		return customerrors.NewForbiddenError("User is not authorized to delete meat portion")
 	}
 
-	err = m.meatPortionRepository.DeleteMeatPortion(meat_portion_id.String())
+	err = m.meatPortionRepository.DeleteServing(meat_portion_id.String())
 
 	if err != nil {
 		log.Error("Error deleting meat portion: ", err)
@@ -184,7 +184,7 @@ func (m MeatPortionServiceImpl) DeleteMeatPortion(meat_portion_id uuid.UUID, use
 
 }
 
-func (m MeatPortionServiceImpl) GetWeeklyAverage(userId uuid.UUID, timeframe string) (dto.AverageMeatPortions, error) {
+func (m ServingServiceImpl) GetWeeklyAverage(userId uuid.UUID, timeframe string) (dto.AverageServings, error) {
 
 	var cutoff time.Time
 	var middleTime time.Time
@@ -215,17 +215,17 @@ func (m MeatPortionServiceImpl) GetWeeklyAverage(userId uuid.UUID, timeframe str
 		weeksOld = int64(middleTime.Sub(cutoff).Hours()/24) / 7
 	default:
 		log.Error("Invalid timeframe value selected")
-		return dto.AverageMeatPortions{}, customerrors.NewBadRequestError("Invalid timeframe value selected")
+		return dto.AverageServings{}, customerrors.NewBadRequestError("Invalid timeframe value selected")
 	}
 
 	log.Debug("CutOff: ", cutoff)
 	log.Debug("MiddleTime: ", middleTime)
 
-	meatPortions, err := m.meatPortionRepository.GetMeatPortions(userId.String(), 0, 0, &cutoff)
+	meatPortions, err := m.meatPortionRepository.GetServings(userId.String(), 0, 0, &cutoff)
 
 	if err != nil {
 		log.Error("Error getting meat portions: ", err)
-		return dto.AverageMeatPortions{}, err
+		return dto.AverageServings{}, err
 	}
 
 	var sumNew int64
@@ -257,7 +257,7 @@ func (m MeatPortionServiceImpl) GetWeeklyAverage(userId uuid.UUID, timeframe str
 
 	log.Info(fmt.Sprintf("Sum of new: %d with average %f of weeks %d, Sum of old %d with average %f and weeks %d and total change rate %d%% ", sumNew, averageNew, weeksNew, sumOld, averageOld, weeksOld, changeRate))
 
-	avg := dto.AverageMeatPortions{
+	avg := dto.AverageServings{
 		Timeframe:  dto.Timeframe(timeframe),
 		Value:      int64(math.Round(averageNew)),
 		ChangeRate: int64(changeRate),
@@ -266,24 +266,24 @@ func (m MeatPortionServiceImpl) GetWeeklyAverage(userId uuid.UUID, timeframe str
 	return avg, nil
 }
 
-func (m MeatPortionServiceImpl) GetAggregatedMeatPortionsByTimeframe(user_id uuid.UUID, timeframe dto.Timeframe) ([]dao.AggregatedMeatPortions, error) {
+func (m ServingServiceImpl) GetAggregatedServingsByTimeframe(user_id uuid.UUID, timeframe dto.Timeframe) ([]dto.AggregatedServings, error) {
 
 	log.Info(fmt.Sprintf("Getting Aggregated Meat Portion by user ID: %v, timeframe: %v", user_id, timeframe))
 
-	var aggregatedMeatPortions []dao.AggregatedMeatPortions
+	var aggregatedServings []dto.AggregatedServings
 
-	aggregatedMeatPortions, err := m.meatPortionRepository.GetAggregatedMeatPortionsByTimeframe(user_id.String(), dao.Timeframe(timeframe))
+	aggregatedServings, err := m.meatPortionRepository.GetAggregatedServingsByTimeframe(user_id.String(), dto.Timeframe(timeframe))
 
 	if err != nil {
 		log.Error("Error getting aggregated meat portions: ", err)
-		return []dao.AggregatedMeatPortions{}, err
+		return []dto.AggregatedServings{}, err
 	}
 
-	return aggregatedMeatPortions, nil
+	return aggregatedServings, nil
 }
 
-func NewMeatPortionService(meatPortionRepository repository.MeatPortionRepository) MeatPortionService {
-	return &MeatPortionServiceImpl{
+func NewServingService(meatPortionRepository repository.ServingRepository) ServingService {
+	return &ServingServiceImpl{
 		meatPortionRepository: meatPortionRepository,
 	}
 }

@@ -1,5 +1,5 @@
 import "./settings.scss";
-import { DayHeader } from "../ListMeals/DayHeader";
+import { DayHeader } from "../ListServings/DayHeader";
 import { Button } from "../ui/button";
 import ChickenLeg from "../../assets/chicken-leg.svg";
 import { useAuthentication } from "@/hooks/useAuthentication";

@@ -13,7 +13,7 @@ function VeggieStreak() {
           <img src={FireLogo} alt="fire" />
         </div>
         <div className="veggie-streak-text">
-          {(!loading || streak != 0) && streak} Days Veggie Streak
+          {((!loading || streak != 0) && streak) || 0} Days Veggie Streak
         </div>
       </div>
     </DashboardBox>

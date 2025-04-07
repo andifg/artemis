@@ -1,8 +1,8 @@
-.list-meals-sheet-background {
+.list-servings-sheet-background {
   background-color: var(--background-color);
 }
 
-.list-meals-wrapper {
+.list-servings-wrapper {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -10,7 +10,7 @@
   width: calc(100% - 20px);
 }
 
-.list-meals-sheet-content {
+.list-servings-sheet-content {
   display: flex;
   flex-direction: column;
 }

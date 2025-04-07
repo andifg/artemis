@@ -1,5 +1,5 @@
 import { DailyOverviewMap } from "@/client/types";
-import { MeatPortion } from "@/client/types";
+import { Serving } from "@/client/types";
 import { StateCreator } from "zustand";
 import { extractDate } from "@/utils/extractDate";
 
@@ -8,8 +8,8 @@ export interface DailyOverviewSlice {
   setSelectedDate: (date: Date) => void;
   dailyOverviewMap: DailyOverviewMap;
   setDailyOverviewMap: (dailyOverviewMap: DailyOverviewMap) => void;
-  increasePortion: (portion: MeatPortion) => void;
-  decreasePortion: (portion: MeatPortion) => void;
+  increasePortion: (portion: Serving) => void;
+  decreasePortion: (portion: Serving) => void;
 }
 
 const dailyOverviewSlice: StateCreator<DailyOverviewSlice> = (set) => ({
