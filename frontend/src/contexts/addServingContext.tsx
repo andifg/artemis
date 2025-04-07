@@ -1,30 +1,27 @@
 import React, { createContext, useEffect } from "react";
-import { MeatPortion, Timeframe } from "@/client/types";
+import { Serving, Timeframe } from "@/client/types";
 
-const AddMeatPortionContext = createContext<{
-  callAddCallbacks: (
-    meatPortion: MeatPortion,
-    timeFrameToCatch: Timeframe,
-  ) => void;
+const AddServingContext = createContext<{
+  callAddCallbacks: (serving: Serving, timeFrameToCatch: Timeframe) => void;
   registerAddCallback: (
-    callback: (meatPortion: MeatPortion, timeFrameToCatch: Timeframe) => void,
+    callback: (serving: Serving, timeFrameToCatch: Timeframe) => void,
   ) => void;
 }>({
   callAddCallbacks: () => {},
   registerAddCallback: () => {},
 });
 
-function AddMeatPortionContextProvider({
+function AddServingContextProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const [addFunction, setAddFunction] = React.useState<
-    ((meatPortion: MeatPortion, timeFrameToCatch: Timeframe) => void)[]
+    ((serving: Serving, timeFrameToCatch: Timeframe) => void)[]
   >([]);
 
   const registerCallback = (
-    callback: (meatPortion: MeatPortion, timeFrameToCatch: Timeframe) => void,
+    callback: (serving: Serving, timeFrameToCatch: Timeframe) => void,
   ) => {
     setAddFunction((prevFunctions) => {
       const isAlreadyRegistered = prevFunctions.some((fn) => fn === callback);
@@ -37,12 +34,9 @@ function AddMeatPortionContextProvider({
     });
   };
 
-  const callAllCallbacks = (
-    meatPortion: MeatPortion,
-    timeFrameToCatch: Timeframe,
-  ) => {
+  const callAllCallbacks = (serving: Serving, timeFrameToCatch: Timeframe) => {
     addFunction.forEach((callback) => {
-      callback(meatPortion, timeFrameToCatch);
+      callback(serving, timeFrameToCatch);
     });
   };
 
@@ -51,15 +45,15 @@ function AddMeatPortionContextProvider({
   }, [addFunction]);
 
   return (
-    <AddMeatPortionContext.Provider
+    <AddServingContext.Provider
       value={{
         callAddCallbacks: callAllCallbacks,
         registerAddCallback: registerCallback,
       }}
     >
       {children}
-    </AddMeatPortionContext.Provider>
+    </AddServingContext.Provider>
   );
 }
 
-export { AddMeatPortionContext, AddMeatPortionContextProvider };
+export { AddServingContext, AddServingContextProvider };

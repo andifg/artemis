@@ -2,7 +2,7 @@ export type User = {
   id: string;
   username: string;
   weeklyMeatPortionTarget: number;
-  meatPortions: MeatPortion[];
+  servings: Serving[];
 };
 
 export type BodyUpdateUser = {
@@ -10,23 +10,29 @@ export type BodyUpdateUser = {
   weeklyMeatPortionTarget: number;
 };
 
-export type MeatPortionSize = "small" | "medium" | "large";
+export type ServingSize = "small" | "medium" | "large";
 
-export type BodyCreateMeatPortion = {
-  size: MeatPortionSize;
+export type Timeframe = "week" | "month" | "quarter";
+
+export type ServingCategory = "meat" | "vegetarian" | "candy" | "alcohol";
+
+export type BodyCreateServing = {
+  size: ServingSize;
+  category: ServingCategory;
   ID: string;
   date: Date;
   note?: string;
 };
 
-export type BodyUpdateMeatPortion = {
-  size?: MeatPortionSize;
-  date?: Date;
+export type BodyUpdateServing = {
+  size: ServingSize;
+  category: ServingCategory;
+  date: Date;
   note?: string;
 };
 
-export type MeatPortion = {
-  size?: MeatPortionSize;
+export type Serving = {
+  size: ServingSize;
   id: string;
   user_id: string;
   date: string;
@@ -39,23 +45,21 @@ export type APIResponse<T> = {
   data: T;
 };
 
-export type Timeframe = "week" | "month" | "quarter";
-
-export type AverageMeatPortions = {
+export type AverageServings = {
   Timeframe: Timeframe;
   Value: number;
   ChangeRate: number;
 };
 
-export type AggregatedMeatPortions = {
+export type AggregatedServings = {
   timeframe: Timeframe;
   total: number;
   timeframe_start: string;
   meat_target: number;
 };
 
-export type MeatPortionDateList = {
-  [key: string]: MeatPortion[];
+export type ServingDateList = {
+  [key: string]: Serving[];
 };
 
 export type DailyOverview = {

@@ -2,24 +2,24 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useClient } from "@/hooks/useClient";
 
-import { MeatPortionService } from "@/client/MeatPortionService";
+import { ServingService } from "@/client/ServingService";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { useCentralState } from "@/hooks/useCentralState";
 
-function useListMeals() {
+function useListServings() {
   const [loading, setLoading] = useState<boolean>(true);
   const [callClientServiceMethod] = useClient();
   const { getUser } = useAuthentication();
   const user = getUser();
 
-  const { setPortions } = useCentralState();
+  const { setServings } = useCentralState();
 
   useEffect(() => {
     callClientServiceMethod({
-      function: MeatPortionService.GetMeatPortion,
+      function: ServingService.GetServings,
       args: [user.id, 1, 30],
     }).then((response) => {
-      setPortions(response.data);
+      setServings(response.data);
       setLoading(false);
     });
   }, []);
@@ -27,4 +27,4 @@ function useListMeals() {
   return { loading };
 }
 
-export { useListMeals };
+export { useListServings };

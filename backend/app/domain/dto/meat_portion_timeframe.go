@@ -4,4 +4,4 @@ import (
 	"github.com/andifg/artemis_backend/app/domain/dao"
 )
 
-type MeatPortionTimeframe map[string][]dao.MeatPortion
+type ServingTimeframe map[string][]dao.Serving

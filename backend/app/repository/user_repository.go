@@ -64,8 +64,7 @@ func (u UserRepositoryImpl) GetUserByID(userID uuid.UUID) (dao.User, error) {
 }
 
 func UserRepositoryInit(db *gorm.DB) UserRepository {
-	db.Exec("CREATE TYPE meat_portion_size as ENUM ('small', 'medium', 'large')")
-	db.AutoMigrate(&dao.User{}, &dao.MeatPortion{})
+	db.AutoMigrate(&dao.User{})
 	return &UserRepositoryImpl{
 		db: db,
 	}

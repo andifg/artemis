@@ -1,4 +1,4 @@
-.portion {
+.serving {
   display: flex;
   flex-direction: row;
   background-color: var(--primary-color);
@@ -10,34 +10,34 @@
   margin-bottom: 4px;
 }
 
-.portion-icon {
+.serving-icon {
   height: 24px;
   width: auto;
   margin-left: 5px;
   filter: grayscale(30%);
 }
 
-.portion-delete-icon {
+.serving-delete-icon {
   padding: 3px;
   border-radius: 8px;
   background-color: white;
   margin-left: 5px;
 }
 
-.portion-edit-icon {
+.serving-edit-icon {
   padding: 3px;
   border-radius: 8px;
   background-color: white;
 }
 
-.portion-confirm-delete-icon {
+.serving-confirm-delete-icon {
   padding: 3px;
   border-radius: 8px;
   background-color: var(--danger);
   stroke: white;
 }
 
-.portion-size {
+.serving-size {
   background-color: var(--secondary-color);
   color: var(--text-contrast);
   padding: 2px 5px 2px 5px;
@@ -45,7 +45,7 @@
   border-radius: 4px;
 }
 
-.portion-note {
+.serving-note {
   width: 65%;
   margin-left: 10px;
 }

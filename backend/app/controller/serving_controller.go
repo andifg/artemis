@@ -16,42 +16,43 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type MeatPortionController interface {
-	CreateMeatPortion(c *gin.Context)
-	UpdateMeatPortion(c *gin.Context)
+type ServingController interface {
+	CreateServing(c *gin.Context)
+	UpdateServing(c *gin.Context)
 	GetDailyOverview(c *gin.Context)
-	GetMeatPortions(c *gin.Context)
-	DeleteMeatPortion(c *gin.Context)
+	GetServings(c *gin.Context)
+	DeleteServing(c *gin.Context)
 	GetAverage(c *gin.Context)
-	GetAggregatedMeatPortionsByTimeframe(c *gin.Context)
+	GetAggregatedServingsByTimeframe(c *gin.Context)
 }
 
-type MeatPortionControllerImpl struct {
-	meatPortionService service.MeatPortionService
+type ServingControllerImpl struct {
+	servingService service.ServingService
 }
 
-func (controller MeatPortionControllerImpl) CreateMeatPortion(c *gin.Context) {
+func (controller ServingControllerImpl) CreateServing(c *gin.Context) {
 	defer pkg.PanicHandler(c)
 
 	user_id := contextutils.GetUserID(c)
 
-	var createMeatPortion dto.CreateMeatPortion
+	var createServing dto.CreateServing
 
-	if err := c.BindJSON(&createMeatPortion); err != nil {
+	if err := c.BindJSON(&createServing); err != nil {
 		log.Error("Error binding meat portion: ", err)
 		contextutils.HandleError(customerrors.NewBadRequestError(fmt.Sprintf("Invalid Request Body: %v", err)), c)
 		return
 	}
 
-	meatPortion := dao.MeatPortion{
-		ID:     createMeatPortion.ID,
-		Size:   createMeatPortion.Size,
-		UserID: user_id,
-		Date:   createMeatPortion.Date,
-		Note:   createMeatPortion.Note,
+	serving := dao.Serving{
+		ID:       createServing.ID,
+		Category: createServing.Category,
+		Size:     createServing.Size,
+		UserID:   user_id,
+		Date:     createServing.Date,
+		Note:     createServing.Note,
 	}
 
-	portion, err := controller.meatPortionService.CreateMeatPortion(meatPortion)
+	portion, err := controller.servingService.CreateServing(serving)
 
 	if err != nil {
 		log.Error("Error creating meat portion: ", err)
@@ -63,14 +64,14 @@ func (controller MeatPortionControllerImpl) CreateMeatPortion(c *gin.Context) {
 
 }
 
-func (controller MeatPortionControllerImpl) UpdateMeatPortion(c *gin.Context) {
+func (controller ServingControllerImpl) UpdateServing(c *gin.Context) {
 	defer pkg.PanicHandler(c)
 
 	user_id := contextutils.GetUserID(c)
 
-	portion_id := uuid.MustParse(c.Param("meatPortionId"))
+	portion_id := uuid.MustParse(c.Param("servingId"))
 
-	var updatePortion dto.UpdateMeatPortion
+	var updatePortion dto.UpdateServing
 
 	if err := c.BindJSON(&updatePortion); err != nil {
 		log.Error("Error binding meat portion: ", err)
@@ -78,15 +79,16 @@ func (controller MeatPortionControllerImpl) UpdateMeatPortion(c *gin.Context) {
 		return
 	}
 
-	meatPortion := dao.MeatPortion{
-		ID:     portion_id,
-		Size:   updatePortion.Size,
-		UserID: user_id,
-		Date:   updatePortion.Date,
-		Note:   updatePortion.Note,
+	serving := dao.Serving{
+		ID:       portion_id,
+		Category: updatePortion.Categroy,
+		Size:     updatePortion.Size,
+		UserID:   user_id,
+		Date:     updatePortion.Date,
+		Note:     updatePortion.Note,
 	}
 
-	portion, err := controller.meatPortionService.UpdateMeatPortion(meatPortion)
+	portion, err := controller.servingService.UpdateServing(serving)
 
 	if err != nil {
 		log.Error("Error updating meat portion: ", err)
@@ -98,12 +100,12 @@ func (controller MeatPortionControllerImpl) UpdateMeatPortion(c *gin.Context) {
 
 }
 
-func (controller MeatPortionControllerImpl) GetDailyOverview(c *gin.Context) {
+func (controller ServingControllerImpl) GetDailyOverview(c *gin.Context) {
 	defer pkg.PanicHandler(c)
 
 	user_id := contextutils.GetUserID(c)
 
-	daily_overview_map, err := controller.meatPortionService.GetDailyOverview(user_id)
+	daily_overview_map, err := controller.servingService.GetDailyOverview(user_id)
 
 	if err != nil {
 		log.Error("Error getting daily overview: ", err)
@@ -115,17 +117,17 @@ func (controller MeatPortionControllerImpl) GetDailyOverview(c *gin.Context) {
 
 }
 
-func (controller MeatPortionControllerImpl) GetMeatPortions(c *gin.Context) {
-	controller.meatPortionService.GetMeatPortionsByUserID(c)
+func (controller ServingControllerImpl) GetServings(c *gin.Context) {
+	controller.servingService.GetServingsByUserID(c)
 }
 
-func (controller MeatPortionControllerImpl) DeleteMeatPortion(c *gin.Context) {
+func (controller ServingControllerImpl) DeleteServing(c *gin.Context) {
 	defer pkg.PanicHandler(c)
 
 	user_id := contextutils.GetUserID(c)
-	meat_portion_id := uuid.MustParse(c.Param("meatPortionId"))
+	meat_portion_id := uuid.MustParse(c.Param("servingId"))
 
-	err := controller.meatPortionService.DeleteMeatPortion(meat_portion_id, user_id)
+	err := controller.servingService.DeleteServing(meat_portion_id, user_id)
 
 	if err != nil {
 
@@ -138,13 +140,13 @@ func (controller MeatPortionControllerImpl) DeleteMeatPortion(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 
-func (controller MeatPortionControllerImpl) GetAverage(c *gin.Context) {
+func (controller ServingControllerImpl) GetAverage(c *gin.Context) {
 	defer pkg.PanicHandler(c)
 	user_id := contextutils.GetUserID(c)
 
 	timeframe := c.Query("timeframe")
 
-	averageData, err := controller.meatPortionService.GetWeeklyAverage(user_id, timeframe)
+	averageData, err := controller.servingService.GetWeeklyAverage(user_id, timeframe)
 
 	if err != nil {
 		log.Error("Error getting average: ", err)
@@ -156,7 +158,7 @@ func (controller MeatPortionControllerImpl) GetAverage(c *gin.Context) {
 
 }
 
-func (controller MeatPortionControllerImpl) GetAggregatedMeatPortionsByTimeframe(c *gin.Context) {
+func (controller ServingControllerImpl) GetAggregatedServingsByTimeframe(c *gin.Context) {
 	defer pkg.PanicHandler(c)
 	user := c.Param("id")
 	user_id := uuid.MustParse(user)
@@ -165,7 +167,7 @@ func (controller MeatPortionControllerImpl) GetAggregatedMeatPortionsByTimeframe
 
 	log.Debug(fmt.Sprintf("TIMEFRAME: %s", timeframe))
 
-	aggreatedMeatPortion, err := controller.meatPortionService.GetAggregatedMeatPortionsByTimeframe(user_id, dto.Timeframe(timeframe))
+	aggreatedServing, err := controller.servingService.GetAggregatedServingsByTimeframe(user_id, dto.Timeframe(timeframe))
 
 	if err != nil {
 		log.Error("Error getting aggregated meat portions: ", err)
@@ -173,11 +175,11 @@ func (controller MeatPortionControllerImpl) GetAggregatedMeatPortionsByTimeframe
 		return
 	}
 
-	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, aggreatedMeatPortion))
+	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, aggreatedServing))
 }
 
-func NewMeatPortionController(s service.MeatPortionService) MeatPortionController {
-	return &MeatPortionControllerImpl{
-		meatPortionService: s,
+func NewServingController(s service.ServingService) ServingController {
+	return &ServingControllerImpl{
+		servingService: s,
 	}
 }

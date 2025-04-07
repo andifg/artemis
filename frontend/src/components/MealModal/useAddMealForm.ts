@@ -1,11 +1,11 @@
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { useContext } from "react";
-import { AddMeatPortionContext } from "@/contexts/addMeatPortionContext";
+import { AddServingContext } from "@/contexts/addServingContext";
 
 import { useClient } from "@/hooks/useClient";
-import { MeatPortionService } from "@/client/MeatPortionService";
-import { BodyCreateMeatPortion } from "@/client/types";
+import { ServingService } from "@/client/ServingService";
+import { BodyCreateServing } from "@/client/types";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { useCentralState } from "@/hooks/useCentralState";
 
@@ -28,16 +28,16 @@ function useAddMealForm({
 }: useAddMealFormProps): useAddMealFormReturn {
   const { getUser } = useAuthentication();
   const [callClientServiceMethod] = useClient();
-  const { callAddCallbacks } = useContext(AddMeatPortionContext);
+  const { callAddCallbacks } = useContext(AddServingContext);
   const { editPortion, addPortion, deletePortion, timeFrame } =
     useCentralState();
 
   const user = getUser();
   const currentUUID = uuidv4();
 
-  const sendData = async (body: BodyCreateMeatPortion) => {
+  const sendData = async (body: BodyCreateServing) => {
     const response = await callClientServiceMethod({
-      function: MeatPortionService.CreateMeatPortion,
+      function: ServingService.CreateServing,
       args: [body, user.id],
     });
     console.log("Response from post: ", response);
@@ -53,9 +53,9 @@ function useAddMealForm({
     );
   };
 
-  const updateData = async (body: BodyCreateMeatPortion, portionId: string) => {
+  const updateData = async (body: BodyCreateServing, portionId: string) => {
     const response = await callClientServiceMethod({
-      function: MeatPortionService.UpdateMeatPortion,
+      function: ServingService.UpdateServing,
       args: [body, user.id, portionId],
     });
     console.log("Response from update: ", response);
@@ -79,6 +79,7 @@ function useAddMealForm({
         await updateData(
           {
             size: values.portionSize,
+            category: "meat",
             ID: editPortion.id,
             date: values.date,
             note: values.notes,
@@ -88,6 +89,7 @@ function useAddMealForm({
       } else {
         await sendData({
           size: values.portionSize,
+          category: "meat",
           ID: currentUUID,
           date: values.date,
           note: values.notes,

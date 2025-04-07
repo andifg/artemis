@@ -5,13 +5,13 @@ import { VeggieStreak } from "@/Components/VeggiStreak/VeggieStreak";
 import { DailyOverview } from "@/Components/DailyOverview/DailyOverview";
 import { AverageMeatPortions } from "@/Components/AverageMeatPortions/AverageMeatPortions";
 import { MeatPortionsChart } from "@/Components/MeatPortionsChart/MeatPortionsChart";
-import { AddMeatPortionContextProvider } from "@/contexts/addMeatPortionContext";
-import { DeleteMeatPortionContextProvider } from "@/contexts/deleteMeatPortionContext";
+import { AddServingContextProvider } from "@/contexts/addServingContext";
+import { DeleteServingContextProvider } from "@/contexts/deleteServingContext";
 
 function Dashboard() {
   return (
-    <AddMeatPortionContextProvider>
-      <DeleteMeatPortionContextProvider>
+    <AddServingContextProvider>
+      <DeleteServingContextProvider>
         <MainLayout
           header={<LogoHeader />}
           mainArea={
@@ -24,8 +24,8 @@ function Dashboard() {
           }
           footer={<BottomNavigator />}
         />
-      </DeleteMeatPortionContextProvider>
-    </AddMeatPortionContextProvider>
+      </DeleteServingContextProvider>
+    </AddServingContextProvider>
   );
 }
 
