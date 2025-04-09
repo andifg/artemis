@@ -63,3 +63,12 @@ make deploy-dev
 ```bash
 make deploy-prod
 ```
+
+## Backup & Restore
+
+The application includes a backup via OpenShift API for Data Protection (OADP).
+To use the feature a DataProtectionApplication needs to be existing in the cluster
+and can be referenced via the values file. The actual backup is configured via
+the schedule ressource.
+
+An example for a restore CR within the same cluster can be found [here](./docs/restore_template.yml)
