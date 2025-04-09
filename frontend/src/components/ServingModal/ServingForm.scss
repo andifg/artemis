@@ -1,0 +1,31 @@
+.meal-form-submit-button {
+  margin-top: auto;
+}
+
+.meal-form-item {
+  padding: 10px 0px 10px 0px;
+}
+
+.meal-form-submit-button {
+  border-color: var(--secondary-color);
+  color: var(--secondary-color);
+}
+
+.form-color {
+  color: var(--text-primary);
+}
+
+.serving-form-button-selected:hover {
+  background-color: var(--secondary-color);
+  color: white;
+  transition-duration: 0ms;
+}
+.serving-form-button-selected {
+  background-color: var(--secondary-color);
+  color: white;
+  transition-duration: 0ms;
+}
+
+.serving-form-header {
+  font-size: 1rem;
+}

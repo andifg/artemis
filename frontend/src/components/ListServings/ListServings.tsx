@@ -39,16 +39,21 @@ const ListMeals = () => {
               return (
                 <>
                   <DayHeader day={day} key={`${day}-l`} />
-                  {servings[day].map((servings) => {
-                    return (
-                      <ServingComponent
-                        serving={servings}
-                        selectedForDeletion={selectedServing}
-                        selectForDeletion={selectForDeletion}
-                        key={`l-${servings.id}`}
-                      />
-                    );
-                  })}
+                  {servings[day]
+                    .sort(
+                      (a, b) =>
+                        new Date(a.date).getTime() - new Date(b.date).getTime(),
+                    )
+                    .map((servings) => {
+                      return (
+                        <ServingComponent
+                          serving={servings}
+                          selectedForDeletion={selectedServing}
+                          selectForDeletion={selectForDeletion}
+                          key={`l-${servings.id}`}
+                        />
+                      );
+                    })}
                 </>
               );
             })}

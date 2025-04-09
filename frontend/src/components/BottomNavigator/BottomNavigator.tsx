@@ -1,5 +1,5 @@
 import "./bottomNavigator.scss";
-import { MealModal } from "@/Components/MealModal/MealModal";
+import { ServingModal } from "@/Components/ServingModal/ServingModal";
 import { useState } from "react";
 import { AlignJustify } from "lucide-react";
 import { House } from "lucide-react";
@@ -12,7 +12,7 @@ import { CirclePlus } from "lucide-react";
 function BottomNavigator() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
 
-  const { setEditPortion } = useCentralState();
+  const { setEditServing } = useCentralState();
 
   const location = useLocation();
 
@@ -21,7 +21,7 @@ function BottomNavigator() {
   };
 
   const closeModal = () => {
-    setEditPortion(null);
+    setEditServing(null);
     setOpenAddModal(false);
   };
 
@@ -80,7 +80,7 @@ function BottomNavigator() {
         </div>
       </div>
 
-      <MealModal open={openAddModal} onClose={closeModal} />
+      <ServingModal open={openAddModal} onClose={closeModal} />
     </div>
   );
 }

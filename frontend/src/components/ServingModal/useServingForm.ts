@@ -11,6 +11,7 @@ import { useCentralState } from "@/hooks/useCentralState";
 
 const formSchema = z.object({
   date: z.date(),
+  category: z.enum(["meat", "vegetarian", "alcohol", "candy"]),
   portionSize: z.enum(["small", "medium", "large"]),
   notes: z.string().max(100).optional(),
 });
@@ -23,13 +24,13 @@ type useAddMealFormProps = {
   onClose: () => void;
 };
 
-function useAddMealForm({
+function useServingForm({
   onClose,
 }: useAddMealFormProps): useAddMealFormReturn {
   const { getUser } = useAuthentication();
   const [callClientServiceMethod] = useClient();
   const { callAddCallbacks } = useContext(AddServingContext);
-  const { editPortion, addPortion, deletePortion, timeFrame } =
+  const { editServing, addServing, deleteServing, timeFrame } =
     useCentralState();
 
   const user = getUser();
@@ -44,6 +45,7 @@ function useAddMealForm({
     callAddCallbacks(
       {
         user_id: user.id,
+        category: body.category,
         date: body.date.toISOString(),
         id: currentUUID,
         size: body.size,
@@ -59,9 +61,10 @@ function useAddMealForm({
       args: [body, user.id, portionId],
     });
     console.log("Response from update: ", response);
-    deletePortion(portionId);
-    addPortion({
+    deleteServing(portionId);
+    addServing({
       id: portionId,
+      category: body.category,
       user_id: user.id,
       size: body.size,
       note: body.note,
@@ -70,26 +73,25 @@ function useAddMealForm({
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    values.date.setHours(12, 30, 0, 0);
-    console.log("submit");
-    console.log(values);
-
     async function handleSubmidt() {
-      if (editPortion) {
+      if (editServing) {
         await updateData(
           {
             size: values.portionSize,
-            category: "meat",
-            ID: editPortion.id,
+            category: values.category,
+            ID: editServing.id,
             date: values.date,
             note: values.notes,
           },
-          editPortion.id,
+          editServing.id,
         );
       } else {
+        values.date.setHours(12, 30, 0, 0);
+        console.log("submit");
+        console.log(values);
         await sendData({
           size: values.portionSize,
-          category: "meat",
+          category: values.category,
           ID: currentUUID,
           date: values.date,
           note: values.notes,
@@ -103,4 +105,4 @@ function useAddMealForm({
   return { onSubmit };
 }
 
-export { useAddMealForm, formSchema };
+export { useServingForm, formSchema };
