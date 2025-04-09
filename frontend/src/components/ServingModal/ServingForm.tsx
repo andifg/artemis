@@ -1,12 +1,14 @@
-import "./MealForm.scss";
+import "./ServingForm.scss";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { useCentralState } from "@/hooks/useCentralState";
-
+import { servingCategories, servingSizes } from "@/client/types";
 import { Button } from "@/Components/ui/button";
+import { ServingIcon } from "../ServingIcon/ServingIcon";
+
 import {
   Popover,
   PopoverTrigger,
@@ -15,13 +17,6 @@ import {
 import { Calendar } from "@/Components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectItem,
-  SelectContent,
-} from "@/Components/ui/select";
 
 import {
   Form,
@@ -34,23 +29,28 @@ import {
 } from "@/Components/ui/form";
 import { Input } from "@/Components/ui/input";
 
-import { useAddMealForm, formSchema } from "./useAddMealForm";
+import { useServingForm, formSchema } from "./useServingForm";
 
 type AddMealFormProps = {
   onClose: () => void;
 };
 
-function AddMealForm({ onClose }: AddMealFormProps) {
-  const { onSubmit } = useAddMealForm({ onClose });
+function ServingForm({ onClose }: AddMealFormProps) {
+  const { onSubmit } = useServingForm({ onClose });
 
-  const { selectedDate, editPortion } = useCentralState();
+  const { selectedDate, editServing } = useCentralState();
+
+  // console.log("Serving Categories", servingCategories);
+
+  console.log("Edit Serving", editServing);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      date: editPortion ? new Date(editPortion.date) : selectedDate,
-      portionSize: editPortion?.size || "medium",
-      notes: editPortion?.note || "",
+      date: editServing ? new Date(editServing.date) : selectedDate,
+      category: editServing?.category || "meat",
+      portionSize: editServing?.size || "medium",
+      notes: editServing?.note || "",
     },
   });
 
@@ -64,7 +64,9 @@ function AddMealForm({ onClose }: AddMealFormProps) {
             // defaultValue={selectedDate}
             render={({ field }) => (
               <FormItem className="meal-form-item">
-                <FormLabel className="form-color">Select Date</FormLabel>
+                <FormLabel className="form-color serving-form-header">
+                  Select Date
+                </FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -101,28 +103,63 @@ function AddMealForm({ onClose }: AddMealFormProps) {
               </FormItem>
             )}
           />
+
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem className="meal-form-item">
+                <FormLabel className="form-color serving-form-header">
+                  Serving Category
+                </FormLabel>
+                <FormControl>
+                  <div className="flex gap-2 flex-wrap">
+                    {servingCategories.map((category) => (
+                      <Button
+                        key={category}
+                        type="button"
+                        style={{ width: "40%" }}
+                        variant={
+                          field.value === category ? "default" : "outline"
+                        }
+                        onClick={() => field.onChange(category)}
+                        className={`form-color ${field.value === category ? "serving-form-button-selected" : ""}`}
+                      >
+                        {category.charAt(0).toUpperCase() + category.slice(1)}
+
+                        {ServingIcon(category)}
+                      </Button>
+                    ))}
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="portionSize"
-            // defaultValue="medium"
             render={({ field }) => (
               <FormItem className="meal-form-item">
-                <FormLabel className="form-color">Portion Size</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="form-color">
-                      <SelectValue placeholder="Select portion size" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="form-color">
-                    <SelectItem value="small">small</SelectItem>
-                    <SelectItem value="medium">medium</SelectItem>
-                    <SelectItem value="large">large</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FormLabel className="form-color serving-form-header">
+                  Serving Size
+                </FormLabel>
+                <FormControl>
+                  <div className="flex gap-2 flex-wrap">
+                    {servingSizes.map((size) => (
+                      <Button
+                        key={size}
+                        type="button"
+                        variant={field.value === size ? "default" : "outline"}
+                        onClick={() => field.onChange(size)}
+                        className={`form-color ${field.value === size ? "serving-form-button-selected" : ""}`}
+                      >
+                        {size.charAt(0).toUpperCase() + size.slice(1)}
+                      </Button>
+                    ))}
+                  </div>
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -133,7 +170,9 @@ function AddMealForm({ onClose }: AddMealFormProps) {
             // defaultValue="Schnitzel"
             render={({ field }) => (
               <FormItem className="meal-form-item">
-                <FormLabel className="form-color">Notes</FormLabel>
+                <FormLabel className="form-color serving-form-header">
+                  Notes
+                </FormLabel>
                 <FormControl>
                   <Input className="form-color" placeholder="..." {...field} />
                 </FormControl>
@@ -155,4 +194,4 @@ function AddMealForm({ onClose }: AddMealFormProps) {
   );
 }
 
-export { AddMealForm };
+export { ServingForm };

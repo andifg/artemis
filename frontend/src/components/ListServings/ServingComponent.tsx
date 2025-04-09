@@ -4,8 +4,7 @@ import { RefObject, useRef } from "react";
 
 import { Trash2 } from "lucide-react";
 import { Pencil } from "lucide-react";
-import ChickenLeg from "../../assets/chicken-leg.svg";
-
+import { ServingIcon } from "../ServingIcon/ServingIcon";
 import { useCentralState } from "@/hooks/useCentralState";
 
 import { Serving } from "@/client/types";
@@ -45,7 +44,7 @@ const ServingComponent = ({
 
   return (
     <div className="serving">
-      <img src={ChickenLeg} alt="chicken leg" className="serving-icon" />
+      {ServingIcon(serving.category)}
       <div className="serving-size">{getSize(serving.size || "medium")}</div>
       <div className="serving-note">{serving.note && serving.note}</div>
       <div className="serving-edit-icon">

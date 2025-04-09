@@ -1,7 +1,6 @@
 import "./settings.scss";
 import { DayHeader } from "../ListServings/DayHeader";
 import { Button } from "../ui/button";
-import ChickenLeg from "../../assets/chicken-leg.svg";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { ExternalLink } from "lucide-react";
 import { Slider } from "../ui/slider";
@@ -9,6 +8,7 @@ import { useCentralState } from "@/hooks/useCentralState";
 import { useSaveSlider } from "./useSaveSlider";
 import { Skeleton } from "../ui/skeleton";
 import { LogOut } from "lucide-react";
+import { ServingIcon } from "../ServingIcon/ServingIcon";
 
 const Settings = () => {
   const { logout } = useAuthentication();
@@ -29,7 +29,7 @@ const Settings = () => {
         <DayHeader day="Settings" />
         <div className="account-settings-slider">
           <div className="account-settings-slider-header">
-            <img src={ChickenLeg} alt="chicken leg" className="portion-icon" />
+            {ServingIcon("meat")}
             <div className="account-settings-slider-header-text">
               Personal Weekly Meat Portion Target
             </div>

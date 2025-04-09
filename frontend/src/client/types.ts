@@ -10,11 +10,20 @@ export type BodyUpdateUser = {
   weeklyMeatPortionTarget: number;
 };
 
-export type ServingSize = "small" | "medium" | "large";
+export const servingSizes = ["small", "medium", "large"] as const;
 
-export type Timeframe = "week" | "month" | "quarter";
+export const servingCategories = [
+  "meat",
+  "vegetarian",
+  "candy",
+  "alcohol",
+] as const;
 
-export type ServingCategory = "meat" | "vegetarian" | "candy" | "alcohol";
+export const timeFramews = ["week", "month", "quarter"] as const;
+
+export type ServingSize = (typeof servingSizes)[number];
+export type Timeframe = (typeof timeFramews)[number];
+export type ServingCategory = (typeof servingCategories)[number];
 
 export type BodyCreateServing = {
   size: ServingSize;
@@ -33,6 +42,7 @@ export type BodyUpdateServing = {
 
 export type Serving = {
   size: ServingSize;
+  category: ServingCategory;
   id: string;
   user_id: string;
   date: string;

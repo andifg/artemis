@@ -1,4 +1,4 @@
-import "./MealModal.scss";
+import "./ServingModal.scss";
 
 import { useCentralState } from "@/hooks/useCentralState";
 
@@ -8,31 +8,31 @@ import {
   SheetDescription,
   SheetTitle,
 } from "@/Components/ui/sheet";
-import { AddMealForm } from "./MealForm";
+import { ServingForm } from "./ServingForm";
 
 export type AddMealSheetProps = {
   open: boolean;
   onClose: () => void;
 };
 
-function MealModal({ open, onClose }: AddMealSheetProps) {
-  const { editPortion } = useCentralState();
+function ServingModal({ open, onClose }: AddMealSheetProps) {
+  const { editServing } = useCentralState();
 
   return (
-    <Sheet open={open || editPortion != null} onOpenChange={onClose}>
+    <Sheet open={open || editServing != null} onOpenChange={onClose}>
       <SheetContent className="h-full" side="bottom">
         <SheetTitle className="meal-sheet-title">
-          {editPortion ? "Edit Meat Serving" : "Add Meat Serving"}
+          {editServing ? "Edit Meat Serving" : "Add Meat Serving"}
         </SheetTitle>
         <SheetDescription>
           {/* {editPortion ? "Edit your meal" : "Add a new meal"} */}
         </SheetDescription>
         <div className="meal-sheet-content">
-          <AddMealForm onClose={onClose} />
+          <ServingForm onClose={onClose} />
         </div>
       </SheetContent>
     </Sheet>
   );
 }
 
-export { MealModal };
+export { ServingModal };
