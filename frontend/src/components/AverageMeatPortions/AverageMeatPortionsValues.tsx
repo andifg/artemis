@@ -1,7 +1,7 @@
-import { AverageMeatPortions } from "@/client/types";
+import { AverageServings } from "@/client/types";
 
 type AverageMeatPortionsValuesProps = {
-  averageMeatPortions: AverageMeatPortions | undefined;
+  averageMeatPortions: AverageServings | undefined;
 };
 
 const AverageMeatPortionsValues = ({
