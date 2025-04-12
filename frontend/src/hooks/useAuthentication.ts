@@ -21,8 +21,8 @@ interface useAuthenticationReturn {
 }
 
 function useAuthentication(): useAuthenticationReturn {
-  const { setPortions } = useCentralState();
-  const portions = useCentralState((state) => state.meatPortions);
+  const { setServings } = useCentralState();
+  const portions = useCentralState((state) => state.servings);
 
   const { setDailyOverviewMap } = useCentralState();
   const dailyOverviewMap = useCentralState((state) => state.dailyOverviewMap);
@@ -42,7 +42,7 @@ function useAuthentication(): useAuthenticationReturn {
     console.log("logout");
 
     if (Object.keys(portions).length > 0) {
-      setPortions({});
+      setServings({});
     }
 
     if (Object.keys(dailyOverviewMap).length > 0) {

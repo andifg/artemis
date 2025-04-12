@@ -7,7 +7,7 @@ import { ChartNoAxesColumn } from "lucide-react";
 import { useCentralState } from "@/hooks/useCentralState";
 import { useEffect } from "react";
 import { getCalendarWeek } from "@/utils/getCalendarWeek";
-import { AggregatedMeatPortions } from "@/client/types";
+import { AggregatedServings } from "@/client/types";
 
 function MeatPortionsChart() {
   const { loading } = useMeatPortionChart();
@@ -23,7 +23,7 @@ function MeatPortionsChart() {
       case "week":
         return {
           data: aggregatedWeeklyMeatPortions,
-          dataKey: (entry: AggregatedMeatPortions) => {
+          dataKey: (entry: AggregatedServings) => {
             const date = new Date(entry.timeframe_start);
             return `W${getCalendarWeek(date)}`;
           },
@@ -31,7 +31,7 @@ function MeatPortionsChart() {
       case "month":
         return {
           data: aggregatedMonthlyMeatPortions,
-          dataKey: (entry: AggregatedMeatPortions) => {
+          dataKey: (entry: AggregatedServings) => {
             const date = new Date(entry.timeframe_start);
             return `${date.toLocaleString("default", { month: "short" })}`;
           },
@@ -39,7 +39,7 @@ function MeatPortionsChart() {
       case "quarter":
         return {
           data: aggregatedQuarterlyMeatPortions,
-          dataKey: (entry: AggregatedMeatPortions) => {
+          dataKey: (entry: AggregatedServings) => {
             const date = new Date(entry.timeframe_start);
             return `Q${Math.ceil((date.getMonth() + 1) / 3)}`;
           },
@@ -74,7 +74,7 @@ function MeatPortionsChart() {
           </div>
           <TimeFrameSelector />
         </div>
-        <MeatPortionBarChartContainer<AggregatedMeatPortions>
+        <MeatPortionBarChartContainer<AggregatedServings>
           data={sortedData}
           dataKey={dataKey}
           loading={loading}

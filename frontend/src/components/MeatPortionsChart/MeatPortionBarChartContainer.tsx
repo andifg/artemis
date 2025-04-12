@@ -12,7 +12,7 @@ import {
   ComposedChart,
 } from "recharts";
 import { DataKey } from "recharts/types/util/types";
-import { AggregatedMeatPortions } from "@/client/types";
+import { AggregatedServings } from "@/client/types";
 import { Skeleton } from "../ui/skeleton";
 import { ReactNode, useEffect } from "react";
 
@@ -29,7 +29,7 @@ type MeatPortionBarChartContainerProps<T> = {
   data: CategoricalChartProps["data"];
   dataKey: DataKey<T>;
   loading: boolean;
-  aggregatedMeatPortions: AggregatedMeatPortions[] | undefined;
+  aggregatedMeatPortions: AggregatedServings[] | undefined;
 };
 
 const MeatPortionBarChartContainer = <T,>({
