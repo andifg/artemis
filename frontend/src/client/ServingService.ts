@@ -6,7 +6,7 @@ import {
   ServingDateList,
   Serving,
   Timeframe,
-  DailyOverviewMap,
+  DailyOverview,
 } from "./types";
 import { API } from "./config";
 import { handleApiRequest } from "./utils";
@@ -51,10 +51,10 @@ class ServingService {
 
   public static GetDailyOverview(
     userID: string,
-  ): Promise<APIResponse<DailyOverviewMap>> {
+  ): Promise<APIResponse<DailyOverview[]>> {
     const url = `${API.baseURL}/api/v1/user/${userID}/daily-overview`;
 
-    return handleApiRequest<APIResponse<DailyOverviewMap>>(url);
+    return handleApiRequest<APIResponse<DailyOverview[]>>(url);
   }
 
   public static GetServings(

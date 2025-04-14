@@ -15,6 +15,7 @@ type ServingRepository interface {
 	CreateServing(serving dao.Serving) (dao.Serving, error)
 	UpdateServing(serving dao.Serving) (dao.Serving, error)
 	GetServingById(servingID string) (dao.Serving, error)
+	GetDailyOverview(userID string) ([]dto.DayOverview, error)
 	GetServings(userID string, page int, limit int, cutOffDay *time.Time) ([]dao.Serving, error)
 	DeleteServing(servingID string) error
 	GetAggregatedServingsByTimeframe(userID string, timeframe dto.Timeframe) ([]dto.AggregatedServings, error)
@@ -104,6 +105,38 @@ func (m ServingRepositoryImpl) GetServingById(servingID string) (dao.Serving, er
 	// log.Debug("Meat Portion found: ", serving)
 	log.Debug(fmt.Printf("Meat Portion found: %v", serving))
 	return serving, nil
+}
+
+func (m ServingRepositoryImpl) GetDailyOverview(userId string) ([]dto.DayOverview, error) {
+	log.Debugf("Creating DailyOverview for user with ID: %v", userId)
+
+	var dailyOverviews []dto.DayOverview
+
+	queryStr := fmt.Sprintf(`
+	WITH date_helpers AS (
+		SELECT CURRENT_DATE - i AS date
+		FROM generate_series(0, 13) AS i
+	)
+	Select DATE(d.date) AS date, COUNT(CASE WHEN s.category = 'meat' THEN 1 END) AS meat_portions, COUNT(CASE WHEN s.category = 'vegetarian' THEN 1 END) AS vegetarian_portions, COUNT(CASE WHEN s.category = 'alcohol' THEN 1 END) AS alcohol_portions, COUNT(CASE WHEN s.category = 'candy' THEN 1 END) AS candy_portions
+	from date_helpers d
+	Left join servings s
+	on d.date = DATE(s.date) and s.user_id = '%s'
+	Group by d.date
+	Order by d.date desc;
+	`, userId)
+
+	log.Debug("Daily Overview Query: ", queryStr)
+
+	query := m.db.Raw(queryStr).Scan(&dailyOverviews)
+
+	if query.Error != nil {
+		log.Error("Error retrieving daily overview: ", query.Error)
+		return nil, query.Error
+	}
+
+	log.Debugf("Daily overview for user %s  : %v ", userId, dailyOverviews)
+	return dailyOverviews, nil
+
 }
 
 func (m ServingRepositoryImpl) DeleteServing(servingID string) error {

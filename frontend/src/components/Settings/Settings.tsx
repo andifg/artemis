@@ -29,7 +29,7 @@ const Settings = () => {
         <DayHeader day="Settings" />
         <div className="account-settings-slider">
           <div className="account-settings-slider-header">
-            {ServingIcon("meat")}
+            <ServingIcon servingCategory="meat" />
             <div className="account-settings-slider-header-text">
               Personal Weekly Meat Portion Target
             </div>

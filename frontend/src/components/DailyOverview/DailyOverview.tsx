@@ -9,39 +9,38 @@ import { useCentralState } from "@/hooks/useCentralState";
 function DailyOverview() {
   const dailyOverviewRef = useRef<HTMLDivElement>(null);
 
-  const { dailyOverviewMap, selectedDate } = useCentralState();
+  const { dailyOverview, selectedDate } = useCentralState();
   const { loading } = useDailyOverview();
 
   useEffect(() => {
+    console.log("Daily overview: ", dailyOverview);
+    console.log("Daily overview type: ", typeof dailyOverview);
     if (dailyOverviewRef.current) {
       dailyOverviewRef.current.scrollLeft =
         dailyOverviewRef.current.scrollWidth;
     }
-  }, [dailyOverviewMap]);
+  }, [dailyOverview]);
 
   return (
     <>
       <div className="daily-overview-wrapper">
         <div>{selectedDate.toDateString()}</div>
         <div className="daily-overview" ref={dailyOverviewRef}>
-          {(!loading || Object.keys(dailyOverviewMap).length != 0) && (
+          {(!loading || dailyOverview.length != 0) && (
             <div
               className="daily-overview-slider"
               style={{
-                minWidth: `${(100 / 7) * Object.keys(dailyOverviewMap).length}%`,
+                minWidth: `${(100 / 7) * dailyOverview.length}%`,
               }}
             >
-              {Object.keys(dailyOverviewMap).map((key) => {
-                return (
-                  <Day
-                    key={key + "day"}
-                    date={new Date(dailyOverviewMap[key].Date)}
-                    meatConsumed={
-                      dailyOverviewMap[key].MeatPortions > 0 ? true : false
-                    }
-                  />
-                );
-              })}
+              {dailyOverview
+                .sort(
+                  (a, b) =>
+                    new Date(a.date).getTime() - new Date(b.date).getTime(),
+                )
+                .map((key) => {
+                  return <Day key={key.date + "day"} dayOverview={key} />;
+                })}
             </div>
           )}
         </div>

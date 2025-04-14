@@ -73,13 +73,16 @@ export type ServingDateList = {
 };
 
 export type DailyOverview = {
-  Date: string;
-  MeatPortions: number;
+  date: string;
+  meat_portions: number;
+  vegetarian_portions: number;
+  alcohol_portions: number;
+  candy_portions: number;
 };
 
-export type DailyOverviewMap = {
-  [key: string]: DailyOverview;
-};
+// export type DailyOverviewMap = {
+//   [key: string]: DailyOverview;
+// };
 export class UnauthorizedError extends Error {
   constructor() {
     super("Unauthorized");

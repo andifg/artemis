@@ -24,8 +24,8 @@ function useAuthentication(): useAuthenticationReturn {
   const { setServings } = useCentralState();
   const portions = useCentralState((state) => state.servings);
 
-  const { setDailyOverviewMap } = useCentralState();
-  const dailyOverviewMap = useCentralState((state) => state.dailyOverviewMap);
+  const { setDailyOverview } = useCentralState();
+  const dailyOverviewMap = useCentralState((state) => state.dailyOverview);
 
   let user: User;
 
@@ -46,7 +46,7 @@ function useAuthentication(): useAuthenticationReturn {
     }
 
     if (Object.keys(dailyOverviewMap).length > 0) {
-      setDailyOverviewMap({});
+      setDailyOverview([]);
     }
 
     removeCookie("id_token");

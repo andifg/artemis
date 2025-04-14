@@ -1,11 +1,10 @@
 import "./day.scss";
-import ChickenLeg from "../../assets/chicken-leg.svg";
-import Brocoli from "../../assets/broccoli.svg";
 import { useCentralState } from "@/hooks/useCentralState";
+import { DailyOverview } from "@/client/types";
+import { SelectIcon } from "./SelectIcon";
 
 export type DailyOverviewEntry = {
-  date: Date;
-  meatConsumed: boolean;
+  dayOverview: DailyOverview;
 };
 
 type DayProps = DailyOverviewEntry;
@@ -16,15 +15,20 @@ function getFirstCharacterOfWeekday(date: Date): string {
   return weekdays[dayIndex];
 }
 
-function Day({ date, meatConsumed }: DayProps) {
+function Day({ dayOverview }: DayProps) {
   const { setSelectedDate, selectedDate } = useCentralState();
 
-  const isInactive = date > new Date(new Date().setHours(23, 59, 59, 999));
-  const isSelected = date.toDateString() == selectedDate.toDateString();
+  const isInactive =
+    new Date(dayOverview.date) > new Date(new Date().setHours(23, 59, 59, 999));
+  const isSelected =
+    new Date(dayOverview.date).toDateString() == selectedDate.toDateString();
 
   const selectDate = () => {
-    if (date <= new Date(new Date().setHours(23, 59, 59, 999))) {
-      setSelectedDate(date);
+    if (
+      new Date(dayOverview.date) <=
+      new Date(new Date().setHours(23, 59, 59, 999))
+    ) {
+      setSelectedDate(new Date(dayOverview.date));
     }
   };
 
@@ -35,19 +39,11 @@ function Day({ date, meatConsumed }: DayProps) {
           className={`day-day ${isSelected ? "day-date-selected" : ""} ${isInactive ? "day-date-unactive" : ""}`}
           onClick={selectDate}
         >
-          {getFirstCharacterOfWeekday(date)}
+          {getFirstCharacterOfWeekday(new Date(dayOverview.date))}
         </div>
       </div>
       <div className="day-image">
-        {meatConsumed ? (
-          <img src={ChickenLeg} alt="chicken leg" className="day-image-image" />
-        ) : (
-          <img
-            src={Brocoli}
-            alt="broccoli"
-            className={`day-image-image ${isInactive ? "day-image-image-inactive" : ""}`}
-          />
-        )}
+        {<SelectIcon dayOverview={dayOverview} />}
       </div>
     </div>
   );

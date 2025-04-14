@@ -6,7 +6,11 @@ import Candy from "../../assets/candy.svg";
 import Vegetarian from "../../assets/cheese.svg";
 import { ServingCategory } from "@/client/types";
 
-const ServingIcon = (servingCategory: ServingCategory) => {
+const ServingIcon = ({
+  servingCategory,
+}: {
+  servingCategory: ServingCategory;
+}) => {
   const getIcon = () => {
     switch (servingCategory) {
       case "meat":

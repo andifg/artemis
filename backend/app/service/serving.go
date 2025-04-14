@@ -20,7 +20,7 @@ import (
 type ServingService interface {
 	CreateServing(portion dao.Serving) (dao.Serving, error)
 	UpdateServing(portion dao.Serving) (dao.Serving, error)
-	GetDailyOverview(userId uuid.UUID) (dto.DailyOverviewMap, error)
+	GetDailyOverview(userId uuid.UUID) ([]dto.DayOverview, error)
 	GetServingsByUserID(*gin.Context)
 	DeleteServing(uuid.UUID, uuid.UUID) error
 	GetWeeklyAverage(uuid.UUID, string) (dto.AverageServings, error)
@@ -58,43 +58,18 @@ func (m ServingServiceImpl) UpdateServing(portion dao.Serving) (dao.Serving, err
 	return usr, nil
 }
 
-func (m ServingServiceImpl) GetDailyOverview(userId uuid.UUID) (dto.DailyOverviewMap, error) {
+func (m ServingServiceImpl) GetDailyOverview(userId uuid.UUID) ([]dto.DayOverview, error) {
 
 	log.Info("Fetch Meat Portions for Daily Overview")
 
-	twoWeeksAgo := time.Now().AddDate(0, 0, -14)
-
-	meatPortions, err := m.meatPortionRepository.GetServings(userId.String(), 0, 0, &twoWeeksAgo)
+	dailyOverview, err := m.meatPortionRepository.GetDailyOverview(userId.String())
 
 	if err != nil {
 		log.Error("Error getting meat portions: ", err)
 		return nil, err
 	}
 
-	response_map := dto.DailyOverviewMap{}
-
-	for i := 0; i < 14; i++ {
-		date_string := time.Now().AddDate(0, 0, -i).Format("2006-01-02")
-		date := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()-i, 12, 0, 0, 0, time.Local)
-		response_map[date_string] = dto.DayOverview{
-			Date:         date,
-			MeatPortions: 0,
-		}
-
-	}
-
-	for _, portion := range meatPortions {
-
-		date_string := portion.Date.Format("2006-01-02")
-
-		if val, ok := response_map[date_string]; ok {
-			val.MeatPortions++
-			response_map[date_string] = val
-		}
-
-	}
-
-	return response_map, nil
+	return dailyOverview, nil
 }
 
 func (m ServingServiceImpl) GetServingsByUserID(c *gin.Context) {
@@ -287,3 +262,20 @@ func NewServingService(meatPortionRepository repository.ServingRepository) Servi
 		meatPortionRepository: meatPortionRepository,
 	}
 }
+
+// WITH date_helpers AS (
+//     SELECT CURRENT_DATE - i AS date
+//     FROM generate_series(0, 13) AS i
+// )
+// Select DATE(d.date) AS date, COUNT(CASE WHEN s.category = 'meat' THEN 1 END) AS meat_portions, COUNT(CASE WHEN s.category = 'vegetarian' THEN 1 END) AS vegetarian_portions, COUNT(CASE WHEN s.category = 'alcohol' THEN 1 END) AS alcohol_portions, COUNT(CASE WHEN s.category = 'candy' THEN 1 END) AS candy_portions
+// from date_helpers d
+// Left join servings s
+// on d.date = DATE(s.date) and s.user_id = '8fcc2bf7-0eea-4f77-8838-f898ed78e162'
+// Group by d.date
+// Order by d.date desc;
+
+// Select DATE(s.date) AS date, COUNT(CASE WHEN s.category = 'meat' THEN 1 END) AS meat_portions, COUNT(CASE WHEN s.category = 'vegetarian' THEN 1 END) AS vegetarian_portions, COUNT(CASE WHEN s.category = 'alcohol' THEN 1 END) AS alcohol_portions, COUNT(CASE WHEN s.category = 'candy' THEN 1 END) AS candy_portions
+// From servings s
+// where s.date > '2024-04-12 15:00:00' and s.user_id = '8fcc2bf7-0eea-4f77-8838-f898ed78e162'
+// Group by date
+// Order by date desc;
