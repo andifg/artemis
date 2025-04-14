@@ -12,9 +12,7 @@ function useDailyOverview() {
   const [callClientServiceMethod] = useClient();
   const user = getUser();
 
-  const setDailyOverviewMap = useCentralState(
-    (state) => state.setDailyOverviewMap,
-  );
+  const setDailyOverview = useCentralState((state) => state.setDailyOverview);
 
   const increasePortion = useCentralState((state) => state.increasePortion);
 
@@ -40,7 +38,8 @@ function useDailyOverview() {
       function: ServingService.GetDailyOverview,
       args: [user.id],
     }).then((response) => {
-      setDailyOverviewMap(response.data);
+      console.log("Daily overview: ", response.data);
+      setDailyOverview(response.data);
       setLoading(false);
     });
   }, []);

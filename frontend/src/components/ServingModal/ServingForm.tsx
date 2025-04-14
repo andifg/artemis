@@ -127,7 +127,7 @@ function ServingForm({ onClose }: AddMealFormProps) {
                       >
                         {category.charAt(0).toUpperCase() + category.slice(1)}
 
-                        {ServingIcon(category)}
+                        {<ServingIcon servingCategory={category} />}
                       </Button>
                     ))}
                   </div>
