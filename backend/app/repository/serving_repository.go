@@ -135,7 +135,7 @@ func (m ServingRepositoryImpl) GetDailyOverview(userId string) ([]dto.DayOvervie
 		return nil, query.Error
 	}
 
-	log.Debugf("Daily overview for user %s  : %v ", userId, dailyOverviews)
+	log.Tracef("Daily overview for user %s  : %v ", userId, dailyOverviews)
 	return dailyOverviews, nil
 
 }
@@ -178,7 +178,7 @@ func (m ServingRepositoryImpl) GetServings(userID string, page int, limit int, c
 		return []dao.Serving{}, result.Error
 	}
 
-	log.Debug("Meat Portion found: ", servings)
+	log.Tracef("Meat Portion found: ", servings)
 	return servings, nil
 }
 
@@ -237,7 +237,7 @@ func (m ServingRepositoryImpl) GetAggregatedServingsByTimeframe(userID string, t
 		return nil, query.Error
 	}
 
-	log.Debug("Aggregated Meat Portions found: ", aggregatedServings)
+	log.Tracef("Aggregated Meat Portions found: ", aggregatedServings)
 	return aggregatedServings, nil
 }
 
