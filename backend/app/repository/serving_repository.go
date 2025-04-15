@@ -19,6 +19,7 @@ type ServingRepository interface {
 	GetServings(userID string, page int, limit int, cutOffDay *time.Time) ([]dao.Serving, error)
 	DeleteServing(servingID string) error
 	GetAggregatedServingsByTimeframe(userID string, timeframe dto.Timeframe) ([]dto.AggregatedServings, error)
+	GetServingStreaks(userID string) ([]dto.ServingStreaks, error)
 }
 
 type ServingRepositoryImpl struct {
@@ -238,6 +239,32 @@ func (m ServingRepositoryImpl) GetAggregatedServingsByTimeframe(userID string, t
 
 	log.Debug("Aggregated Meat Portions found: ", aggregatedServings)
 	return aggregatedServings, nil
+}
+
+func (m ServingRepositoryImpl) GetServingStreaks(userId string) ([]dto.ServingStreaks, error) {
+	log.Debugf("Get Serving Streaks for user with ID: %v", userId)
+
+	var servingStreaks []dto.ServingStreaks
+
+	queryString := fmt.Sprintf(`
+	Select s.category, Min(EXTRACT(DAY FROM CURRENT_DATE - s.date)::INT) as streak
+	From servings s
+	where s.user_id = '%s'
+	Group by s.category;`,
+		userId)
+
+	log.Debug("Serving Streaks query : ", queryString)
+
+	res := m.db.Raw(queryString).Scan(&servingStreaks)
+
+	if res.Error != nil {
+		log.Error("Error retrieving serving streaks: ", res.Error)
+		return nil, res.Error
+	}
+
+	log.Debug("Serving Streaks found: ", servingStreaks)
+	return servingStreaks, nil
+
 }
 
 func NewServingRepository(db *gorm.DB) ServingRepository {

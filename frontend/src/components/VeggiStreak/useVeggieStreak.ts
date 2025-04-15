@@ -8,7 +8,6 @@ import { useCentralState } from "@/hooks/useCentralState";
 
 interface useVeggieStreakReturn {
   loading: boolean;
-  streak: number;
 }
 
 function useVeggieStreak(): useVeggieStreakReturn {
@@ -16,57 +15,33 @@ function useVeggieStreak(): useVeggieStreakReturn {
   const user = getUser();
   const [callClientServiceMethod] = useClient();
 
+  const [loading, setLoading] = useState(true);
+
   const { registerAddCallback } = useContext(AddServingContext);
 
-  const [streak, setStreak] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { setServingStreaks } = useCentralState();
 
-  const { setServings, servings, addServing } = useCentralState();
-
-  const addMeatPortion = (portion: Serving, _: Timeframe) => {
-    addServing(portion);
-  };
-
-  const fetchStreak = () => {
+  const fetchStreaks = () => {
     callClientServiceMethod({
-      function: ServingService.GetServings,
-      args: [user.id, 1, 30],
+      function: ServingService.GetServingStreaks,
+      args: [user.id],
     }).then((response) => {
-      setServings(response.data);
+      setServingStreaks(response.data);
       setLoading(false);
     });
   };
 
-  useEffect(() => {
-    const newestDateString = Object.keys(servings).sort().reverse()[0];
-
-    if (!newestDateString) {
-      setStreak(0);
-      return;
-    }
-
-    console.log("Current data: ", servings);
-    const newestDate = new Date(newestDateString);
-
-    const now = new Date();
-
-    newestDate.setHours(0, 0, 0, 0);
-    now.setHours(0, 0, 0, 0);
-
-    const diffTime = now.getTime() - newestDate.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-    setStreak(diffDays);
-  }, [servings]);
+  const addMeatPortion = (__: Serving, _: Timeframe) => {
+    fetchStreaks();
+  };
 
   useEffect(() => {
     registerAddCallback(addMeatPortion);
-    fetchStreak();
+    fetchStreaks();
   }, []);
 
   return {
     loading,
-    streak,
   };
 }
 

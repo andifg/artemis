@@ -13,6 +13,11 @@ import {
   AggregateTimeFramesSlice,
 } from "@/state/aggregateTimeframesSclice";
 
+import {
+  ServingStreakSlice,
+  servingStreakSlice,
+} from "@/state/servingStreakSlice";
+
 import { settingsSlice, SettingsSlice } from "@/state/settingsSlice";
 
 const useCentralState = create<
@@ -20,13 +25,15 @@ const useCentralState = create<
     ServingSlice &
     AverageTimeFramesSlice &
     AggregateTimeFramesSlice &
-    SettingsSlice
+    SettingsSlice &
+    ServingStreakSlice
 >()((...a) => ({
   ...dailyOverviewSlice(...a),
   ...servingSlice(...a),
   ...averageTimeFrameSlice(...a),
   ...aggregateTimeframesSlice(...a),
   ...settingsSlice(...a),
+  ...servingStreakSlice(...a),
 }));
 
 export { useCentralState };

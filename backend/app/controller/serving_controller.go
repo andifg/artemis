@@ -24,6 +24,7 @@ type ServingController interface {
 	DeleteServing(c *gin.Context)
 	GetAverage(c *gin.Context)
 	GetAggregatedServingsByTimeframe(c *gin.Context)
+	GetServingsStreaks(c *gin.Context)
 }
 
 type ServingControllerImpl struct {
@@ -176,6 +177,22 @@ func (controller ServingControllerImpl) GetAggregatedServingsByTimeframe(c *gin.
 	}
 
 	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, aggreatedServing))
+}
+
+func (controller ServingControllerImpl) GetServingsStreaks(c *gin.Context) {
+	defer pkg.PanicHandler(c)
+	user := c.Param("id")
+	user_id := uuid.MustParse(user)
+
+	streaks, err := controller.servingService.GetServingsStreaks(user_id)
+
+	if err != nil {
+		log.Error("Error getting servings streaks: ", err)
+		contextutils.HandleError(err, c)
+		return
+	}
+
+	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, streaks))
 }
 
 func NewServingController(s service.ServingService) ServingController {

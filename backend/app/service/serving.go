@@ -25,6 +25,7 @@ type ServingService interface {
 	DeleteServing(uuid.UUID, uuid.UUID) error
 	GetWeeklyAverage(uuid.UUID, string) (dto.AverageServings, error)
 	GetAggregatedServingsByTimeframe(uuid.UUID, dto.Timeframe) ([]dto.AggregatedServings, error)
+	GetServingsStreaks(uuid.UUID) ([]dto.ServingStreaks, error)
 }
 
 type ServingServiceImpl struct {
@@ -257,25 +258,21 @@ func (m ServingServiceImpl) GetAggregatedServingsByTimeframe(user_id uuid.UUID, 
 	return aggregatedServings, nil
 }
 
+func (m ServingServiceImpl) GetServingsStreaks(user_id uuid.UUID) ([]dto.ServingStreaks, error) {
+	log.Info(fmt.Sprintf("Getting Meat Portion Streaks by user ID: %v", user_id))
+
+	servingStreaks, err := m.meatPortionRepository.GetServingStreaks(user_id.String())
+
+	if err != nil {
+		log.Error("Error getting meat portion streaks: ", err)
+		return []dto.ServingStreaks{}, err
+	}
+
+	return servingStreaks, nil
+}
+
 func NewServingService(meatPortionRepository repository.ServingRepository) ServingService {
 	return &ServingServiceImpl{
 		meatPortionRepository: meatPortionRepository,
 	}
 }
-
-// WITH date_helpers AS (
-//     SELECT CURRENT_DATE - i AS date
-//     FROM generate_series(0, 13) AS i
-// )
-// Select DATE(d.date) AS date, COUNT(CASE WHEN s.category = 'meat' THEN 1 END) AS meat_portions, COUNT(CASE WHEN s.category = 'vegetarian' THEN 1 END) AS vegetarian_portions, COUNT(CASE WHEN s.category = 'alcohol' THEN 1 END) AS alcohol_portions, COUNT(CASE WHEN s.category = 'candy' THEN 1 END) AS candy_portions
-// from date_helpers d
-// Left join servings s
-// on d.date = DATE(s.date) and s.user_id = '8fcc2bf7-0eea-4f77-8838-f898ed78e162'
-// Group by d.date
-// Order by d.date desc;
-
-// Select DATE(s.date) AS date, COUNT(CASE WHEN s.category = 'meat' THEN 1 END) AS meat_portions, COUNT(CASE WHEN s.category = 'vegetarian' THEN 1 END) AS vegetarian_portions, COUNT(CASE WHEN s.category = 'alcohol' THEN 1 END) AS alcohol_portions, COUNT(CASE WHEN s.category = 'candy' THEN 1 END) AS candy_portions
-// From servings s
-// where s.date > '2024-04-12 15:00:00' and s.user_id = '8fcc2bf7-0eea-4f77-8838-f898ed78e162'
-// Group by date
-// Order by date desc;
