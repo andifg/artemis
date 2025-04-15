@@ -104,7 +104,7 @@ const MeatPortionBarChartContainer = <T,>({
           name="Meat Portion Target"
           type="monotone"
           dataKey="meat_target"
-          stroke="var(--secondary-color)"
+          stroke="var(--secondary-dark)"
           strokeWidth={2}
           dot={false}
         />
