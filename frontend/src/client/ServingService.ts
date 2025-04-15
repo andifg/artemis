@@ -7,6 +7,7 @@ import {
   Serving,
   Timeframe,
   DailyOverview,
+  ServingStreak,
 } from "./types";
 import { API } from "./config";
 import { handleApiRequest } from "./utils";
@@ -96,6 +97,13 @@ class ServingService {
     const url = `${API.baseURL}/api/v1/user/${userID}/servings/aggregate?timeframe=${timeframe}`;
 
     return handleApiRequest<APIResponse<AggregatedServings[]>>(url);
+  }
+
+  public static GetServingStreaks(
+    userID: string,
+  ): Promise<APIResponse<ServingStreak[]>> {
+    const url = `${API.baseURL}/api/v1/user/${userID}/serving-streaks`;
+    return handleApiRequest<APIResponse<ServingStreak[]>>(url);
   }
 }
 

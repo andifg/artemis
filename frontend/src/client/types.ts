@@ -80,9 +80,11 @@ export type DailyOverview = {
   candy_portions: number;
 };
 
-// export type DailyOverviewMap = {
-//   [key: string]: DailyOverview;
-// };
+export type ServingStreak = {
+  serving_category: ServingCategory;
+  streak: number;
+};
+
 export class UnauthorizedError extends Error {
   constructor() {
     super("Unauthorized");

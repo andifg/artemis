@@ -50,6 +50,8 @@ func Init(init *config.Initialization, oidcMgr auth.OidcManager, origin string) 
 
 			v1_authorized.GET("/user/:id/servings/aggregate", init.ServingController.GetAggregatedServingsByTimeframe)
 
+			v1_authorized.GET("/user/:id/serving-streaks", init.ServingController.GetServingsStreaks)
+
 		}
 
 	}
