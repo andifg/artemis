@@ -247,7 +247,7 @@ func (m ServingRepositoryImpl) GetServingStreaks(userId string) ([]dto.ServingSt
 	var servingStreaks []dto.ServingStreaks
 
 	queryString := fmt.Sprintf(`
-	Select s.category, Min(EXTRACT(DAY FROM CURRENT_DATE - s.date)::INT) as streak
+	Select s.category, Min(EXTRACT(DAY FROM CURRENT_DATE - s.date)::INT) + 1 as streak
 	From servings s
 	where s.user_id = '%s'
 	Group by s.category;`,
