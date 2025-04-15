@@ -212,7 +212,7 @@ func (o *OidcManagerImpl) RefreshToken(refreshToken string) (OidcTokens, error) 
 
 func (o *OidcManagerImpl) VerifyToken(token string) (JWT, error) {
 
-	log.Debug("Verifying token: ", token)
+	log.Trace("Verifying token: ", token)
 
 	claims, err := o.jwtKeySet.VerifySignature(o.context, token)
 	if err != nil {
@@ -220,7 +220,7 @@ func (o *OidcManagerImpl) VerifyToken(token string) (JWT, error) {
 		return JWT{}, err
 	}
 
-	log.Debug("Token verified: ", claims)
+	log.Trace("Token verified: ", claims)
 
 	jwt := JWT{}
 
