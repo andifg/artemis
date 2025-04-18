@@ -18,7 +18,7 @@ func ExecuteTemplate(tmpl *template.Template, data any) (string, error) {
 
 }
 
-func GenerateAggregatedServingsQuery(timeframe dto.Timeframe, userId string) (string, error) {
+func GenerateAverageServingsQuery(timeframe dto.Timeframe, userId string) (string, error) {
 
 	var intervalStep string = "1"
 	var intervalEntity string
@@ -83,3 +83,86 @@ LIMIT 1;
 	return ExecuteTemplate(tmpl, data)
 
 }
+
+func GenerateAggregatedServingsQuery(timeframe dto.Timeframe, userId string) (string, error) {
+
+	var intervalMax int64 = 5
+	var intervalStep int64 = 1
+	var intervalEntity string
+	var weekMuliplier float64 = 1
+
+	switch timeframe {
+	case dto.Week:
+		intervalEntity = "week"
+	case dto.Month:
+		intervalEntity = "month"
+		weekMuliplier = 4.34524
+	case dto.Quarter:
+		intervalEntity = "month"
+		intervalMax = 15
+		intervalStep = 3
+		weekMuliplier = 13
+	}
+
+	const tmplQuery = `
+WITH time_series AS (
+	SELECT generate_series(
+		date_trunc('{{.intervalEntity}}', NOW()) - INTERVAL '{{.intervalMax}} {{.intervalEntity}}',
+		date_trunc('{{.intervalEntity}}', NOW()),
+		INTERVAL '{{.intervalStep}} {{.intervalEntity}}'
+	) AS timeframe_start,
+		'{{.userId}}'::uuid AS user_id
+)
+Select ts.timeframe_start, '{{.timeframe}}' as timeframe,
+	COUNT(CASE WHEN s.category = 'meat' THEN 1 END)  AS meat_servings,
+    COUNT(CASE WHEN s.category = 'vegetarian' THEN 1 END)  AS vegetarian_servings,
+    COUNT(CASE WHEN s.category = 'alcohol' THEN 1 END)  AS alcohol_servings,
+    COUNT(CASE WHEN s.category = 'candy' THEN 1 END)  AS candy_servings,
+	CAST(ROUND(u.meattarget * {{.weekMuliplier}}, 2) as INT) as meat_target
+From time_series ts
+Left join servings s on ts.timeframe_start = date_trunc('{{.intervalEntity}}', s.date) and s.user_id = ts.user_id
+Left join users u on u.id = ts.user_id
+Group by ts.timeframe_start, u.meattarget
+Order by ts.timeframe_start DESC
+`
+
+	tmpl, err := template.New("query").Parse(tmplQuery)
+	if err != nil {
+		return "", err
+	}
+	data := map[string]any{
+		"timeframe":      timeframe,
+		"userId":         userId,
+		"intervalStep":   intervalStep,
+		"intervalEntity": intervalEntity,
+		"weekMuliplier":  weekMuliplier,
+		"intervalMax":    intervalMax,
+	}
+
+	query, err := ExecuteTemplate(tmpl, data)
+	if err != nil {
+		return "", err
+	}
+	return query, nil
+
+}
+
+// WITH time_series AS (
+// 	SELECT generate_series(
+// 		date_trunc('month', NOW()) - INTERVAL '5 months',
+// 		date_trunc('month', NOW()),
+// 		INTERVAL '1 month'
+// 	) AS timeframe_start,
+// 		'8fcc2bf7-0eea-4f77-8838-f898ed78e162'::uuid AS user_id
+// )
+// Select ts.timeframe_start, 'month' as timeframe,
+// 	COUNT(CASE WHEN s.category = 'meat' THEN 1 END)  AS meat_portions,
+//     COUNT(CASE WHEN s.category = 'vegetarian' THEN 1 END)  AS vegetarian_portions,
+//     COUNT(CASE WHEN s.category = 'alcohol' THEN 1 END)  AS alcohol_portions,
+//     COUNT(CASE WHEN s.category = 'candy' THEN 1 END)  AS candy_portions,
+// 	u.meattarget
+// From time_series ts
+// Left join servings s on ts.timeframe_start = date_trunc('month', s.date) and s.user_id = ts.user_id
+// Left join users u on u.id = ts.user_id
+// Group by ts.timeframe_start, u.meattarget
+// Order by ts.timeframe_start DESC

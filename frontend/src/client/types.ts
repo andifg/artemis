@@ -70,9 +70,15 @@ export type AverageServings = {
 
 export type AggregatedServings = {
   timeframe: Timeframe;
-  total: number;
   timeframe_start: string;
+  meat_servings: number;
+  vegetarian_servings: number;
+  alcohol_servings: number;
+  candy_servings: number;
   meat_target: number;
+  vegetarian_target: number;
+  alcohol_target: number;
+  candy_target: number;
 };
 
 export type ServingDateList = {

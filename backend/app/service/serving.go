@@ -21,8 +21,8 @@ type ServingService interface {
 	GetDailyOverview(userId uuid.UUID) ([]dto.DayOverview, error)
 	GetServingsByUserID(*gin.Context)
 	DeleteServing(uuid.UUID, uuid.UUID) error
-	GetAggregatedServingsByTimeframe(uuid.UUID, dto.Timeframe) ([]dto.AggregatedServings, error)
-	GetServingsAverages(uuid.UUID, string) (dto.AverageServings, error)
+	GetServingsAggregates(uuid.UUID, dto.Timeframe) ([]dto.AggregatedServings, error)
+	GetServingsAverages(uuid.UUID, dto.Timeframe) (dto.AverageServings, error)
 	GetServingsStreaks(uuid.UUID) ([]dto.ServingStreaks, error)
 }
 
@@ -158,7 +158,7 @@ func (m ServingServiceImpl) DeleteServing(meat_portion_id uuid.UUID, user_id uui
 
 }
 
-func (m ServingServiceImpl) GetServingsAverages(userId uuid.UUID, timeframe string) (dto.AverageServings, error) {
+func (m ServingServiceImpl) GetServingsAverages(userId uuid.UUID, timeframe dto.Timeframe) (dto.AverageServings, error) {
 
 	log.Info(fmt.Sprintf("Getting Serving Averages by user ID: %v, timeframe: %v", userId, timeframe))
 
@@ -172,7 +172,7 @@ func (m ServingServiceImpl) GetServingsAverages(userId uuid.UUID, timeframe stri
 	return avg, nil
 }
 
-func (m ServingServiceImpl) GetAggregatedServingsByTimeframe(user_id uuid.UUID, timeframe dto.Timeframe) ([]dto.AggregatedServings, error) {
+func (m ServingServiceImpl) GetServingsAggregates(user_id uuid.UUID, timeframe dto.Timeframe) ([]dto.AggregatedServings, error) {
 
 	log.Info(fmt.Sprintf("Getting Aggregated Meat Portion by user ID: %v, timeframe: %v", user_id, timeframe))
 
