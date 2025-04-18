@@ -56,9 +56,16 @@ export type APIResponse<T> = {
 };
 
 export type AverageServings = {
-  Timeframe: Timeframe;
-  Value: number;
-  ChangeRate: number;
+  timeframe: Timeframe;
+  timeframe_start: string;
+  meat_portions: number;
+  vegetarian_portions: number;
+  alcohol_portions: number;
+  candy_portions: number;
+  prev_meat_portions: number;
+  prev_vegetarian_portions: number;
+  prev_alcohol_portions: number;
+  prev_candy_portions: number;
 };
 
 export type AggregatedServings = {

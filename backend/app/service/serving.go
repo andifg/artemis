@@ -11,10 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
-	"math"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 type ServingService interface {
@@ -23,8 +21,8 @@ type ServingService interface {
 	GetDailyOverview(userId uuid.UUID) ([]dto.DayOverview, error)
 	GetServingsByUserID(*gin.Context)
 	DeleteServing(uuid.UUID, uuid.UUID) error
-	GetWeeklyAverage(uuid.UUID, string) (dto.AverageServings, error)
 	GetAggregatedServingsByTimeframe(uuid.UUID, dto.Timeframe) ([]dto.AggregatedServings, error)
+	GetServingsAverages(uuid.UUID, string) (dto.AverageServings, error)
 	GetServingsStreaks(uuid.UUID) ([]dto.ServingStreaks, error)
 }
 
@@ -160,83 +158,15 @@ func (m ServingServiceImpl) DeleteServing(meat_portion_id uuid.UUID, user_id uui
 
 }
 
-func (m ServingServiceImpl) GetWeeklyAverage(userId uuid.UUID, timeframe string) (dto.AverageServings, error) {
+func (m ServingServiceImpl) GetServingsAverages(userId uuid.UUID, timeframe string) (dto.AverageServings, error) {
 
-	var cutoff time.Time
-	var middleTime time.Time
-	var weeksNew int64
-	var weeksOld int64
+	log.Info(fmt.Sprintf("Getting Serving Averages by user ID: %v, timeframe: %v", userId, timeframe))
 
-	var today time.Time = time.Now()
-
-	switch {
-	case timeframe == "week":
-		weekdaySub := int(today.Weekday())
-		if weekdaySub == 0 {
-			weekdaySub = 7
-		}
-		cutoff = time.Date(today.Year(), today.Month(), (today.Day() - weekdaySub - 6), 0, 0, 0, 0, time.Local)
-		middleTime = time.Date(today.Year(), today.Month(), today.Day()-weekdaySub+1, 0, 0, 0, 0, time.Local)
-		weeksNew = 1
-		weeksOld = 1
-	case timeframe == "month":
-		middleTime = time.Date(today.Year(), today.Month(), 1, 0, 0, 0, 0, time.Local)
-		cutoff = middleTime.AddDate(0, -1, 0)
-		weeksNew = int64(today.Day()) / 7
-		weeksOld = int64(time.Date(today.Year(), today.Month(), -1, 0, 0, 0, 0, time.Local).Day()) / 7
-	case timeframe == "quarter":
-		middleTime = time.Date(today.Year(), (today.Month()-1)/3*3+1, 1, 0, 0, 0, 0, time.Local)
-		cutoff = middleTime.AddDate(0, -3, 0)
-		weeksNew = int64(today.Sub(middleTime).Hours()/24) / 7
-		weeksOld = int64(middleTime.Sub(cutoff).Hours()/24) / 7
-	default:
-		log.Error("Invalid timeframe value selected")
-		return dto.AverageServings{}, customerrors.NewBadRequestError("Invalid timeframe value selected")
-	}
-
-	log.Debug("CutOff: ", cutoff)
-	log.Debug("MiddleTime: ", middleTime)
-
-	meatPortions, err := m.meatPortionRepository.GetServings(userId.String(), 0, 0, &cutoff)
+	avg, err := m.meatPortionRepository.GetServingsAverages(userId.String(), dto.Timeframe(timeframe))
 
 	if err != nil {
-		log.Error("Error getting meat portions: ", err)
+		log.Error("Error getting meat portion averages: ", err)
 		return dto.AverageServings{}, err
-	}
-
-	var sumNew int64
-	var sumOld int64
-
-	for _, portion := range meatPortions {
-		if portion.Date.Before(middleTime) {
-			sumOld++
-		} else {
-			sumNew++
-		}
-	}
-
-	var averageNew float64 = 0
-	var averageOld float64 = 0
-
-	if weeksNew != 0 {
-		averageNew = float64(sumNew) / float64(weeksNew)
-	}
-	if weeksOld != 0 {
-		averageOld = float64(sumOld) / float64(weeksOld)
-	}
-
-	changeRate := 0
-
-	if averageOld != 0 {
-		changeRate = int(float64(averageNew-averageOld) / float64(averageOld) * 100)
-	}
-
-	log.Info(fmt.Sprintf("Sum of new: %d with average %f of weeks %d, Sum of old %d with average %f and weeks %d and total change rate %d%% ", sumNew, averageNew, weeksNew, sumOld, averageOld, weeksOld, changeRate))
-
-	avg := dto.AverageServings{
-		Timeframe:  dto.Timeframe(timeframe),
-		Value:      int64(math.Round(averageNew)),
-		ChangeRate: int64(changeRate),
 	}
 
 	return avg, nil

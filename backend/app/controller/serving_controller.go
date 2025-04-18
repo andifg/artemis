@@ -22,8 +22,8 @@ type ServingController interface {
 	GetDailyOverview(c *gin.Context)
 	GetServings(c *gin.Context)
 	DeleteServing(c *gin.Context)
-	GetAverage(c *gin.Context)
 	GetAggregatedServingsByTimeframe(c *gin.Context)
+	GetServingsAverages(c *gin.Context)
 	GetServingsStreaks(c *gin.Context)
 }
 
@@ -141,13 +141,13 @@ func (controller ServingControllerImpl) DeleteServing(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 
-func (controller ServingControllerImpl) GetAverage(c *gin.Context) {
+func (controller ServingControllerImpl) GetServingsAverages(c *gin.Context) {
 	defer pkg.PanicHandler(c)
 	user_id := contextutils.GetUserID(c)
 
 	timeframe := c.Query("timeframe")
 
-	averageData, err := controller.servingService.GetWeeklyAverage(user_id, timeframe)
+	averageData, err := controller.servingService.GetServingsAverages(user_id, timeframe)
 
 	if err != nil {
 		log.Error("Error getting average: ", err)

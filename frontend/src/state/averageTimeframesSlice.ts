@@ -4,28 +4,29 @@ import { StateCreator } from "zustand";
 export interface AverageTimeFramesSlice {
   timeFrame: Timeframe;
   setTimeFrame: (timeFrame: Timeframe) => void;
-  averageWeeklyMeatPortions: AverageServings | undefined;
-  averageMonthlyMeatPortions: AverageServings | undefined;
-  averageQuarterlyMeatPortions: AverageServings | undefined;
-  setAverageServings: (averageMeatPortions: AverageServings) => void;
+  averageWeeklyServings: AverageServings | undefined;
+  averageMonthlyServings: AverageServings | undefined;
+  averageQuarterlyServings: AverageServings | undefined;
+  setAverageServings: (averageServings: AverageServings) => void;
 }
 
 const averageTimeFrameSlice: StateCreator<AverageTimeFramesSlice> = (set) => ({
   timeFrame: "week",
   setTimeFrame: (timeFrame) => set({ timeFrame }),
-  averageWeeklyMeatPortions: undefined,
-  averageMonthlyMeatPortions: undefined,
-  averageQuarterlyMeatPortions: undefined,
-  setAverageServings: (averageMeatPortions) => {
-    switch (averageMeatPortions.Timeframe) {
+  averageWeeklyServings: undefined,
+  averageMonthlyServings: undefined,
+  averageQuarterlyServings: undefined,
+  setAverageServings: (averageServings) => {
+    switch (averageServings.timeframe) {
       case "week":
-        set({ averageWeeklyMeatPortions: averageMeatPortions });
+        console.log("Setting weekly servings");
+        set({ averageWeeklyServings: averageServings });
         break;
       case "month":
-        set({ averageMonthlyMeatPortions: averageMeatPortions });
+        set({ averageMonthlyServings: averageServings });
         break;
       case "quarter":
-        set({ averageQuarterlyMeatPortions: averageMeatPortions });
+        set({ averageQuarterlyServings: averageServings });
         break;
     }
   },

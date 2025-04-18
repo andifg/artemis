@@ -1,21 +1,48 @@
 import "./averageMeatPortions.scss";
 import { DashboardBox } from "../DashboardBox/DashboardBox";
 import { TrendingUp } from "lucide-react";
-import { useAverageMeatPortions } from "./useAverageMeatPortions";
-import { useCentralState } from "@/hooks/useCentralState";
+import { useAverageMeatPortions } from "../AnalyticsWrapper/useAverageMeatPortions";
 import { AverageMeatPortionsValues } from "./AverageMeatPortionsValues";
 
 import { TimeFrameSelector } from "../TimeframeSelector/TimeFrameSelector";
+import { AverageServings, ServingCategory } from "@/client/types";
 
-function AverageMeatPortions() {
-  const {
-    timeFrame,
-    averageMonthlyMeatPortions,
-    averageQuarterlyMeatPortions,
-    averageWeeklyMeatPortions,
-  } = useCentralState();
+type AverageMeatPortionsProps = {
+  averageServings: AverageServings;
+  servingCategory: ServingCategory;
+};
 
+function AverageMeatPortions({
+  averageServings,
+  servingCategory,
+}: AverageMeatPortionsProps) {
   useAverageMeatPortions();
+
+  let currentValue: number = 0;
+  let lastValue: number = 0;
+
+  switch (servingCategory) {
+    case "meat":
+      currentValue = averageServings.meat_portions;
+      lastValue = averageServings.prev_meat_portions;
+      break;
+    case "vegetarian":
+      currentValue = averageServings.vegetarian_portions;
+      lastValue = averageServings.prev_vegetarian_portions;
+      break;
+    case "alcohol":
+      currentValue = averageServings.alcohol_portions;
+      lastValue = averageServings.prev_alcohol_portions;
+      break;
+    case "candy":
+      currentValue = averageServings.candy_portions;
+      lastValue = averageServings.prev_candy_portions;
+      break;
+    default:
+      currentValue = averageServings.meat_portions;
+      lastValue = averageServings.prev_meat_portions;
+      break;
+  }
 
   return (
     <DashboardBox>
@@ -24,7 +51,8 @@ function AverageMeatPortions() {
           <div className="average-meat-portions-header-title">
             <TrendingUp color="var(--secondary-color)" />
             <div className="average-meat-portions-header-title-title">
-              Average Weekly Meat Portions
+              Average Weekly {servingCategory.charAt(0).toUpperCase()}
+              {servingCategory.slice(1)} Portions
             </div>
           </div>
 
@@ -32,13 +60,8 @@ function AverageMeatPortions() {
         </div>
 
         <AverageMeatPortionsValues
-          averageMeatPortions={
-            timeFrame == "week"
-              ? averageWeeklyMeatPortions
-              : timeFrame == "month"
-                ? averageMonthlyMeatPortions
-                : averageQuarterlyMeatPortions
-          }
+          currentValue={currentValue}
+          lastValue={lastValue}
         />
       </div>
     </DashboardBox>

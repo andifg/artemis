@@ -85,7 +85,7 @@ class ServingService {
     userID: string,
     timeframe: Timeframe,
   ): Promise<APIResponse<AverageServings>> {
-    const url = `${API.baseURL}/api/v1/user/${userID}/servings/average?timeframe=${timeframe}`;
+    const url = `${API.baseURL}/api/v1/user/${userID}/servings-averages?timeframe=${timeframe}`;
 
     return handleApiRequest<APIResponse<AverageServings>>(url);
   }
