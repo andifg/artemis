@@ -188,9 +188,9 @@ func (m ServingRepositoryImpl) GetServingsAverages(userID string, timeframe dto.
 
 	var averageServings dto.AverageServings
 
-	queryStr, err := repository_queries.GenerateAggregatedServingsQuery(timeframe, userID)
+	queryStr, err := repository_queries.GenerateAverageServingsQuery(timeframe, userID)
 
-	log.Debug("Portion Chart Query: ", queryStr)
+	log.Debug("Average Servings query: ", queryStr)
 
 	if err != nil {
 		log.Error("Error creating query: ", err)
@@ -213,47 +213,11 @@ func (m ServingRepositoryImpl) GetAggregatedServingsByTimeframe(userID string, t
 	log.Debug(fmt.Sprintf("Getting Aggregated Meat Portion by user ID: %v, timeframe: %v", userID, timeframe))
 
 	var aggregatedServings []dto.AggregatedServings
-	var intervalMax int64 = 5
-	var intervalStep int64 = 1
-	var intervalEntity string
-	var weekMuliplier float64 = 1
-
-	switch timeframe {
-	case dto.Week:
-		timeframe = "week"
-		intervalEntity = "week"
-	case dto.Month:
-		timeframe = "month"
-		intervalEntity = "month"
-		weekMuliplier = 4.34524
-	case dto.Quarter:
-		timeframe = "quarter"
-		intervalEntity = "month"
-		intervalMax = 15
-		intervalStep = 3
-		weekMuliplier = 13
+	queryStr, err := repository_queries.GenerateAggregatedServingsQuery(timeframe, userID)
+	if err != nil {
+		log.Error("Error creating query: ", err)
+		return nil, err
 	}
-
-	queryStr := fmt.Sprintf(`
-	WITH time_series AS (
-    SELECT generate_series(
-        date_trunc('%s', NOW()) - INTERVAL '%d %ss',
-        date_trunc('%s', NOW()),
-        INTERVAL '%d %s'
-    ) AS timeframe_start,
-	'%s'::uuid AS user_id
-	)
-	SELECT ts.timeframe_start, COALESCE(mp.total, 0) AS total, '%s' AS timeframe, CAST(ROUND(users.meattarget * %f, 2) as INT) as meat_target
-	FROM time_series ts
-	LEFT JOIN (
-	SELECT date_trunc('%s', date) AS timeframe_start, COUNT(*) AS total, user_id
-	FROM servings
-	WHERE user_id = '%s'
-	GROUP BY timeframe_start, user_id
-	) mp ON ts.timeframe_start = mp.timeframe_start
-	LEFT JOIN users ON users.id = ts.user_id
-	ORDER BY ts.timeframe_start DESC;
-	`, timeframe, intervalMax, intervalEntity, timeframe, intervalStep, intervalEntity, userID, timeframe, weekMuliplier, timeframe, userID)
 
 	log.Debug("Portion Chart Query: ", queryStr)
 
@@ -264,7 +228,7 @@ func (m ServingRepositoryImpl) GetAggregatedServingsByTimeframe(userID string, t
 		return nil, query.Error
 	}
 
-	log.Tracef("Aggregated Meat Portions found: ", aggregatedServings)
+	log.Tracef("Aggregated Meat Portions found: %v", aggregatedServings)
 	return aggregatedServings, nil
 }
 

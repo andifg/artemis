@@ -94,7 +94,7 @@ class ServingService {
     userID: string,
     timeframe: Timeframe,
   ): Promise<APIResponse<AggregatedServings[]>> {
-    const url = `${API.baseURL}/api/v1/user/${userID}/servings/aggregate?timeframe=${timeframe}`;
+    const url = `${API.baseURL}/api/v1/user/${userID}/servings-aggregates?timeframe=${timeframe}`;
 
     return handleApiRequest<APIResponse<AggregatedServings[]>>(url);
   }

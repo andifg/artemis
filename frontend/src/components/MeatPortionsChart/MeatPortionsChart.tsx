@@ -1,4 +1,4 @@
-import "./meatPortionsChart.scss";
+import "./MeatPortionsChart.scss";
 import { DashboardBox } from "../DashboardBox/DashboardBox";
 import { useMeatPortionChart } from "./useMeatPortionChart";
 import { TimeFrameSelector } from "../TimeframeSelector/TimeFrameSelector";
@@ -69,7 +69,7 @@ function MeatPortionsChart() {
           <div className="meat-portions-chart-title-left">
             <ChartNoAxesColumn color="var(--secondary-color)" />
             <div className="meat-portions-chart-title-title">
-              Total Meat Portions
+              Total Servings
             </div>
           </div>
           <TimeFrameSelector />

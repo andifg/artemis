@@ -61,6 +61,7 @@ const MeatPortionBarChartContainer = <T,>({
               fill="white"
               textAnchor="middle"
               dominantBaseline="middle"
+              fontSize={10}
             >
               {value}
             </text>
@@ -73,11 +74,12 @@ const MeatPortionBarChartContainer = <T,>({
   return loading && aggregatedMeatPortions == undefined ? (
     <Skeleton className="min-h-[200px] w-full m-2 self-center" />
   ) : (
-    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+    <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
       <ComposedChart
         accessibilityLayer
         data={data?.sort((a, b) => a.timeframe.localeCompare(b.timeframe))}
         margin={{ top: 30, left: 0 }}
+        barCategoryGap={"13%"}
       >
         <CartesianGrid vertical={false} />
         <XAxis
@@ -89,22 +91,82 @@ const MeatPortionBarChartContainer = <T,>({
         />
         <YAxis width={25} allowDecimals={false} />
         <Bar
-          dataKey="total"
-          name="Portions"
+          dataKey="meat_servings"
+          name="Meat Servings"
           fill="var(--secondary-color)"
           radius={4}
         >
           <LabelList
-            dataKey="total"
+            dataKey="meat_servings"
+            position="insideTop"
+            content={renderCustomizedLabel}
+          />
+        </Bar>
+        <Bar
+          dataKey="vegetarian_servings"
+          name="Vegetarian Servings"
+          fill="var(--secondary-dark)"
+          radius={4}
+        >
+          <LabelList
+            dataKey="vegetarian_servings"
+            position="insideTop"
+            content={renderCustomizedLabel}
+          />
+        </Bar>
+        <Bar
+          dataKey="alcohol_servings"
+          name="Alcohol Servings"
+          fill="var(--secondary-light)"
+          radius={4}
+        >
+          <LabelList
+            dataKey="alcohol_servings"
+            position="insideTop"
+            content={renderCustomizedLabel}
+          />
+        </Bar>
+        <Bar
+          dataKey="candy_servings"
+          name="Candy Servings"
+          fill="var(--sencodary-darker)"
+          radius={4}
+        >
+          <LabelList
+            dataKey="candy_servings"
             position="insideTop"
             content={renderCustomizedLabel}
           />
         </Bar>
         <Line
-          name="Meat Portion Target"
+          name="Meat Serving Target"
           type="monotone"
           dataKey="meat_target"
+          stroke="var(--secondary-color)"
+          strokeWidth={2}
+          dot={false}
+        />
+        <Line
+          name="Vegetarian Serving Target"
+          type="monotone"
+          dataKey="vegetarian_target"
           stroke="var(--secondary-dark)"
+          strokeWidth={2}
+          dot={false}
+        />
+        <Line
+          name="Alcohol Serving Target"
+          type="monotone"
+          dataKey="alcohol_target"
+          stroke="var(--secondary-light)"
+          strokeWidth={2}
+          dot={false}
+        />
+        <Line
+          name="Candy Serving Target"
+          type="monotone"
+          dataKey="candy_target"
+          stroke="var(--sencodary-darker)"
           strokeWidth={2}
           dot={false}
         />

@@ -22,7 +22,7 @@ type ServingController interface {
 	GetDailyOverview(c *gin.Context)
 	GetServings(c *gin.Context)
 	DeleteServing(c *gin.Context)
-	GetAggregatedServingsByTimeframe(c *gin.Context)
+	GetServingsAggregates(c *gin.Context)
 	GetServingsAverages(c *gin.Context)
 	GetServingsStreaks(c *gin.Context)
 }
@@ -147,7 +147,7 @@ func (controller ServingControllerImpl) GetServingsAverages(c *gin.Context) {
 
 	timeframe := c.Query("timeframe")
 
-	averageData, err := controller.servingService.GetServingsAverages(user_id, timeframe)
+	averageData, err := controller.servingService.GetServingsAverages(user_id, dto.Timeframe(timeframe))
 
 	if err != nil {
 		log.Error("Error getting average: ", err)
@@ -159,7 +159,7 @@ func (controller ServingControllerImpl) GetServingsAverages(c *gin.Context) {
 
 }
 
-func (controller ServingControllerImpl) GetAggregatedServingsByTimeframe(c *gin.Context) {
+func (controller ServingControllerImpl) GetServingsAggregates(c *gin.Context) {
 	defer pkg.PanicHandler(c)
 	user := c.Param("id")
 	user_id := uuid.MustParse(user)
@@ -168,7 +168,7 @@ func (controller ServingControllerImpl) GetAggregatedServingsByTimeframe(c *gin.
 
 	log.Debug(fmt.Sprintf("TIMEFRAME: %s", timeframe))
 
-	aggreatedServing, err := controller.servingService.GetAggregatedServingsByTimeframe(user_id, dto.Timeframe(timeframe))
+	aggreatedServing, err := controller.servingService.GetServingsAggregates(user_id, dto.Timeframe(timeframe))
 
 	if err != nil {
 		log.Error("Error getting aggregated meat portions: ", err)
