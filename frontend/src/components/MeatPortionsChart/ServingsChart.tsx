@@ -1,20 +1,20 @@
-import "./MeatPortionsChart.scss";
+import "./servingsChart.scss";
 import { DashboardBox } from "../DashboardBox/DashboardBox";
-import { useMeatPortionChart } from "./useMeatPortionChart";
+import { useServingsChart } from "./useServingsChart";
 import { TimeFrameSelector } from "../TimeframeSelector/TimeFrameSelector";
-import { MeatPortionBarChartContainer } from "./MeatPortionBarChartContainer";
+import { ServingsBarChartContainer } from "./ServingsBarChartContainer";
 import { ChartNoAxesColumn } from "lucide-react";
 import { useCentralState } from "@/hooks/useCentralState";
 import { useEffect } from "react";
 import { getCalendarWeek } from "@/utils/getCalendarWeek";
 import { AggregatedServings } from "@/client/types";
 
-function MeatPortionsChart() {
-  const { loading } = useMeatPortionChart();
+function ServingsChart() {
+  const { loading } = useServingsChart();
   const {
-    aggregatedWeeklyMeatPortions,
-    aggregatedMonthlyMeatPortions,
-    aggregatedQuarterlyMeatPortions,
+    aggregatedWeeklyServings,
+    aggregatedMonthlyServings,
+    aggregatedQuarterlyServings,
     timeFrame,
   } = useCentralState();
 
@@ -22,7 +22,7 @@ function MeatPortionsChart() {
     switch (timeFrame) {
       case "week":
         return {
-          data: aggregatedWeeklyMeatPortions,
+          data: aggregatedWeeklyServings,
           dataKey: (entry: AggregatedServings) => {
             const date = new Date(entry.timeframe_start);
             return `W${getCalendarWeek(date)}`;
@@ -30,7 +30,7 @@ function MeatPortionsChart() {
         };
       case "month":
         return {
-          data: aggregatedMonthlyMeatPortions,
+          data: aggregatedMonthlyServings,
           dataKey: (entry: AggregatedServings) => {
             const date = new Date(entry.timeframe_start);
             return `${date.toLocaleString("default", { month: "short" })}`;
@@ -38,7 +38,7 @@ function MeatPortionsChart() {
         };
       case "quarter":
         return {
-          data: aggregatedQuarterlyMeatPortions,
+          data: aggregatedQuarterlyServings,
           dataKey: (entry: AggregatedServings) => {
             const date = new Date(entry.timeframe_start);
             return `Q${Math.ceil((date.getMonth() + 1) / 3)}`;
@@ -56,33 +56,28 @@ function MeatPortionsChart() {
     [];
 
   useEffect(() => {
-    console.log(
-      "Aggregated weekly meat portions: ",
-      aggregatedWeeklyMeatPortions,
-    );
-  }, [aggregatedWeeklyMeatPortions]);
+    console.log("Aggregated weekly meat portions: ", aggregatedWeeklyServings);
+  }, [aggregatedWeeklyServings]);
 
   return (
     <DashboardBox>
-      <div className="meat-portions-chart-wrapper">
-        <div className="meat-portions-chart-title">
-          <div className="meat-portions-chart-title-left">
+      <div className="servings-chart-wrapper">
+        <div className="servings-chart-title">
+          <div className="servings-chart-title-left">
             <ChartNoAxesColumn color="var(--secondary-color)" />
-            <div className="meat-portions-chart-title-title">
-              Total Servings
-            </div>
+            <div className="servings-chart-title-title">Total Servings</div>
           </div>
           <TimeFrameSelector />
         </div>
-        <MeatPortionBarChartContainer<AggregatedServings>
+        <ServingsBarChartContainer<AggregatedServings>
           data={sortedData}
           dataKey={dataKey}
           loading={loading}
-          aggregatedMeatPortions={data}
+          aggregatedServings={data}
         />
       </div>
     </DashboardBox>
   );
 }
 
-export { MeatPortionsChart };
+export { ServingsChart };

@@ -7,7 +7,7 @@ import { AddServingContext } from "@/contexts/addServingContext";
 import { DeleteServingContext } from "@/contexts/deleteServingContext";
 import { useCentralState } from "@/hooks/useCentralState";
 
-function useMeatPortionChart(): {
+function useServingsChart(): {
   loading: boolean;
 } {
   const { getUser } = useAuthentication();
@@ -17,7 +17,7 @@ function useMeatPortionChart(): {
   const { timeFrame, setAggregatedServings } = useCentralState();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const fetchAggregatedMeatPortions = (timeFrameToFetch: Timeframe) => {
+  const fetchAggregatedServings = (timeFrameToFetch: Timeframe) => {
     setLoading(true);
     console.log(
       "2: Fetching aggregated meat portions for timeframe: ",
@@ -33,25 +33,25 @@ function useMeatPortionChart(): {
     });
   };
 
-  const updateMeatPortions = (_: Serving, timeFrameToFetch: Timeframe) => {
+  const updateServings = (_: Serving, timeFrameToFetch: Timeframe) => {
     console.log("1: Updating meat portions for timeframe: ", timeFrameToFetch);
-    fetchAggregatedMeatPortions(timeFrameToFetch);
+    fetchAggregatedServings(timeFrameToFetch);
   };
 
   const deleteMeatPortion = (_: Serving, timeFrameToFetch: Timeframe) => {
-    fetchAggregatedMeatPortions(timeFrameToFetch);
+    fetchAggregatedServings(timeFrameToFetch);
   };
 
   useEffect(() => {
-    registerAddCallback(updateMeatPortions);
+    registerAddCallback(updateServings);
     registerDeleteCallback(deleteMeatPortion);
   }, []);
 
   useEffect(() => {
-    fetchAggregatedMeatPortions(timeFrame);
+    fetchAggregatedServings(timeFrame);
   }, [timeFrame]);
 
   return { loading };
 }
 
-export { useMeatPortionChart };
+export { useServingsChart };
