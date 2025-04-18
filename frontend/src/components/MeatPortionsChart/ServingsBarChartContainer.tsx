@@ -1,4 +1,3 @@
-import "./meatPortionsChart.scss";
 import { ChartConfig, ChartContainer } from "../ui/chart";
 import { CategoricalChartProps } from "recharts/types/chart/generateCategoricalChart";
 import {
@@ -25,19 +24,19 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-type MeatPortionBarChartContainerProps<T> = {
+type ServingsBarChartContainerProps<T> = {
   data: CategoricalChartProps["data"];
   dataKey: DataKey<T>;
   loading: boolean;
-  aggregatedMeatPortions: AggregatedServings[] | undefined;
+  aggregatedServings: AggregatedServings[] | undefined;
 };
 
-const MeatPortionBarChartContainer = <T,>({
+const ServingsBarChartContainer = <T,>({
   data,
   dataKey,
   loading,
-  aggregatedMeatPortions,
-}: MeatPortionBarChartContainerProps<T>) => {
+  aggregatedServings,
+}: ServingsBarChartContainerProps<T>) => {
   useEffect(() => {
     console.log("Meat portion chart data: ", data);
   }, [data]);
@@ -71,7 +70,7 @@ const MeatPortionBarChartContainer = <T,>({
     );
   };
 
-  return loading && aggregatedMeatPortions == undefined ? (
+  return loading && aggregatedServings == undefined ? (
     <Skeleton className="min-h-[200px] w-full m-2 self-center" />
   ) : (
     <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
@@ -176,4 +175,4 @@ const MeatPortionBarChartContainer = <T,>({
   );
 };
 
-export { MeatPortionBarChartContainer };
+export { ServingsBarChartContainer };

@@ -1,22 +1,22 @@
-.meat-portions-chart-wrapper {
+.servings-chart-wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
   padding: 10px;
 }
 
-.meat-portions-chart-title {
+.servings-chart-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.meat-portions-chart-title-left {
+.servings-chart-title-left {
   display: inline-flex;
   font-size: 1rem;
   align-items: center;
 }
 
-.meat-portions-chart-title-title {
+.servings-chart-title-title {
   margin-left: 10px;
 }

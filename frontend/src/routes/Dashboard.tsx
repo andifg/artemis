@@ -3,7 +3,7 @@ import { BottomNavigator } from "@/Components/BottomNavigator/BottomNavigator";
 import { LogoHeader } from "@/Components/LogoHeader/LogoHeader";
 import { VeggieStreak } from "@/Components/VeggiStreak/VeggieStreak";
 import { DailyOverview } from "@/Components/DailyOverview/DailyOverview";
-import { MeatPortionsChart } from "@/Components/MeatPortionsChart/MeatPortionsChart";
+import { ServingsChart } from "@/Components/MeatPortionsChart/ServingsChart";
 import { AddServingContextProvider } from "@/contexts/addServingContext";
 import { DeleteServingContextProvider } from "@/contexts/deleteServingContext";
 import { AnalyticsWrapper } from "@/Components/AnalyticsWrapper/AnalyticsWrapper";
@@ -18,7 +18,7 @@ function Dashboard() {
             <>
               <DailyOverview />
               <VeggieStreak />
-              <MeatPortionsChart />
+              <ServingsChart />
               <AnalyticsWrapper />
             </>
           }
