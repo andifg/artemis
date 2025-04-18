@@ -26,11 +26,7 @@ function useAverageMeatPortions(): useAverageMeatPortionsReturn {
       args: [getUser().id, timeFrameToCatch],
     }).then((data) => {
       console.log("data average", data.data);
-      setAverageServings({
-        Timeframe: data.data.Timeframe,
-        Value: data.data.Value,
-        ChangeRate: data.data.ChangeRate,
-      });
+      setAverageServings(data.data);
       setLoading(false);
     });
   };

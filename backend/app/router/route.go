@@ -46,9 +46,9 @@ func Init(init *config.Initialization, oidcMgr auth.OidcManager, origin string) 
 
 			v1_authorized.GET("/user/:id/daily-overview", init.ServingController.GetDailyOverview)
 
-			v1_authorized.GET("/user/:id/servings/average", init.ServingController.GetAverage)
-
 			v1_authorized.GET("/user/:id/servings/aggregate", init.ServingController.GetAggregatedServingsByTimeframe)
+
+			v1_authorized.GET("/user/:id/servings-averages", init.ServingController.GetServingsAverages)
 
 			v1_authorized.GET("/user/:id/serving-streaks", init.ServingController.GetServingsStreaks)
 

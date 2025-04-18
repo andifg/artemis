@@ -1,21 +1,26 @@
-import { AverageServings } from "@/client/types";
-
 type AverageMeatPortionsValuesProps = {
-  averageMeatPortions: AverageServings | undefined;
+  currentValue?: number;
+  lastValue?: number;
 };
 
 const AverageMeatPortionsValues = ({
-  averageMeatPortions,
+  currentValue,
+  lastValue,
 }: AverageMeatPortionsValuesProps) => {
+  let changeRate = 0;
+  if (lastValue != undefined && lastValue != 0 && currentValue != undefined) {
+    changeRate = ((currentValue - lastValue) / lastValue) * 100;
+  }
+
   return (
     <div className="average-meat-portions-value-header">
       <div className="average-meat-portions-value">
-        {averageMeatPortions == undefined ? 0 : averageMeatPortions.Value}
+        {currentValue == undefined ? 0 : currentValue.toFixed(0)}
       </div>
       <div
-        className={`average-meat-portions-diff ${averageMeatPortions && averageMeatPortions.ChangeRate < 0 && "average-meat-portions-diff-negative"} ${averageMeatPortions && averageMeatPortions.ChangeRate == 0 && "average-meat-portions-diff-zero"} ${averageMeatPortions && averageMeatPortions.ChangeRate > 0 && "average-meat-portions-diff-positive"}`}
+        className={`average-meat-portions-diff ${changeRate < 0 && "average-meat-portions-diff-negative"} ${changeRate == 0 && "average-meat-portions-diff-zero"} ${changeRate > 0 && "average-meat-portions-diff-positive"}`}
       >
-        {averageMeatPortions == undefined ? 0 : averageMeatPortions.ChangeRate}%
+        {changeRate == undefined ? 0 : changeRate.toFixed(0)}%
       </div>
     </div>
   );

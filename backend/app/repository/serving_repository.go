@@ -6,6 +6,7 @@ import (
 	"github.com/andifg/artemis_backend/app/domain/dao"
 	"github.com/andifg/artemis_backend/app/domain/dto"
 	"github.com/andifg/artemis_backend/app/pkg/customerrors"
+	"github.com/andifg/artemis_backend/app/repository/repository_queries"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"time"
@@ -19,6 +20,7 @@ type ServingRepository interface {
 	GetServings(userID string, page int, limit int, cutOffDay *time.Time) ([]dao.Serving, error)
 	DeleteServing(servingID string) error
 	GetAggregatedServingsByTimeframe(userID string, timeframe dto.Timeframe) ([]dto.AggregatedServings, error)
+	GetServingsAverages(userID string, timeframe dto.Timeframe) (dto.AverageServings, error)
 	GetServingStreaks(userID string) ([]dto.ServingStreaks, error)
 }
 
@@ -178,8 +180,33 @@ func (m ServingRepositoryImpl) GetServings(userID string, page int, limit int, c
 		return []dao.Serving{}, result.Error
 	}
 
-	log.Tracef("Meat Portion found: ", servings)
+	log.Tracef("Meat Portion found: %v", servings)
 	return servings, nil
+}
+
+func (m ServingRepositoryImpl) GetServingsAverages(userID string, timeframe dto.Timeframe) (dto.AverageServings, error) {
+
+	var averageServings dto.AverageServings
+
+	queryStr, err := repository_queries.GenerateAggregatedServingsQuery(timeframe, userID)
+
+	log.Debug("Portion Chart Query: ", queryStr)
+
+	if err != nil {
+		log.Error("Error creating query: ", err)
+		return dto.AverageServings{}, err
+	}
+
+	query := m.db.Raw(queryStr).Scan(&averageServings)
+
+	if query.Error != nil {
+		log.Error("Error retrieving aggregated meat portions: ", query.Error)
+		return dto.AverageServings{}, query.Error
+	}
+
+	log.Tracef("Aggregated Meat Portions found: %v", averageServings)
+	return averageServings, nil
+
 }
 
 func (m ServingRepositoryImpl) GetAggregatedServingsByTimeframe(userID string, timeframe dto.Timeframe) ([]dto.AggregatedServings, error) {
