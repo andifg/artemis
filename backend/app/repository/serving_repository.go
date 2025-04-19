@@ -66,7 +66,7 @@ func (m ServingRepositoryImpl) UpdateServing(serving dao.Serving) (dao.Serving, 
 func (m ServingRepositoryImpl) GetServingsByUserID(userID string, cutOffDay *time.Time, limit *int) ([]dao.Serving, error) {
 	log.Debug(fmt.Sprintf("Fetching Meat Portion by user ID: %v", userID))
 
-	var servings []dao.Serving
+	servings := []dao.Serving{}
 
 	query := m.db.Model(&dao.Serving{}).Where("user_id = ?", userID).Order("date desc")
 
@@ -113,7 +113,7 @@ func (m ServingRepositoryImpl) GetServingById(servingID string) (dao.Serving, er
 func (m ServingRepositoryImpl) GetDailyOverview(userId string) ([]dto.DayOverview, error) {
 	log.Debugf("Creating DailyOverview for user with ID: %v", userId)
 
-	var dailyOverviews []dto.DayOverview
+	dailyOverviews := []dto.DayOverview{}
 
 	queryStr := fmt.Sprintf(`
 	WITH date_helpers AS (
@@ -158,7 +158,7 @@ func (m ServingRepositoryImpl) GetServings(userID string, page int, limit int, c
 
 	log.Debug(fmt.Sprintf("Getting Meat Portion by user ID: %v for page %d", userID, page))
 
-	var servings []dao.Serving
+	servings := []dao.Serving{}
 
 	query := m.db.Model(&dao.Serving{}).Where("user_id = ?", userID).Order("date desc")
 
@@ -212,7 +212,7 @@ func (m ServingRepositoryImpl) GetServingsAverages(userID string, timeframe dto.
 func (m ServingRepositoryImpl) GetAggregatedServingsByTimeframe(userID string, timeframe dto.Timeframe) ([]dto.AggregatedServings, error) {
 	log.Debug(fmt.Sprintf("Getting Aggregated Meat Portion by user ID: %v, timeframe: %v", userID, timeframe))
 
-	var aggregatedServings []dto.AggregatedServings
+	aggregatedServings := []dto.AggregatedServings{}
 	queryStr, err := repository_queries.GenerateAggregatedServingsQuery(timeframe, userID)
 	if err != nil {
 		log.Error("Error creating query: ", err)
@@ -235,7 +235,7 @@ func (m ServingRepositoryImpl) GetAggregatedServingsByTimeframe(userID string, t
 func (m ServingRepositoryImpl) GetServingStreaks(userId string) ([]dto.ServingStreaks, error) {
 	log.Debugf("Get Serving Streaks for user with ID: %v", userId)
 
-	var servingStreaks []dto.ServingStreaks
+	servingStreaks := []dto.ServingStreaks{}
 
 	queryString := fmt.Sprintf(`
 	Select s.category, Min(EXTRACT(DAY FROM CURRENT_DATE - s.date)::INT) + 1 as streak
