@@ -192,6 +192,8 @@ func (controller ServingControllerImpl) GetServingsStreaks(c *gin.Context) {
 		return
 	}
 
+	log.Info("STREEEAAAKKS: ", streaks)
+
 	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, streaks))
 }
 

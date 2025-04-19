@@ -39,16 +39,18 @@ function VeggieStreak() {
             plugins={[Autoplay({ delay: 3000, stopOnInteraction: false })]}
           >
             <CarouselContent className="max-h-10">
-              {loading && servingStreaks.length == 0 ? (
+              {loading && servingStreaks == undefined ? (
                 <CarouselItem>loading ....</CarouselItem>
               ) : (
                 Object.entries(servingCategoriesPriorities).map((priority) => {
                   return (
                     <CarouselItem>
                       {" "}
-                      {servingStreaks.find(
-                        (streak) => streak.serving_category == priority[1],
-                      )?.streak || 0}{" "}
+                      {(servingStreaks.length > 0 &&
+                        servingStreaks.find(
+                          (streak) => streak.serving_category == priority[1],
+                        )?.streak) ||
+                        0}{" "}
                       Days {streakNames[priority[1]]} Streak
                     </CarouselItem>
                   );
