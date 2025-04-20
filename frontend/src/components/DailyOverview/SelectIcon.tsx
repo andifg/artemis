@@ -2,6 +2,7 @@ import { DailyOverview } from "@/client/types";
 import { ServingIcon } from "../ServingIcon/ServingIcon";
 import { GenericIcon } from "../ServingIcon/GenericIcon";
 import MeatBeer from "../../assets/meat-beer.svg";
+import MeatCheese from "../../assets/meat-cheese.svg";
 import BeerCandy from "../../assets/beer-candy.svg";
 import CheeseBeer from "../../assets/cheese-beer.svg";
 import CheeseCandy from "../../assets/cheese-candy.svg";
@@ -53,7 +54,7 @@ const SelectIcon = ({ dayOverview }: { dayOverview: DailyOverview }) => {
       dayOverview.alcohol_portions == 0 &&
       dayOverview.candy_portions == 0
     ) {
-      return <GenericIcon iconSrc={MeatBeer} />;
+      return <GenericIcon iconSrc={MeatCheese} />;
     } else if (
       // meat and alcohol
       dayOverview.meat_portions > 0 &&
@@ -86,7 +87,17 @@ const SelectIcon = ({ dayOverview }: { dayOverview: DailyOverview }) => {
       dayOverview.candy_portions > 0
     ) {
       return <GenericIcon iconSrc={BeerCandy} />;
-    } else if (
+    }
+    else if (
+      // meat and candy
+      dayOverview.meat_portions > 0 &&
+      dayOverview.vegetarian_portions == 0 &&
+      dayOverview.alcohol_portions == 0 &&
+      dayOverview.candy_portions > 0
+    ) {
+      return <GenericIcon iconSrc={MeatCheeseCandy} />;
+    }
+    else if (
       // meat, vegetarian and alcohol
       dayOverview.meat_portions > 0 &&
       dayOverview.vegetarian_portions > 0 &&
