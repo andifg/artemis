@@ -55,7 +55,7 @@ aggregated AS (
     COUNT(CASE WHEN s.category = 'alcohol' THEN 1 END) / ts.weeks AS alcohol_portions,
     COUNT(CASE WHEN s.category = 'candy' THEN 1 END) / ts.weeks AS candy_portions
   FROM time_series ts
-  LEFT JOIN servings s ON ts.timeframe_start = DATE_TRUNC('{{.intervalEntity}}', s.date)
+  LEFT JOIN servings s ON ts.timeframe_start = DATE_TRUNC('{{.intervalEntity}}', s.date) and s.user_id = ts.user_id
   GROUP BY ts.timeframe_start, ts.timeframe_end, ts.weeks
 )
 SELECT *,
