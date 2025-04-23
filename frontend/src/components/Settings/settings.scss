@@ -7,18 +7,19 @@
 
 .account-settings-slider-header {
   display: flex;
+  align-items: center;
 }
 
 .account-settings-slider-header-text {
-  margin-left: 8px;
+  // margin-left: 8px;
 }
 
 .account-settings-slider {
   display: flex;
   flex-direction: column;
   background-color: var(--primary-color);
-  padding: 8px 8px 8px 8px;
-  border-radius: 8px;
+  // padding: 8px 8px 8px 8px;
+  // border-radius: 8px;
   margin-top: 8px;
   font-size: 1rem;
 }
@@ -29,17 +30,19 @@
 }
 
 .slider-value {
-  margin-top: 8px;
+  // margin-top: 8px;
+  // margin-left: 5px;
   align-self: center;
   border-radius: 4px;
   padding: 2px;
-  font-size: 1.2rem;
-  background-color: var(--secondary-color);
-  color: var(--text-contrast);
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--text-color);
+  // color: var(--secondary-color);
   padding: 4px;
-  padding-left: 6px;
-  padding-right: 6px;
-  min-width: 35px;
+  // padding-left: 6px;
+  // padding-right: 6px;
+  // min-width: 35px;
   text-align: center;
 }
 

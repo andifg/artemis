@@ -1,0 +1,18 @@
+.category {
+  border-radius: 8px;
+  background-color: var(--primary-color);
+  margin-bottom: 8px;
+  padding: 8px;
+}
+
+.category-content {
+  width: 100%;
+}
+
+.category-active {
+}
+
+.category-inactive {
+  // color: grey;
+  color: rgb(187, 187, 187);
+}
