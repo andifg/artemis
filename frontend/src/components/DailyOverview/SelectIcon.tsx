@@ -87,8 +87,7 @@ const SelectIcon = ({ dayOverview }: { dayOverview: DailyOverview }) => {
       dayOverview.candy_portions > 0
     ) {
       return <GenericIcon iconSrc={BeerCandy} />;
-    }
-    else if (
+    } else if (
       // meat and candy
       dayOverview.meat_portions > 0 &&
       dayOverview.vegetarian_portions == 0 &&
@@ -96,8 +95,7 @@ const SelectIcon = ({ dayOverview }: { dayOverview: DailyOverview }) => {
       dayOverview.candy_portions > 0
     ) {
       return <GenericIcon iconSrc={MeatCheeseCandy} />;
-    }
-    else if (
+    } else if (
       // meat, vegetarian and alcohol
       dayOverview.meat_portions > 0 &&
       dayOverview.vegetarian_portions > 0 &&
