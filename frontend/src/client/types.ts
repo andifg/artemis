@@ -81,10 +81,10 @@ export type AggregatedServings = {
   vegetarian_servings: number;
   alcohol_servings: number;
   candy_servings: number;
-  meat_target: number;
-  vegetarian_target: number;
-  alcohol_target: number;
-  candy_target: number;
+  meat_limit: number;
+  vegetarian_limit: number;
+  alcohol_limit: number;
+  candy_limit: number;
 };
 
 export type ServingDateList = {

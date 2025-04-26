@@ -11,8 +11,8 @@ type AggregatedServings struct {
 	VegetarianServings float64   `json:"vegetarian_servings"`
 	AlcoholServings    float64   `json:"alcohol_servings"`
 	CandyServings      float64   `json:"candy_servings"`
-	MeatTarget         int64     `json:"meat_target"`
-	VegetarianTarget   int64     `json:"vegetarian_target"`
-	AlcoholTarget      int64     `json:"alcohol_target"`
-	CandyTarget        int64     `json:"candy_target"`
+	MeatLimit          float64   `json:"meat_limit"`
+	VegetarianLimit    float64   `json:"vegetarian_limit"`
+	AlcoholLimit       float64   `json:"alcohol_limit"`
+	CandyLimit         float64   `json:"candy_limit"`
 }
