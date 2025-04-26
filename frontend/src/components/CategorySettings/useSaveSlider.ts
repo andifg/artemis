@@ -3,31 +3,14 @@ import { useCentralState } from "@/hooks/useCentralState";
 import { useClient } from "@/hooks/useClient";
 import { UserService } from "@/client/UserService";
 import { useAuthentication } from "@/hooks/useAuthentication";
-import { ServingCategory } from "@/client/types";
 
-function useSaveSlider({ category }: { category: ServingCategory }) {
+function useSaveSlider() {
   const [loading, setLoading] = useState(false);
   const { user, setUser } = useCentralState();
   const [callClientServiceMethod] = useClient();
   const { getUser } = useAuthentication();
 
   const tokenUser = getUser();
-
-  const limitMap = {
-    meat: user.weekly_meat_limit,
-    vegetarian: user.weekly_vegetarian_limit,
-    alcohol: user.weekly_alcohol_limit,
-    candy: user.weekly_candy_limit,
-  };
-
-  const categoryMap = {
-    meat: "weekly_meat_limit",
-    vegetarian: "weekly_vegetarian_limit",
-    alcohol: "weekly_alcohol_limit",
-    candy: "weekly_candy_limit",
-  };
-
-  const limit = limitMap[category as keyof typeof limitMap];
 
   const loadSliderValue = () => {
     callClientServiceMethod({
@@ -40,20 +23,23 @@ function useSaveSlider({ category }: { category: ServingCategory }) {
   };
 
   const saveSliderValue = () => {
-    if (limit === undefined) {
+    if (user === undefined) {
       console.log("No slider value to save");
       return;
     }
 
     const bodyUpdateUser = {
       id: tokenUser.id,
-      [categoryMap[category as keyof typeof categoryMap]]: limit,
+      weekly_meat_limit: user.weekly_meat_limit,
+      weekly_vegetarian_limit: user.weekly_vegetarian_limit,
+      weekly_alcohol_limit: user.weekly_alcohol_limit,
+      weekly_candy_limit: user.weekly_candy_limit,
     };
     callClientServiceMethod({
       function: UserService.UpdateUser,
       args: [bodyUpdateUser, tokenUser.id],
     }).then((data) => {
-      console.log("Updated slider value");
+      console.log("Updated slider value: ", data.data);
       setUser(data.data);
     });
   };
@@ -64,10 +50,15 @@ function useSaveSlider({ category }: { category: ServingCategory }) {
         saveSliderValue();
       },
 
-      500,
+      200,
     );
     return () => clearTimeout(timeoutId);
-  }, [limit]);
+  }, [
+    user.weekly_alcohol_limit,
+    user.weekly_candy_limit,
+    user.weekly_meat_limit,
+    user.weekly_vegetarian_limit,
+  ]);
 
   useEffect(() => {
     setLoading(true);

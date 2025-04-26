@@ -4,11 +4,14 @@ import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { SortableCategory } from "./SortableCategory";
 import { useCategorySettings } from "./useCategorySettings";
+import { useSaveSlider } from "./useSaveSlider";
 
 const CategorySettings = () => {
   const touchSensor = useSensor(TouchSensor);
 
   const { items, setItems, updateIDs, toggleActive } = useCategorySettings();
+
+  useSaveSlider();
 
   return (
     <DndContext
