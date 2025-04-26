@@ -140,7 +140,7 @@ const ServingsBarChartContainer = <T,>({
         <Line
           name="Meat Serving Target"
           type="monotone"
-          dataKey="meat_target"
+          dataKey="meat_limit"
           stroke="var(--secondary-color)"
           strokeWidth={2}
           dot={false}
@@ -148,7 +148,7 @@ const ServingsBarChartContainer = <T,>({
         <Line
           name="Vegetarian Serving Target"
           type="monotone"
-          dataKey="vegetarian_target"
+          dataKey="vegetarian_limit"
           stroke="var(--secondary-dark)"
           strokeWidth={2}
           dot={false}
@@ -156,7 +156,7 @@ const ServingsBarChartContainer = <T,>({
         <Line
           name="Alcohol Serving Target"
           type="monotone"
-          dataKey="alcohol_target"
+          dataKey="alcohol_limit"
           stroke="var(--secondary-light)"
           strokeWidth={2}
           dot={false}
@@ -164,7 +164,7 @@ const ServingsBarChartContainer = <T,>({
         <Line
           name="Candy Serving Target"
           type="monotone"
-          dataKey="candy_target"
+          dataKey="candy_limit"
           stroke="var(--sencodary-darker)"
           strokeWidth={2}
           dot={false}

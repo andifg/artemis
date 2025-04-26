@@ -118,11 +118,14 @@ Select ts.timeframe_start, '{{.timeframe}}' as timeframe,
     COUNT(CASE WHEN s.category = 'vegetarian' THEN 1 END)  AS vegetarian_servings,
     COUNT(CASE WHEN s.category = 'alcohol' THEN 1 END)  AS alcohol_servings,
     COUNT(CASE WHEN s.category = 'candy' THEN 1 END)  AS candy_servings,
-	CAST(ROUND(u.meattarget * {{.weekMuliplier}}, 2) as INT) as meat_target
+	CAST(ROUND(u.meatlimit * {{.weekMuliplier}}, 2) as INT) as meat_limit,
+	CAST(ROUND(u.vegetarianlimit * {{.weekMuliplier}}, 2) as INT) as vegetarian_limit,
+	CAST(ROUND(u.alcohollimit * {{.weekMuliplier}}, 2) as INT) as alcohol_limit,
+	CAST(ROUND(u.candylimit * {{.weekMuliplier}}, 2) as INT) as candy_limit
 From time_series ts
 Left join servings s on ts.timeframe_start = date_trunc('{{.intervalEntity}}', s.date) and s.user_id = ts.user_id
 Left join users u on u.id = ts.user_id
-Group by ts.timeframe_start, u.meattarget
+Group by ts.timeframe_start, u.meatlimit, u.vegetarianlimit, u.alcohollimit, u.candylimit
 Order by ts.timeframe_start DESC
 `
 
