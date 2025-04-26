@@ -1,13 +1,19 @@
 export type User = {
   id: string;
   username: string;
-  weeklyMeatPortionTarget: number;
+  weekly_meat_limit: number;
+  weekly_vegetarian_limit: number;
+  weekly_alcohol_limit: number;
+  weekly_candy_limit: number;
   servings: Serving[];
 };
 
 export type BodyUpdateUser = {
   id: string;
-  weeklyMeatPortionTarget: number;
+  weekly_meat_limit?: number;
+  weekly_vegetarian_limit?: number;
+  weekly_alcohol_limit?: number;
+  weekly_candy_limit?: number;
 };
 
 export const servingSizes = ["small", "medium", "large"] as const;
