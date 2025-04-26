@@ -1,0 +1,28 @@
+.serving-category-slider {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--primary-color);
+  margin-top: 8px;
+  font-size: 1rem;
+}
+
+.slider-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.slider-value {
+  align-self: center;
+  border-radius: 4px;
+  padding: 2px;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--text-color);
+  padding: 4px;
+  text-align: center;
+}
+
+.serving-category-slider-header {
+  display: flex;
+  align-items: center;
+}

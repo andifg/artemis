@@ -65,6 +65,7 @@ func (u UserRepositoryImpl) GetUserByID(userID uuid.UUID) (dao.User, error) {
 
 func UserRepositoryInit(db *gorm.DB) UserRepository {
 	db.AutoMigrate(&dao.User{})
+	RenameWeeklyMeatToWeeklyMeatLimit(db)
 	return &UserRepositoryImpl{
 		db: db,
 	}

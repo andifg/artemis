@@ -7,6 +7,7 @@ import { ServingsChart } from "@/Components/MeatPortionsChart/ServingsChart";
 import { AddServingContextProvider } from "@/contexts/addServingContext";
 import { DeleteServingContextProvider } from "@/contexts/deleteServingContext";
 import { AnalyticsWrapper } from "@/Components/AnalyticsWrapper/AnalyticsWrapper";
+import { CategorySelector } from "@/Components/CategorySelector/CategorySelector";
 
 function Dashboard() {
   return (
@@ -18,6 +19,7 @@ function Dashboard() {
             <>
               <DailyOverview />
               <VeggieStreak />
+              <CategorySelector />
               <ServingsChart />
               <AnalyticsWrapper />
             </>

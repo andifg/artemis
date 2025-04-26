@@ -71,8 +71,18 @@ func (u UserServiceImpl) PatchUser(userID uuid.UUID, updateUser dto.UpdateUser) 
 		return dao.User{}, err
 	}
 
-	if updateUser.WeeklyMeatPortionTarget != nil {
-		usr.WeeklyMeatPortionTarget = *updateUser.WeeklyMeatPortionTarget
+	if updateUser.WeeklyMeatLimit != nil {
+		usr.WeeklyMeatLimit = *updateUser.WeeklyMeatLimit
+	}
+
+	if updateUser.WeeklyVegetarianLimit != nil {
+		usr.WeeklyVegetarianLimit = *updateUser.WeeklyVegetarianLimit
+	}
+	if updateUser.WeeklyAlcoholLimit != nil {
+		usr.WeeklyAlcoholLimit = *updateUser.WeeklyAlcoholLimit
+	}
+	if updateUser.WeeklyCandyLimit != nil {
+		usr.WeeklyCandyLimit = *updateUser.WeeklyCandyLimit
 	}
 
 	err = u.userRepository.UpdateUser(usr)

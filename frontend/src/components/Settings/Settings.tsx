@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { ExternalLink } from "lucide-react";
 import { LogOut } from "lucide-react";
-import { CategorySettings } from "./CategorySettings";
+import { CategorySettings } from "../CategorySettings/CategorySettings";
 
 const Settings = () => {
   const { logout } = useAuthentication();
