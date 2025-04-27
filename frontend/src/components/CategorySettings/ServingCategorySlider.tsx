@@ -1,7 +1,6 @@
 import "./servingCategorySlider.scss";
 import { Slider } from "../ui/slider";
 import { useCentralState } from "@/hooks/useCentralState";
-// import { useSaveSlider } from "./useSaveSlider";
 import { Skeleton } from "../ui/skeleton";
 import { ServingCategory } from "@/client/types";
 
@@ -12,15 +11,13 @@ const ServingCategorySlider = ({
   category: ServingCategory;
   active: boolean;
 }) => {
-  // const { loading } = useSaveSlider({ category });
-
   const { user, setLimit } = useCentralState();
 
   const limitMap = {
-    meat: user.weekly_meat_limit,
-    vegetarian: user.weekly_vegetarian_limit,
-    alcohol: user.weekly_alcohol_limit,
-    candy: user.weekly_candy_limit,
+    meat: user?.weekly_meat_limit,
+    vegetarian: user?.weekly_vegetarian_limit,
+    alcohol: user?.weekly_alcohol_limit,
+    candy: user?.weekly_candy_limit,
   };
 
   const limit = limitMap[category as keyof typeof limitMap];

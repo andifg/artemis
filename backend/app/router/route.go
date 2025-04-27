@@ -36,6 +36,8 @@ func Init(init *config.Initialization, oidcMgr auth.OidcManager, origin string) 
 
 			v1_authorized.GET("/user", init.UserController.GetAllUsers)
 
+			v1_authorized.POST("/user/:id/category-ranks", init.UserController.UpdateRankings)
+
 			v1_authorized.POST("/user/:id/servings", init.ServingController.CreateServing)
 
 			v1_authorized.GET("/user/:id/servings", init.ServingController.GetServings)

@@ -1,54 +1,34 @@
 import "./categorySettings.scss";
 import { DndContext, useSensor, TouchSensor } from "@dnd-kit/core";
-import { SortableContext, arrayMove } from "@dnd-kit/sortable";
+import { SortableContext } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { SortableCategory } from "./SortableCategory";
 import { useCategorySettings } from "./useCategorySettings";
-import { useSaveSlider } from "./useSaveSlider";
+import { useSaveUserUpdates } from "./useSaveUserUpdates";
 
 const CategorySettings = () => {
   const touchSensor = useSensor(TouchSensor);
 
-  const { items, setItems, updateIDs, toggleActive } = useCategorySettings();
+  const { ranks, handleResortEvent, toggleActive } = useCategorySettings();
 
-  useSaveSlider();
+  useSaveUserUpdates();
 
   return (
     <DndContext
       sensors={[touchSensor]}
       modifiers={[restrictToVerticalAxis]}
-      onDragEnd={(event) => {
-        const { active, over } = event;
-
-        if (!over) return;
-
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over.id);
-
-        if (items[newIndex].active == false) {
-          console.log("Target is inactive, not moving");
-          return;
-        }
-
-        if (oldIndex !== newIndex) {
-          setItems((items) => {
-            const updatedItems = arrayMove(items, oldIndex, newIndex);
-            // updateIDs(updatedItems);
-            return updateIDs(updatedItems);
-          });
-        }
-      }}
+      onDragEnd={handleResortEvent}
     >
-      <SortableContext items={items}>
+      <SortableContext items={ranks.map((rank) => rank.rank)}>
         <ul className="list">
-          {items.map((id) => (
+          {ranks.map((rank) => (
             <SortableCategory
-              key={`${id.id}${id.category}`}
-              id={id.id}
-              text={id.category}
-              active={id.active}
+              key={`${rank.user_id}${rank.category}`}
+              id={rank.rank}
+              text={rank.category}
+              active={rank.active}
               toggleActive={toggleActive}
-              category={id.category}
+              category={rank.category}
             />
           ))}
         </ul>
