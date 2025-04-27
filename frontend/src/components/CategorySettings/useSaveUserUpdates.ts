@@ -4,7 +4,7 @@ import { useClient } from "@/hooks/useClient";
 import { UserService } from "@/client/UserService";
 import { useAuthentication } from "@/hooks/useAuthentication";
 
-function useSaveSlider() {
+function useSaveUserUpdates() {
   const [loading, setLoading] = useState(false);
   const { user, setUser } = useCentralState();
   const [callClientServiceMethod] = useClient();
@@ -12,17 +12,33 @@ function useSaveSlider() {
 
   const tokenUser = getUser();
 
-  const loadSliderValue = () => {
+  const loadUser = () => {
     callClientServiceMethod({
       function: UserService.GetUser,
       args: [tokenUser.id],
     }).then((data) => {
-      console.log("Slider value loaded: ", data.data);
+      console.log("User loaded: ", data.data);
       setUser(data.data);
     });
   };
 
-  const saveSliderValue = () => {
+  const saveCategoryRanksUpdate = () => {
+    if (user === undefined) {
+      console.log("No ranks to update");
+      return;
+    }
+
+    console.log("Saving ranks to server", user?.category_ranks);
+
+    callClientServiceMethod({
+      function: UserService.UpdateRanks,
+      args: [user.category_ranks, tokenUser.id],
+    }).then((data) => {
+      console.log("Successfully updated ranks on server", data);
+    });
+  };
+
+  const saveLimitUpdate = () => {
     if (user === undefined) {
       console.log("No slider value to save");
       return;
@@ -47,22 +63,27 @@ function useSaveSlider() {
   useEffect(() => {
     const timeoutId = setTimeout(
       () => {
-        saveSliderValue();
+        saveLimitUpdate();
       },
 
       200,
     );
     return () => clearTimeout(timeoutId);
   }, [
-    user.weekly_alcohol_limit,
-    user.weekly_candy_limit,
-    user.weekly_meat_limit,
-    user.weekly_vegetarian_limit,
+    user?.weekly_alcohol_limit,
+    user?.weekly_candy_limit,
+    user?.weekly_meat_limit,
+    user?.weekly_vegetarian_limit,
   ]);
 
   useEffect(() => {
+    console.log("Detected rank change,", user);
+    saveCategoryRanksUpdate();
+  }, [user?.category_ranks]);
+
+  useEffect(() => {
     setLoading(true);
-    loadSliderValue();
+    loadUser();
     setLoading(false);
   }, []);
 
@@ -71,4 +92,4 @@ function useSaveSlider() {
   };
 }
 
-export { useSaveSlider };
+export { useSaveUserUpdates };

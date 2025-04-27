@@ -20,30 +20,47 @@ func SetExistingPortionsToMeat(db *gorm.DB) {
 
 }
 
-func RenameWeeklyMeatToWeeklyMeatLimit(db *gorm.DB) {
+func DropOldForeignKeyConstraint(db *gorm.DB) {
+	result := db.Exec(`
+		ALTER TABLE servings
+		DROP CONSTRAINT IF EXISTS fk_users_servings;
+	`)
 
-	var exists bool
-	err := db.Raw(`
-	SELECT EXISTS (
-		SELECT 1
-		FROM information_schema.columns
-		WHERE table_name='users' AND column_name='meattarget'
-	)
-`).Scan(&exists).Error
-
-	if err != nil {
-		log.Error("Error checking column existence:", err)
-		return
+	if result.Error != nil {
+		log.Fatalf("failed to drop foreign key constraint: %v", result.Error)
 	}
 
-	if exists {
-		result := db.Exec(`ALTER TABLE users RENAME COLUMN meattarget TO meatlimit;`)
-		if result.Error != nil {
-			log.Error("Error renaming column:", result.Error)
-		} else {
-			log.Info("Column renamed successfully.")
-		}
-	} else {
-		log.Info("Column 'meatlimit' does not exist, skipping rename.")
+	log.Debugf("Dropped old foreign key constraint from servings table")
+}
+
+func AddDefaultCategoryRanksOnce(db *gorm.DB) {
+	// Check if the category_ranks table is empty
+
+	query := `
+  WITH default_ranks AS (
+	SELECT 'meat' AS category, 1 AS rank, true AS active
+	UNION ALL
+	SELECT 'vegetarian' AS category, 2 AS rank, true AS active
+	UNION ALL
+	SELECT 'alcohol' AS category, 3 AS rank, true AS active
+	UNION ALL
+	SELECT 'candy' AS category, 4 AS rank, true AS active
+  )
+  INSERT INTO category_ranks (category, rank, user_id, active)
+  SELECT
+  	dr.category::serving_category,
+	dr.rank,
+	u.id AS user_id,
+	dr.active
+  From users u
+  Cross JOIN default_ranks dr
+  where u.id not in (SELECT user_id FROM category_ranks)
+  `
+
+	result := db.Exec(query)
+	if result.Error != nil {
+		log.Fatalf("failed to insert default category ranks: %v", result.Error)
 	}
+	log.Debugf("Inserted default category ranks for %d users", result.RowsAffected)
+
 }

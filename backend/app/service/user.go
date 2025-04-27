@@ -16,36 +16,30 @@ import (
 )
 
 type UserService interface {
-	CreateUser(*gin.Context)
+	CreateUser(user dao.User) (dao.User, error)
 	PatchUser(userID uuid.UUID, user dto.UpdateUser) (dao.User, error)
 	GetAllUsers(*gin.Context)
 	GetUser(userID uuid.UUID) (dao.User, error)
 	GetUserByID(userID uuid.UUID) (dao.User, error)
+	UpdateRanks(userID uuid.UUID, ranks []dao.CategoryRank) error
 }
 
 type UserServiceImpl struct {
 	userRepository repository.UserRepository
 }
 
-func (u UserServiceImpl) CreateUser(c *gin.Context) {
-	defer pkg.PanicHandler(c)
-	var user dao.User
+func (u UserServiceImpl) CreateUser(user dao.User) (dao.User, error) {
 
 	log.Info("Create User")
-
-	if err := c.BindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
 
 	usr, err := u.userRepository.CreateUser(user)
 
 	if err != nil {
-		pkg.PanicException(constant.InvalidRequest)
-		return
+		return dao.User{}, err
 	}
 
-	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, usr))
+	log.Info("User created successfully: ", usr)
+	return usr, nil
 }
 
 func (u UserServiceImpl) GetUser(userID uuid.UUID) (dao.User, error) {
@@ -127,6 +121,20 @@ func (u UserServiceImpl) GetAllUsers(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, pkg.BuildResponse(constant.Success, res))
+}
+
+func (u UserServiceImpl) UpdateRanks(userID uuid.UUID, ranks []dao.CategoryRank) error {
+
+	log.Infof("Update ranks for user %s", userID)
+
+	err := u.userRepository.UpdateRankings(ranks)
+
+	if err != nil {
+		return err
+	}
+
+	log.Infof("Successfully updated rankings for user: %s", userID)
+	return nil
 }
 
 func UserServiceInit(userRepository repository.UserRepository) UserService {

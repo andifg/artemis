@@ -47,12 +47,40 @@ func RenameMeatPortionsToServings(db *gorm.DB) {
 
 }
 
+func RenameWeeklyMeatToWeeklyMeatLimit(db *gorm.DB) {
+
+	var exists bool
+	err := db.Raw(`
+	SELECT EXISTS (
+		SELECT 1
+		FROM information_schema.columns
+		WHERE table_name='users' AND column_name='meattarget'
+	)
+`).Scan(&exists).Error
+
+	if err != nil {
+		log.Error("Error checking column existence:", err)
+		return
+	}
+
+	if exists {
+		result := db.Exec(`ALTER TABLE users RENAME COLUMN meattarget TO meatlimit;`)
+		if result.Error != nil {
+			log.Error("Error renaming column:", result.Error)
+		} else {
+			log.Info("Column renamed successfully.")
+		}
+	} else {
+		log.Info("Column 'meatlimit' does not exist, skipping rename.")
+	}
+}
+
 func CustomMigrationsPreStart(db *gorm.DB) {
 
 	CreateMeatPortionType(db)
 	CreateServingCategoryType(db)
-
 	RenameMeatPortionsToServings(db)
+	RenameWeeklyMeatToWeeklyMeatLimit(db)
 }
 
 func InitDB(

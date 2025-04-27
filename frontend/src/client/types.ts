@@ -5,7 +5,14 @@ export type User = {
   weekly_vegetarian_limit: number;
   weekly_alcohol_limit: number;
   weekly_candy_limit: number;
-  servings: Serving[];
+  category_ranks: CategoryRank[];
+};
+
+export type CategoryRank = {
+  user_id: string;
+  category: ServingCategory;
+  rank: number;
+  active: boolean;
 };
 
 export type BodyUpdateUser = {
