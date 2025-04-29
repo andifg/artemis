@@ -22,7 +22,7 @@ function ServingModal({ open, onClose }: AddMealSheetProps) {
     <Sheet open={open || editServing != null} onOpenChange={onClose}>
       <SheetContent className="h-full" side="bottom">
         <SheetTitle className="meal-sheet-title">
-          {editServing ? "Edit Meat Serving" : "Add Meat Serving"}
+          {editServing ? "Edit Serving" : "Add Serving"}
         </SheetTitle>
         <SheetDescription>
           {/* {editPortion ? "Edit your meal" : "Add a new meal"} */}
