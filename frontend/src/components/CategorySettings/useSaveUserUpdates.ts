@@ -1,26 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useCentralState } from "@/hooks/useCentralState";
 import { useClient } from "@/hooks/useClient";
 import { UserService } from "@/client/UserService";
 import { useAuthentication } from "@/hooks/useAuthentication";
 
 function useSaveUserUpdates() {
-  const [loading, setLoading] = useState(false);
   const { user, setUser } = useCentralState();
   const [callClientServiceMethod] = useClient();
   const { getUser } = useAuthentication();
 
   const tokenUser = getUser();
-
-  const loadUser = () => {
-    callClientServiceMethod({
-      function: UserService.GetUser,
-      args: [tokenUser.id],
-    }).then((data) => {
-      console.log("User loaded: ", data.data);
-      setUser(data.data);
-    });
-  };
 
   const saveCategoryRanksUpdate = () => {
     if (user === undefined) {
@@ -80,16 +69,6 @@ function useSaveUserUpdates() {
     console.log("Detected rank change,", user);
     saveCategoryRanksUpdate();
   }, [user?.category_ranks]);
-
-  useEffect(() => {
-    setLoading(true);
-    loadUser();
-    setLoading(false);
-  }, []);
-
-  return {
-    loading,
-  };
 }
 
 export { useSaveUserUpdates };

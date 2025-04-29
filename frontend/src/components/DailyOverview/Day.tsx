@@ -1,6 +1,6 @@
 import "./day.scss";
 import { useCentralState } from "@/hooks/useCentralState";
-import { DailyOverview } from "@/client/types";
+import { DailyOverview, ServingCategory } from "@/client/types";
 import { SelectIcon } from "./SelectIcon";
 
 export type DailyOverviewEntry = {
@@ -16,7 +16,39 @@ function getFirstCharacterOfWeekday(date: Date): string {
 }
 
 function Day({ dayOverview }: DayProps) {
-  const { setSelectedDate, selectedDate } = useCentralState();
+  const { setSelectedDate, selectedDate, user } = useCentralState();
+
+  type ServingKeys = Extract<
+    keyof DailyOverview,
+    | "meat_portions"
+    | "vegetarian_portions"
+    | "alcohol_portions"
+    | "candy_portions"
+  >;
+
+  const DayMap: Record<ServingCategory, ServingKeys> = {
+    meat: "meat_portions",
+    vegetarian: "vegetarian_portions",
+    alcohol: "alcohol_portions",
+    candy: "candy_portions",
+  };
+
+  const filterDayOverview = (dayOverview: DailyOverview): DailyOverview => {
+    if (!user?.category_ranks) {
+      return dayOverview;
+    }
+
+    const updatedDayOverview = { ...dayOverview };
+
+    for (const category of user.category_ranks) {
+      if (!category.active) {
+        const key = DayMap[category.category];
+
+        updatedDayOverview[key] = 0;
+      }
+    }
+    return updatedDayOverview;
+  };
 
   const isInactive =
     new Date(dayOverview.date) > new Date(new Date().setHours(23, 59, 59, 999));
@@ -43,7 +75,7 @@ function Day({ dayOverview }: DayProps) {
         </div>
       </div>
       <div className="day-image">
-        {<SelectIcon dayOverview={dayOverview} />}
+        {<SelectIcon dayOverview={filterDayOverview(dayOverview)} />}
       </div>
     </div>
   );

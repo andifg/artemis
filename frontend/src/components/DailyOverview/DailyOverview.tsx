@@ -13,8 +13,6 @@ function DailyOverview() {
   const { loading } = useDailyOverview();
 
   useEffect(() => {
-    console.log("Daily overview: ", dailyOverview);
-    console.log("Daily overview type: ", typeof dailyOverview);
     if (dailyOverviewRef.current) {
       dailyOverviewRef.current.scrollLeft =
         dailyOverviewRef.current.scrollWidth;

@@ -11,9 +11,9 @@ import {
   ComposedChart,
 } from "recharts";
 import { DataKey } from "recharts/types/util/types";
-import { AggregatedServings } from "@/client/types";
+import { AggregatedServings, ServingCategory } from "@/client/types";
 import { Skeleton } from "../ui/skeleton";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 
 import { LabelProps } from "recharts";
 import { SVGProps } from "react";
@@ -29,6 +29,7 @@ type ServingsBarChartContainerProps<T> = {
   dataKey: DataKey<T>;
   loading: boolean;
   aggregatedServings: AggregatedServings[] | undefined;
+  activeCategories: ServingCategory[];
 };
 
 const ServingsBarChartContainer = <T,>({
@@ -36,10 +37,46 @@ const ServingsBarChartContainer = <T,>({
   dataKey,
   loading,
   aggregatedServings,
+  activeCategories,
 }: ServingsBarChartContainerProps<T>) => {
-  useEffect(() => {
-    console.log("Meat portion chart data: ", data);
-  }, [data]);
+  type ChartSetting = {
+    color: string;
+    label: string;
+    targetLabel: string;
+    data: string;
+    limitData: string;
+  };
+
+  const chartMap: Record<ServingCategory, ChartSetting> = {
+    meat: {
+      color: "var(--secondary-color)",
+      label: "Meat Servings",
+      targetLabel: "Meat Limit",
+      data: "meat_servings",
+      limitData: "meat_limit",
+    },
+    vegetarian: {
+      color: "var(--secondary-dark)",
+      label: "Vegetarian Servings",
+      targetLabel: "Vegetarian Limit",
+      data: "vegetarian_servings",
+      limitData: "vegetarian_limit",
+    },
+    alcohol: {
+      color: "var(--secondary-light)",
+      label: "Alcohol Servings",
+      targetLabel: "Alcohol Limit",
+      data: "alcohol_servings",
+      limitData: "alcohol_limit",
+    },
+    candy: {
+      color: "var(--secondary-darker)",
+      label: "Candy Servings",
+      targetLabel: "Candy Limit",
+      data: "candy_servings",
+      limitData: "candy_limit",
+    },
+  };
 
   const renderCustomizedLabel = (
     props: Omit<SVGProps<SVGTextElement>, "viewBox"> & LabelProps,
@@ -47,6 +84,7 @@ const ServingsBarChartContainer = <T,>({
     const { x, y, width, value } = props;
 
     if (data == undefined || value == undefined) {
+      console.log("Data is undefined");
       return y;
     }
 
@@ -89,86 +127,33 @@ const ServingsBarChartContainer = <T,>({
           tickFormatter={(value) => value.slice(0, 3)}
         />
         <YAxis width={25} allowDecimals={false} />
-        <Bar
-          dataKey="meat_servings"
-          name="Meat Servings"
-          fill="var(--secondary-color)"
-          radius={4}
-        >
-          <LabelList
-            dataKey="meat_servings"
-            position="insideTop"
-            content={renderCustomizedLabel}
+        {activeCategories.map((category) => (
+          <Bar
+            key={`${category}-bar`}
+            dataKey={chartMap[category].data}
+            name={chartMap[category].label}
+            fill={chartMap[category].color}
+            radius={4}
+          >
+            <LabelList
+              dataKey={chartMap[category].data}
+              position="insideTop"
+              content={renderCustomizedLabel}
+            />
+          </Bar>
+        ))}
+        {activeCategories.map((category) => (
+          <Line
+            key={`${category}-line`}
+            name={chartMap[category].targetLabel}
+            type="monotone"
+            dataKey={chartMap[category].limitData}
+            stroke={chartMap[category].color}
+            strokeWidth={2}
+            dot={false}
           />
-        </Bar>
-        <Bar
-          dataKey="vegetarian_servings"
-          name="Vegetarian Servings"
-          fill="var(--secondary-dark)"
-          radius={4}
-        >
-          <LabelList
-            dataKey="vegetarian_servings"
-            position="insideTop"
-            content={renderCustomizedLabel}
-          />
-        </Bar>
-        <Bar
-          dataKey="alcohol_servings"
-          name="Alcohol Servings"
-          fill="var(--secondary-light)"
-          radius={4}
-        >
-          <LabelList
-            dataKey="alcohol_servings"
-            position="insideTop"
-            content={renderCustomizedLabel}
-          />
-        </Bar>
-        <Bar
-          dataKey="candy_servings"
-          name="Candy Servings"
-          fill="var(--sencodary-darker)"
-          radius={4}
-        >
-          <LabelList
-            dataKey="candy_servings"
-            position="insideTop"
-            content={renderCustomizedLabel}
-          />
-        </Bar>
-        <Line
-          name="Meat Serving Target"
-          type="monotone"
-          dataKey="meat_limit"
-          stroke="var(--secondary-color)"
-          strokeWidth={2}
-          dot={false}
-        />
-        <Line
-          name="Vegetarian Serving Target"
-          type="monotone"
-          dataKey="vegetarian_limit"
-          stroke="var(--secondary-dark)"
-          strokeWidth={2}
-          dot={false}
-        />
-        <Line
-          name="Alcohol Serving Target"
-          type="monotone"
-          dataKey="alcohol_limit"
-          stroke="var(--secondary-light)"
-          strokeWidth={2}
-          dot={false}
-        />
-        <Line
-          name="Candy Serving Target"
-          type="monotone"
-          dataKey="candy_limit"
-          stroke="var(--sencodary-darker)"
-          strokeWidth={2}
-          dot={false}
-        />
+        ))}
+
         <Legend />
       </ComposedChart>
     </ChartContainer>

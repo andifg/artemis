@@ -5,12 +5,14 @@ import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { SortableCategory } from "./SortableCategory";
 import { useCategorySettings } from "./useCategorySettings";
 import { useSaveUserUpdates } from "./useSaveUserUpdates";
+import { useLoadUser } from "@/hooks/useLoadUser";
 
 const CategorySettings = () => {
   const touchSensor = useSensor(TouchSensor);
 
   const { ranks, handleResortEvent, toggleActive } = useCategorySettings();
 
+  useLoadUser();
   useSaveUserUpdates();
 
   return (

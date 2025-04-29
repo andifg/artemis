@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { useCentralState } from "@/hooks/useCentralState";
-import { servingCategories, servingSizes } from "@/client/types";
+import { servingSizes } from "@/client/types";
 import { Button } from "@/Components/ui/button";
 import { ServingIcon } from "../ServingIcon/ServingIcon";
 
@@ -38,9 +38,7 @@ type AddMealFormProps = {
 function ServingForm({ onClose }: AddMealFormProps) {
   const { onSubmit } = useServingForm({ onClose });
 
-  const { selectedDate, editServing } = useCentralState();
-
-  // console.log("Serving Categories", servingCategories);
+  const { selectedDate, editServing, user } = useCentralState();
 
   console.log("Edit Serving", editServing);
 
@@ -48,7 +46,7 @@ function ServingForm({ onClose }: AddMealFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       date: editServing ? new Date(editServing.date) : selectedDate,
-      category: editServing?.category || "meat",
+      category: editServing?.category || user?.category_ranks[0].category,
       portionSize: editServing?.size || "medium",
       notes: editServing?.note || "",
     },
@@ -114,22 +112,27 @@ function ServingForm({ onClose }: AddMealFormProps) {
                 </FormLabel>
                 <FormControl>
                   <div className="flex gap-2 flex-wrap">
-                    {servingCategories.map((category) => (
-                      <Button
-                        key={category}
-                        type="button"
-                        style={{ width: "40%" }}
-                        variant={
-                          field.value === category ? "default" : "outline"
-                        }
-                        onClick={() => field.onChange(category)}
-                        className={`form-color ${field.value === category ? "serving-form-button-selected" : ""}`}
-                      >
-                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                    {user?.category_ranks
+                      .filter((rank) => rank.active)
+                      .map((rank) => (
+                        <Button
+                          key={rank.category}
+                          type="button"
+                          style={{ width: "40%" }}
+                          variant={
+                            field.value === rank.category
+                              ? "default"
+                              : "outline"
+                          }
+                          onClick={() => field.onChange(rank.category)}
+                          className={`form-color ${field.value === rank.category ? "serving-form-button-selected" : ""}`}
+                        >
+                          {rank.category.charAt(0).toUpperCase() +
+                            rank.category.slice(1)}
 
-                        {<ServingIcon servingCategory={category} />}
-                      </Button>
-                    ))}
+                          {<ServingIcon servingCategory={rank.category} />}
+                        </Button>
+                      ))}
                   </div>
                 </FormControl>
                 <FormMessage />
@@ -167,7 +170,6 @@ function ServingForm({ onClose }: AddMealFormProps) {
           <FormField
             control={form.control}
             name="notes"
-            // defaultValue="Schnitzel"
             render={({ field }) => (
               <FormItem className="meal-form-item">
                 <FormLabel className="form-color serving-form-header">
