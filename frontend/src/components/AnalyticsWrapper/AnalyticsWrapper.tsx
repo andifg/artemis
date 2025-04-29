@@ -1,18 +1,18 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import { AverageMeatPortions } from "../AverageMeatPortions/AverageMeatPortions";
 import { useAverageMeatPortions } from "./useAverageMeatPortions";
-import { AverageServings, ServingCategory, Timeframe } from "@/client/types";
+import {
+  AverageServings,
+  ServingCategory,
+  Timeframe,
+  servingCategories,
+} from "@/client/types";
 import { useCentralState } from "@/hooks/useCentralState";
-
-const servingCategoriesPriorities: Record<number, ServingCategory> = {
-  1: "meat",
-  2: "vegetarian",
-  3: "alcohol",
-  4: "candy",
-};
+import { CategorySelector } from "../CategorySelector/CategorySelector";
+import { ServingsChart } from "../MeatPortionsChart/ServingsChart";
 
 const AnalyticsWrapper = () => {
-  const { timeFrame } = useCentralState();
+  const { timeFrame, user } = useCentralState();
 
   const { loading } = useAverageMeatPortions();
 
@@ -22,17 +22,16 @@ const AnalyticsWrapper = () => {
     averageQuarterlyServings,
   } = useCentralState();
 
-  const emtpyAverageServings: AverageServings = {
-    timeframe: timeFrame,
-    timeframe_start: "",
-    meat_portions: 0,
-    vegetarian_portions: 0,
-    alcohol_portions: 0,
-    candy_portions: 0,
-    prev_meat_portions: 0,
-    prev_vegetarian_portions: 0,
-    prev_alcohol_portions: 0,
-    prev_candy_portions: 0,
+  const [categoryActive, setCategoryActive] = useState<
+    Map<ServingCategory, boolean>
+  >(new Map(servingCategories.map((category) => [category, true])));
+
+  const toggleCategory = (category: ServingCategory) => {
+    setCategoryActive((prev) => {
+      const newMap = new Map(prev);
+      newMap.set(category, !newMap.get(category));
+      return newMap;
+    });
   };
 
   const timeFrameMapper: Record<Timeframe, AverageServings | undefined> = {
@@ -41,26 +40,40 @@ const AnalyticsWrapper = () => {
     quarter: averageQuarterlyServings,
   };
 
-  useEffect(() => {
-    console.log("Week overview: ", averageWeeklyServings);
-  }, [averageWeeklyServings]);
-
   return (
     <>
-      {loading && timeFrameMapper[timeFrame] == undefined ? (
+      <CategorySelector
+        categoryActive={categoryActive}
+        toggleCategory={toggleCategory}
+      />
+      <ServingsChart
+        activeCategories={Array.from(user?.category_ranks || [])
+          .filter(
+            (rank) => rank.active && categoryActive.get(rank.category) === true,
+          )
+          .map((rank) => rank.category)}
+      />
+      {loading &&
+      timeFrameMapper[timeFrame] == undefined &&
+      user == undefined ? (
         <div className="loading-indicator">Loading...</div>
       ) : (
-        Object.entries(servingCategoriesPriorities).map(([key, category]) => {
-          return (
-            <AverageMeatPortions
-              key={key}
-              averageServings={
-                timeFrameMapper[timeFrame] || emtpyAverageServings
-              }
-              servingCategory={category}
-            />
-          );
-        })
+        user?.category_ranks
+          .filter(
+            (rank) => rank.active && categoryActive.get(rank.category) === true,
+          )
+          .map((rank) => {
+            if (!timeFrameMapper[timeFrame]) {
+              return null;
+            }
+            return (
+              <AverageMeatPortions
+                key={`${rank.user_id}${rank.category}-average`}
+                averageServings={timeFrameMapper[timeFrame]}
+                servingCategory={rank.category}
+              />
+            );
+          })
       )}
     </>
   );

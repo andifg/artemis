@@ -1,7 +1,7 @@
 import "./averageMeatPortions.scss";
 import { DashboardBox } from "../DashboardBox/DashboardBox";
 import { TrendingUp } from "lucide-react";
-import { useAverageMeatPortions } from "../AnalyticsWrapper/useAverageMeatPortions";
+// import { useAverageMeatPortions } from "../AnalyticsWrapper/useAverageMeatPortions";
 import { AverageMeatPortionsValues } from "./AverageMeatPortionsValues";
 
 import { TimeFrameSelector } from "../TimeframeSelector/TimeFrameSelector";
@@ -16,8 +16,6 @@ function AverageMeatPortions({
   averageServings,
   servingCategory,
 }: AverageMeatPortionsProps) {
-  useAverageMeatPortions();
-
   let currentValue: number = 0;
   let lastValue: number = 0;
 

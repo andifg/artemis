@@ -15,7 +15,7 @@ import { LoaderIcon } from "lucide-react";
 const ListMeals = () => {
   const { loading } = useListServings();
 
-  const { servings } = useCentralState();
+  const { servings, user } = useCentralState();
   const { addServing } = useCentralState();
 
   const { selectedServing, selectForDeletion } = useDeleteServing();
@@ -43,6 +43,12 @@ const ListMeals = () => {
                     .sort(
                       (a, b) =>
                         new Date(a.date).getTime() - new Date(b.date).getTime(),
+                    )
+                    .filter(
+                      (serving) =>
+                        user?.category_ranks.find(
+                          (rank) => rank.category === serving.category,
+                        )?.active,
                     )
                     .map((servings) => {
                       return (

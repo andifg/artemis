@@ -5,11 +5,14 @@ import { TimeFrameSelector } from "../TimeframeSelector/TimeFrameSelector";
 import { ServingsBarChartContainer } from "./ServingsBarChartContainer";
 import { ChartNoAxesColumn } from "lucide-react";
 import { useCentralState } from "@/hooks/useCentralState";
-import { useEffect } from "react";
 import { getCalendarWeek } from "@/utils/getCalendarWeek";
-import { AggregatedServings } from "@/client/types";
+import { AggregatedServings, ServingCategory } from "@/client/types";
 
-function ServingsChart() {
+function ServingsChart({
+  activeCategories,
+}: {
+  activeCategories: ServingCategory[];
+}) {
   const { loading } = useServingsChart();
   const {
     aggregatedWeeklyServings,
@@ -55,10 +58,6 @@ function ServingsChart() {
     data?.sort((a, b) => a.timeframe_start.localeCompare(b.timeframe_start)) ||
     [];
 
-  useEffect(() => {
-    console.log("Aggregated weekly meat portions: ", aggregatedWeeklyServings);
-  }, [aggregatedWeeklyServings]);
-
   return (
     <DashboardBox>
       <div className="servings-chart-wrapper">
@@ -74,6 +73,7 @@ function ServingsChart() {
           dataKey={dataKey}
           loading={loading}
           aggregatedServings={data}
+          activeCategories={activeCategories}
         />
       </div>
     </DashboardBox>

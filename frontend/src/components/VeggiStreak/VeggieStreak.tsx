@@ -10,14 +10,7 @@ import Autoplay from "embla-carousel-autoplay";
 function VeggieStreak() {
   const { loading } = useVeggieStreak();
 
-  const { servingStreaks } = useCentralState();
-
-  const servingCategoriesPriorities: Record<number, ServingCategory> = {
-    1: "meat",
-    2: "vegetarian",
-    3: "alcohol",
-    4: "candy",
-  };
+  const { servingStreaks, user } = useCentralState();
 
   const streakNames: Record<ServingCategory, string> = {
     meat: "Meatless",
@@ -38,23 +31,23 @@ function VeggieStreak() {
             opts={{ loop: true }}
             plugins={[Autoplay({ delay: 3000, stopOnInteraction: false })]}
           >
-            <CarouselContent className="max-h-10">
+            <CarouselContent className="max-h-10" key="veggie-streak-carousel">
               {loading && servingStreaks == undefined ? (
                 <CarouselItem>loading ....</CarouselItem>
               ) : (
-                Object.entries(servingCategoriesPriorities).map((priority) => {
-                  return (
-                    <CarouselItem>
+                user?.category_ranks
+                  .filter((rank) => rank.active)
+                  .map((rank) => (
+                    <CarouselItem key={`${rank.category}-carousel-item`}>
                       {" "}
                       {(servingStreaks.length > 0 &&
                         servingStreaks.find(
-                          (streak) => streak.serving_category == priority[1],
+                          (streak) => streak.serving_category == rank.category,
                         )?.streak) ||
                         0}{" "}
-                      Days {streakNames[priority[1]]} Streak
+                      Days {streakNames[rank.category]} Streak
                     </CarouselItem>
-                  );
-                })
+                  ))
               )}
             </CarouselContent>
           </Carousel>
