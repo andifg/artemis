@@ -9,7 +9,7 @@ import {
 } from "@/client/types";
 import { useCentralState } from "@/hooks/useCentralState";
 import { CategorySelector } from "../CategorySelector/CategorySelector";
-import { ServingsChart } from "../MeatPortionsChart/ServingsChart";
+import { ServingsChart } from "../ServingChart/ServingsChart";
 
 const AnalyticsWrapper = () => {
   const { timeFrame, user } = useCentralState();
