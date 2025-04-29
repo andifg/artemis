@@ -39,6 +39,20 @@
   align-items: center;
 }
 
+.bottom-navigator-link-add {
+  padding: 7px;
+  text-align: center;
+  font-size: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 60px;
+  align-items: center;
+  align-self: baseline;
+  border-radius: 13px;
+  background-color: var(--secondary-color);
+  margin-bottom: 8px;
+}
+
 .bottom-navigator-icon {
   width: 24px;
   height: 24px;
