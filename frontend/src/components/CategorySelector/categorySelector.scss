@@ -4,4 +4,25 @@
 
 .category-selector {
   margin: 4px;
+  font-size: 1rem;
+}
+
+.category-selector-selected {
+  border-color: var(--secondary-color);
+  color: var(--secondary-color);
+  background-color: var(--primary-color);
+}
+
+.category-selector-unselected {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+  background-color: var(--background-color);
+}
+
+.category-selector-item {
+  border: 1px solid;
+  border-radius: 4px;
+  padding: 5px;
+  margin: 4px;
+  min-width: calc(100vw / 4 - 20px);
 }
