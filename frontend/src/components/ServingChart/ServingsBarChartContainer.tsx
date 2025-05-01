@@ -49,28 +49,28 @@ const ServingsBarChartContainer = <T,>({
 
   const chartMap: Record<ServingCategory, ChartSetting> = {
     meat: {
-      color: "var(--secondary-color)",
+      color: "var(--chart-color-1)",
       label: "Meat Servings",
       targetLabel: "Meat Limit",
       data: "meat_servings",
       limitData: "meat_limit",
     },
     vegetarian: {
-      color: "var(--secondary-dark)",
+      color: "var(--chart-color-2)",
       label: "Vegetarian Servings",
       targetLabel: "Vegetarian Limit",
       data: "vegetarian_servings",
       limitData: "vegetarian_limit",
     },
     alcohol: {
-      color: "var(--secondary-light)",
+      color: "var(--chart-color-3)",
       label: "Alcohol Servings",
       targetLabel: "Alcohol Limit",
       data: "alcohol_servings",
       limitData: "alcohol_limit",
     },
     candy: {
-      color: "var(--secondary-darker)",
+      color: "var(--chart-color-4)",
       label: "Candy Servings",
       targetLabel: "Candy Limit",
       data: "candy_servings",
