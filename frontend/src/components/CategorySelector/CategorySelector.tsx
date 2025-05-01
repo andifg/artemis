@@ -1,6 +1,4 @@
 import "./categorySelector.scss";
-
-import { Button } from "../ui/button";
 import { ServingCategory } from "@/client/types";
 import { useCentralState } from "@/hooks/useCentralState";
 
@@ -20,18 +18,14 @@ const CategorySelector = ({
       {user?.category_ranks
         .filter((rank) => rank.active)
         .map((category) => (
-          <Button
+          <button
             key={category.category}
-            variant={
-              categoryActive.get(category.category) == true
-                ? "default"
-                : "outline"
-            }
-            className={`form-color ${categoryActive.get(category.category) == true ? "serving-form-button-selected" : ""} category-selector`}
+            className={`form-color ${categoryActive.get(category.category) == true ? "category-selector-selected" : "category-selector-unselected"} category-selector-item`}
             onClick={() => toggleCategory(category.category)}
           >
-            {category.category}
-          </Button>
+            {category.category.charAt(0).toUpperCase()}
+            {category.category.slice(1)}
+          </button>
         ))}
     </div>
   );
