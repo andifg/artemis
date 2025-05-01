@@ -60,6 +60,7 @@ function AverageMeatPortions({
         <AverageMeatPortionsValues
           currentValue={currentValue}
           lastValue={lastValue}
+          category={servingCategory}
         />
       </div>
     </DashboardBox>

@@ -25,6 +25,12 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+}
+
+.average-meat-portions-values-area {
+  display: flex;
+  align-items: center;
 }
 
 .average-meat-portions-value {
