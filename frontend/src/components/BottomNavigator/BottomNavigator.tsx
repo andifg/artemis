@@ -46,13 +46,14 @@ function BottomNavigator() {
           </Link>
         </div>
 
-        <div className={`bottom-navigator-child `}>
+        <div className={`bottom-navigator-child bottom-navigator-add`}>
           <div className="bottom-navigator-link-add" onClick={openModal}>
             <CirclePlus
-              color="var(--text-primary)"
-              strokeWidth={1.5}
-              width={38}
-              height={38}
+              // color="var(--text-primary)"
+              color="white"
+              strokeWidth={2}
+              width={24}
+              height={24}
             />
             {/* Record */}
           </div>
