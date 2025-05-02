@@ -26,7 +26,32 @@ const AnalyticsWrapper = () => {
     Map<ServingCategory, boolean>
   >(new Map(servingCategories.map((category) => [category, true])));
 
+  const [allActive, setAllActive] = useState(true);
+
+  const activateAllActive = () => {
+    setAllActive(true);
+    setCategoryActive((prev) => {
+      const newMap = new Map(prev);
+      servingCategories.forEach((category) => {
+        newMap.set(category, true);
+      });
+      return newMap;
+    });
+  };
+
   const toggleCategory = (category: ServingCategory) => {
+    if (allActive) {
+      setAllActive(false);
+      setCategoryActive((prev) => {
+        const newMap = new Map(prev);
+        servingCategories.forEach((cat) => {
+          newMap.set(cat, false);
+        });
+        newMap.set(category, true);
+        return newMap;
+      });
+      return;
+    }
     setCategoryActive((prev) => {
       const newMap = new Map(prev);
       newMap.set(category, !newMap.get(category));
@@ -45,6 +70,8 @@ const AnalyticsWrapper = () => {
       <CategorySelector
         categoryActive={categoryActive}
         toggleCategory={toggleCategory}
+        allActive={allActive}
+        setAllActive={activateAllActive}
       />
       <ServingsChart
         activeCategories={Array.from(user?.category_ranks || [])
