@@ -37,8 +37,8 @@ const ListMeals = () => {
             .reverse()
             .map((day) => {
               return (
-                <>
-                  <DayHeader day={day} key={`${day}-l`} />
+                <div key={`${day}-l`}>
+                  <DayHeader>{day}</DayHeader>
                   {servings[day]
                     .sort(
                       (a, b) =>
@@ -60,7 +60,7 @@ const ListMeals = () => {
                         />
                       );
                     })}
-                </>
+                </div>
               );
             })}
         </div>
