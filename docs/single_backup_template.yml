@@ -1,0 +1,18 @@
+apiVersion: velero.io/v1
+kind: Backup
+metadata:
+  namespace: openshift-adp
+  labels:
+    backup-type: manual
+  name: manual-artemis-prod-backup-3
+spec:
+  includedNamespaces:
+    - artemis-prod
+  orLabelSelectors:
+    - matchExpressions:
+        - key: backup-pvc-snapshot-to-s3
+          operator: In
+          values:
+            - "true"
+  snapshotMoveData: true
+  storageLocation: aws-s3
