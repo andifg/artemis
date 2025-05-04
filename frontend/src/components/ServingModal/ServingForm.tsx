@@ -65,7 +65,7 @@ function ServingForm({ onClose }: AddMealFormProps) {
                 <FormLabel className="form-color serving-form-header">
                   Select Date
                 </FormLabel>
-                <Popover>
+                <Popover modal={true}>
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
