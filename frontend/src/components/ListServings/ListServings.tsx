@@ -22,6 +22,26 @@ const ListMeals = () => {
 
   const { registerAddCallback } = useContext(AddServingContext);
 
+  const filteredDays = Object.keys(servings)
+    .sort()
+    .reverse()
+    .map((day) => {
+      const filteredServings = servings[day]
+        .filter((serving) =>
+          user?.category_ranks.find(
+            (rank) => rank.category === serving.category && rank.active,
+          ),
+        )
+        .sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+        );
+
+      return filteredServings.length > 0
+        ? { day, servings: filteredServings }
+        : null;
+    })
+    .filter(Boolean) as { day: string; servings: (typeof servings)[string] }[];
+
   useEffect(() => {
     registerAddCallback(addServing);
   }, []);
@@ -32,37 +52,19 @@ const ListMeals = () => {
         <LoaderIcon className="animate-spin" />
       ) : (
         <div className="list-servings-sheet-content">
-          {Object.keys(servings)
-            .sort()
-            .reverse()
-            .map((day) => {
-              return (
-                <div key={`${day}-l`}>
-                  <DayHeader>{day}</DayHeader>
-                  {servings[day]
-                    .sort(
-                      (a, b) =>
-                        new Date(a.date).getTime() - new Date(b.date).getTime(),
-                    )
-                    .filter(
-                      (serving) =>
-                        user?.category_ranks.find(
-                          (rank) => rank.category === serving.category,
-                        )?.active,
-                    )
-                    .map((servings) => {
-                      return (
-                        <ServingComponent
-                          serving={servings}
-                          selectedForDeletion={selectedServing}
-                          selectForDeletion={selectForDeletion}
-                          key={`l-${servings.id}`}
-                        />
-                      );
-                    })}
-                </div>
-              );
-            })}
+          {filteredDays.map(({ day, servings }) => (
+            <div key={`${day}-l`}>
+              <DayHeader>{day}</DayHeader>
+              {servings.map((serving) => (
+                <ServingComponent
+                  serving={serving}
+                  selectedForDeletion={selectedServing}
+                  selectForDeletion={selectForDeletion}
+                  key={`l-${serving.id}`}
+                />
+              ))}
+            </div>
+          ))}
         </div>
       )}
     </div>
