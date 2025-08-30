@@ -22,14 +22,18 @@ func GenerateAverageServingsQuery(timeframe dto.Timeframe, userId string) (strin
 
 	var intervalStep string = "1"
 	var intervalEntity string
+	var truncateEntity string
 
 	switch timeframe {
 	case dto.Week:
 		intervalEntity = "week"
+		truncateEntity = "week"
 	case dto.Month:
 		intervalEntity = "month"
+		truncateEntity = "month"
 	case dto.Quarter:
 		intervalEntity = "month"
+		truncateEntity = "quarter"
 		intervalStep = "3"
 	}
 
@@ -41,9 +45,9 @@ WITH time_series AS (
     EXTRACT(DAY FROM ((gs + INTERVAL '{{.intervalStep}} {{.intervalEntity}}') - gs)) / 7.0 AS weeks,
     '{{.UserID}}'::uuid AS user_id
   FROM generate_series(
-    date_trunc('{{.intervalEntity}}', NOW()) - INTERVAL '{{.intervalStep}} {{.intervalEntity}}',
-    date_trunc('{{.intervalEntity}}', NOW()),
-    INTERVAL '1 {{.intervalEntity}}'
+    date_trunc('{{.truncateEntity}}', NOW()) - INTERVAL '{{.intervalStep}} {{.intervalEntity}}',
+    date_trunc('{{.truncateEntity}}', NOW()),
+    INTERVAL '{{.intervalStep}} {{.intervalEntity}}'
   ) AS gs
 ),
 aggregated AS (
@@ -55,7 +59,7 @@ aggregated AS (
     COUNT(CASE WHEN s.category = 'alcohol' THEN 1 END) / ts.weeks AS alcohol_portions,
     COUNT(CASE WHEN s.category = 'candy' THEN 1 END) / ts.weeks AS candy_portions
   FROM time_series ts
-  LEFT JOIN servings s ON ts.timeframe_start = DATE_TRUNC('{{.intervalEntity}}', s.date) and s.user_id = ts.user_id
+  LEFT JOIN servings s ON ts.timeframe_start = DATE_TRUNC('{{.truncateEntity}}', s.date) and s.user_id = ts.user_id
   GROUP BY ts.timeframe_start, ts.timeframe_end, ts.weeks
 )
 SELECT *,
@@ -78,6 +82,7 @@ LIMIT 1;
 		"UserID":         userId,
 		"intervalStep":   intervalStep,
 		"intervalEntity": intervalEntity,
+		"truncateEntity": truncateEntity,
 	}
 
 	return ExecuteTemplate(tmpl, data)
@@ -89,16 +94,20 @@ func GenerateAggregatedServingsQuery(timeframe dto.Timeframe, userId string) (st
 	var intervalMax int64 = 5
 	var intervalStep int64 = 1
 	var intervalEntity string
+	var truncateEntity string
 	var weekMuliplier float64 = 1
 
 	switch timeframe {
 	case dto.Week:
 		intervalEntity = "week"
+		truncateEntity = "week"
 	case dto.Month:
 		intervalEntity = "month"
+		truncateEntity = "month"
 		weekMuliplier = 4.34524
 	case dto.Quarter:
 		intervalEntity = "month"
+		truncateEntity = "quarter"
 		intervalMax = 15
 		intervalStep = 3
 		weekMuliplier = 13
@@ -107,8 +116,8 @@ func GenerateAggregatedServingsQuery(timeframe dto.Timeframe, userId string) (st
 	const tmplQuery = `
 WITH time_series AS (
 	SELECT generate_series(
-		date_trunc('{{.intervalEntity}}', NOW()) - INTERVAL '{{.intervalMax}} {{.intervalEntity}}',
-		date_trunc('{{.intervalEntity}}', NOW()),
+		date_trunc('{{.truncateEntity}}', NOW()) - INTERVAL '{{.intervalMax}} {{.intervalEntity}}',
+		date_trunc('{{.truncateEntity}}', NOW()),
 		INTERVAL '{{.intervalStep}} {{.intervalEntity}}'
 	) AS timeframe_start,
 		'{{.userId}}'::uuid AS user_id
@@ -123,7 +132,7 @@ Select ts.timeframe_start, '{{.timeframe}}' as timeframe,
 	CAST(ROUND(u.alcohollimit * {{.weekMuliplier}}, 2) as INT) as alcohol_limit,
 	CAST(ROUND(u.candylimit * {{.weekMuliplier}}, 2) as INT) as candy_limit
 From time_series ts
-Left join servings s on ts.timeframe_start = date_trunc('{{.intervalEntity}}', s.date) and s.user_id = ts.user_id
+Left join servings s on ts.timeframe_start = date_trunc('{{.truncateEntity}}', s.date) and s.user_id = ts.user_id
 Left join users u on u.id = ts.user_id
 Group by ts.timeframe_start, u.meatlimit, u.vegetarianlimit, u.alcohollimit, u.candylimit
 Order by ts.timeframe_start DESC
@@ -138,6 +147,7 @@ Order by ts.timeframe_start DESC
 		"userId":         userId,
 		"intervalStep":   intervalStep,
 		"intervalEntity": intervalEntity,
+		"truncateEntity": truncateEntity,
 		"weekMuliplier":  weekMuliplier,
 		"intervalMax":    intervalMax,
 	}
