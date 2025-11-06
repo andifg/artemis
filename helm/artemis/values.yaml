@@ -58,6 +58,10 @@ keycloak:
   podSecurityContext:
     enabled: false
 
+  image:
+    # use bitnami legacy repostitory
+    repository: bitnamilegacy/keycloak
+
 
   extraStartupArgs: "--import-realm"
 
@@ -135,3 +139,8 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 autoscaling: {}
+
+
+global:
+  security:
+    allowInsecureImages: true
