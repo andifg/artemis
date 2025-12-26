@@ -1,0 +1,8 @@
+apiVersion: velero.io/v1
+kind: Restore
+metadata:
+  name: restore-new
+  namespace: velero
+spec:
+  backupName: manual-meat-meater-dev-backup-2
+  restorePVs: true

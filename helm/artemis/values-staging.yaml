@@ -1,3 +1,50 @@
+
+ingress:
+  # hostname: artemis-dev.k8s-one.gummy-bears.de
+  hostname: test.mygreendays.de
+  tls:
+    secretName: artemis-tls-secret
+
+
 backup:
   enabled: true
   scheduleName: 'artemis-test-backup'
+  veleroNamespace: velero
+  adpStorageLocationName: cloudflare
+  # veleroNamespace: openshift-adp
+
+
+frontend:
+  containerPort: 8080
+  service:
+    type: ClusterIP
+    port: 80
+  image:
+    name: ""
+    pullPolicy: IfNotPresent
+
+keycloak:
+
+  resourcesPreset: none
+
+  resources: 
+    limits:
+      cpu: 750m
+      ephemeral-storage: 2Gi
+      memory: 768Mi
+    requests: 
+      cpu: 0m
+      ephemeral-storage: 0Gi
+      memory: 0Mi
+
+  ingress:
+
+    # hostname: auth.k8s-one.gummy-bears.de
+    hostname: auth.test.mygreendays.de
+
+    extraTls:
+      - hosts:
+          # Make sure its same as ingress.hostname
+          - auth.test.mygreendays.de
+          # - auth.k8s-one.gummy-bears.de
+        secretName: keycloak-tls          

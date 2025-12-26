@@ -40,6 +40,11 @@ postgresql:
     secretKeys:
       userPasswordKey: postgres-password
 
+  image:
+    # use bitnami legacy repostitory
+    repository: bitnamilegacy/postgresql
+
+
 frontend:
   containerPort: 8080
   service:
@@ -118,9 +123,13 @@ keycloak:
         userPasswordKey: admin-password
         adminPasswordKey: admin-password
 
+    image:
+      # use bitnami legacy repostitory
+      repository: bitnamilegacy/postgresql
+
 backup:
   enabled: true
-  openshiftAdpNamespace: openshift-adp
+  veleroNamespace: openshift-adp
   scheduleName: 'artemis-backup'
   schedule: '0 5 * * 1'
   # Name of an existing Openshift ADP storage location
@@ -139,6 +148,9 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 autoscaling: {}
+
+
+imagePullSecrets: []
 
 
 global:

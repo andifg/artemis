@@ -37,29 +37,29 @@ test:
 
 build-backend:
 	echo "Building backend image"
-	echo "${image_registry}/${NAMESPACE}/${backend_image_name}:${image_tag}"
-	cd backend && podman build --arch x86_64 -t ${image_registry}/${NAMESPACE}/${backend_image_name}:${image_tag} .
+	echo "${image_registry}/${ARTEMIS_BACKEND_IMAGE_REPOSITROY}/${backend_image_name}:${image_tag}"
+	cd backend && podman build --arch x86_64 -t ${image_registry}/${ARTEMIS_BACKEND_IMAGE_REPOSITROY}/${backend_image_name}:${image_tag} .
 
 build-frontend:
 	echo "Building frontend image"
-	echo "${image_registry}/${NAMESPACE}/${frontend_image_name}:${image_tag}"
-	cd frontend && podman build --build-arg PWA_ICON_GENERATE_COMMAND=${PWA_ICON_GENERATE_COMMAND} --build-arg STAGE=${stage} --arch x86_64 -t ${image_registry}/${NAMESPACE}/${frontend_image_name}:${image_tag} .
+	echo "${image_registry}/${ARTEMIS_FRONTEND_IMAGE_REPOSITROY}/${frontend_image_name}:${image_tag}"
+	cd frontend && podman build --build-arg PWA_ICON_GENERATE_COMMAND=${PWA_ICON_GENERATE_COMMAND} --build-arg STAGE=${stage} --arch x86_64 -t ${image_registry}/${ARTEMIS_FRONTEND_IMAGE_REPOSITROY}/${frontend_image_name}:${image_tag} .
 
 podman-login:
-	podman login -u `oc whoami` -p `oc whoami -t` ${image_registry}
+	podman login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${image_registry}
 
 push-frontend: build-frontend podman-login
 	echo "Pushing frontend image"
-	podman push ${image_registry}/${NAMESPACE}/${frontend_image_name}:${image_tag}
+	podman push ${image_registry}/${ARTEMIS_FRONTEND_IMAGE_REPOSITROY}/${frontend_image_name}:${image_tag}
 
 push-backend: build-backend podman-login
 	echo "Pushing backend image"
-	podman push ${image_registry}/${NAMESPACE}/${backend_image_name}:${image_tag}
+	podman push ${image_registry}/${ARTEMIS_BACKEND_IMAGE_REPOSITROY}/${backend_image_name}:${image_tag}
 
 
 deploy-chart:
-	cd helm && helm upgrade --install artemis ./artemis --set backend.image.name=${image_registry}/${NAMESPACE}/${backend_image_name}:${image_tag} \
-	--namespace ${NAMESPACE} --set frontend.image.name=${image_registry}/${NAMESPACE}/${frontend_image_name}:${image_tag} --values ./artemis/values-${stage}.yaml
+	cd helm && helm upgrade --install artemis ./artemis --set backend.image.name=${image_registry}/${ARTEMIS_BACKEND_IMAGE_REPOSITROY}/${backend_image_name}:${image_tag} \
+	--namespace ${NAMESPACE} --set frontend.image.name=${image_registry}/${ARTEMIS_FRONTEND_IMAGE_REPOSITROY}/${frontend_image_name}:${image_tag} --values ./artemis/values-${stage}.yaml
 
 deploy: push-backend push-frontend deploy-chart
 	@echo "PWA: ${PWA_ICON_GENERATE_COMMAND}"
