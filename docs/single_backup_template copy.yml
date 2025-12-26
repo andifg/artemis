@@ -1,13 +1,13 @@
 apiVersion: velero.io/v1
 kind: Backup
 metadata:
-  namespace: openshift-adp
+  namespace: velero
   labels:
     backup-type: manual
-  name: manual-artemis-prod-backup-3
+  name: manual-meat-meater-dev-backup-2
 spec:
   includedNamespaces:
-    - artemis-prod
+    - meat-meater-dev
   orLabelSelectors:
     - matchExpressions:
         - key: backup-pvc-snapshot-to-s3
@@ -15,4 +15,6 @@ spec:
           values:
             - "true"
   snapshotMoveData: true
-  storageLocation: aws-s3
+  # for openshift
+  # storageLocation: default
+  storageLocation: default
