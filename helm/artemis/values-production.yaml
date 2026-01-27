@@ -1,6 +1,16 @@
 ingress:
   hostname: mygreendays.de
 
+
+
+backup:
+  enabled: true
+  schedule: '0 5 * * *'
+  scheduleName: 'artemis-prod-backup'
+  veleroNamespace: velero
+  adpStorageLocationName: cloudflare
+  # veleroNamespace: openshift-adp
+
 frontend:
   containerPort: 8080
   service:

@@ -8,6 +8,7 @@ ingress:
 
 backup:
   enabled: true
+  schedule: '0 5 * * *'
   scheduleName: 'artemis-test-backup'
   veleroNamespace: velero
   adpStorageLocationName: cloudflare
