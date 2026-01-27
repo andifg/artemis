@@ -1,0 +1,70 @@
+apiVersion: velero.io/v1
+kind: Restore
+metadata:
+  name: artemis-prod-migration-2
+  namespace: velero
+spec:
+  backupName: artemis-prod-migration-2
+  # backupName: coffee-app-test-20251103050056
+  resourceModifier:
+    kind: configmap
+    name: storage-class-modifier
+  # this tells velero to use kopia instead of snapshots
+  restorePVs: false 
+  hooks:
+    resources:
+    - name: sleep-in-pod
+      includedNamespaces:
+      - artemis-prod
+      postHooks:
+        - init:
+            initContainers:
+            - name: sleeperoc 
+              image: alpine:latest
+              command: ["/bin/sleep", "15"]
+    - name: restore-artemis-keycloak-database
+      labelSelector:
+        matchLabels:
+          statefulset.kubernetes.io/pod-name: artemis-postgresql-0
+      postHooks:
+      - init:
+          initContainers:
+          - name: permissionfixer
+            image: alpine:latest
+            volumeMounts:
+            - mountPath: /restores/pvc1-vm
+              # Volume name from the podSpec
+              name: data
+            command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Starting permission fixer on /restores/pvc1-vm"
+              echo "Before chown:"
+              ls -la /restores/pvc1-vm
+              chown -R 1001:1001 /restores/pvc1-vm/*
+              echo "After chown:"
+              ls -la /restores/pvc1-vm
+            securityContext:
+              runAsUser: 0
+              runAsGroup: 0
+    - name: restore-artemis-keycloak-database
+      labelSelector:
+        matchLabels:
+          statefulset.kubernetes.io/pod-name: keycloak-postgresql-0
+      postHooks:
+      - init:
+          initContainers:
+          - name: permissionfixer
+            image: alpine:latest
+            volumeMounts:
+            - mountPath: /restores/pvc1-vm
+              # Volume name from the podSpec
+              name: data
+            command:
+            - /bin/sh
+            - -c
+            - chown -R 1001:1001 /restores/pvc1-vm/*
+            securityContext:
+              runAsUser: 0
+              runAsGroup: 0

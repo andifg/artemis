@@ -12,6 +12,9 @@ spec:
       labels:
         velero.io/schedule-name: {{ .Release.Name }}
         velero.io/storage-location: {{ .Values.backup.adpStorageLocationName }}
+    includedResources:
+      - persistentvolumes
+      - persistentvolumeclaims
     includedNamespaces:
       - {{ .Release.Namespace }}
     orLabelSelectors:

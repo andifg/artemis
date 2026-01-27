@@ -1,8 +1,13 @@
 apiVersion: velero.io/v1
 kind: Restore
 metadata:
-  name: restore-new
+  name: restore-new-8
   namespace: velero
 spec:
-  backupName: manual-meat-meater-dev-backup-2
+  backupName: artemis-test-backup-20260123092408
   restorePVs: true
+  # includedResources:
+  #   - persistentvolumes
+  #   - persistentvolumeclaims
+  namespaceMapping:
+    meat-meater-dev: artemis-dev

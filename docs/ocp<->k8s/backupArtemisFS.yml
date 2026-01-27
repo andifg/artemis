@@ -1,0 +1,23 @@
+apiVersion: velero.io/v1
+kind: Backup
+metadata:
+  name: artemis-prod-migration-2
+  namespace: openshift-adp
+spec:
+  csiSnapshotTimeout: 10m0s
+  # Use kopia for volume backups, will create podvolumebackups and podvolumesrestores
+  defaultVolumesToFsBackup: true
+  includedNamespaces:
+    - artemis-prod
+  includedResources:
+    - StatefulSet
+    - Pod
+    - serviceaccounts
+    - secrets
+    - persistentvolumeclaim
+    - configmap
+  itemOperationTimeout: 4h0m0s
+  # Don't use snapshots
+  snapshotMoveData: false
+  storageLocation: aws-s3
+  ttl: 672h0m0s
