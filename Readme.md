@@ -31,6 +31,8 @@ Locally running services:
 
 ## Deployment
 
+Before installing the Helm chart, create the required OpenShift secrets manually; see [helm/artemis/Readme.md](./helm/artemis/Readme.md#prerequesites).
+
 ### Define variables
 
 Create .envrc from skeleton and fill with correct values
@@ -71,4 +73,6 @@ To use the feature a DataProtectionApplication needs to be existing in the clust
 and can be referenced via the values file. The actual backup is configured via
 the schedule ressource.
 
-An example for a restore CR within the same cluster can be found [here](./docs/restore_template.yml)
+An example for a restore CR within the same cluster can be found [here](./docs/restore_template.yml).
+
+To validate backups by restoring PVCs into a separate namespace, see [verify-backup.md](./docs/verify-backup.md).

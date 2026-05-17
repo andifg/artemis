@@ -4,10 +4,10 @@ metadata:
   name: restore-new-8
   namespace: velero
 spec:
-  backupName: artemis-test-backup-20260123092408
+  backupName: artemis-prod-backup-20260516050046
   restorePVs: true
   # includedResources:
   #   - persistentvolumes
   #   - persistentvolumeclaims
-  namespaceMapping:
-    meat-meater-dev: artemis-dev
+  # namespaceMapping:
+  #   meat-meater-dev: artemis-dev
