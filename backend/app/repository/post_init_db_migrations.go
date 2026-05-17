@@ -21,6 +21,21 @@ func SetExistingPortionsToMeat(db *gorm.DB) {
 }
 
 func DropOldForeignKeyConstraint(db *gorm.DB) {
+	var exists bool
+	if err := db.Raw(`
+		SELECT EXISTS (
+			SELECT FROM information_schema.tables
+			WHERE table_schema = 'public' AND table_name = 'servings'
+		);
+	`).Scan(&exists).Error; err != nil {
+		log.Fatalf("failed to check servings table existence: %v", err)
+	}
+
+	if !exists {
+		log.Debug("Table servings does not exist, skipping foreign key drop")
+		return
+	}
+
 	result := db.Exec(`
 		ALTER TABLE servings
 		DROP CONSTRAINT IF EXISTS fk_users_servings;
