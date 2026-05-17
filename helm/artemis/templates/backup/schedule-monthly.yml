@@ -1,0 +1,23 @@
+{{- if .Values.backup.enabled -}}
+---
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: {{ .Values.backup.monthly.scheduleName }}
+  namespace: {{ .Values.backup.veleroNamespace }}
+spec:
+  schedule: {{ .Values.backup.monthly.schedule | quote }}
+  template:
+    metadata:
+      labels:
+        velero.io/schedule-name: {{ .Values.backup.monthly.scheduleName }}
+        velero.io/storage-location: {{ .Values.backup.adpStorageLocationName }}
+    includedResources:
+      - persistentvolumes
+      - persistentvolumeclaims
+    includedNamespaces:
+      - {{ .Release.Namespace }}
+    snapshotMoveData: true
+    storageLocation: {{ .Values.backup.adpStorageLocationName }}
+    ttl: {{ .Values.backup.monthly.ttl }}
+{{- end }}

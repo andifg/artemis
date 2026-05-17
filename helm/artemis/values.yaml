@@ -28,11 +28,13 @@ backend:
 
 
 postgresql:
-  # Problems with updating statefulset
-  # primary:
-  #   persistence:
-  #     labels:
-  #       backup-pvc-snapshot-to-s3: "true"
+  primary:
+    pdb:
+      create: false
+    persistence:
+      # Must match templates/postgresql/pvc.yaml (release name is "artemis" in Makefile)
+      existingClaim: data-mount-artemis-postgresql-0
+      size: 8Gi
   auth:
     existingSecret: artemis-database-access
     database: "artemis"
@@ -57,6 +59,8 @@ frontend:
 keycloak:
   nameOverride: keycloak
   fullnameOverride: keycloak
+  pdb:
+    create: false
   production: true
   proxy: edge
 
@@ -111,6 +115,8 @@ keycloak:
     fullnameOverride: keycloak-postgresql
     nameOverride: keycloak-postgresql
     primary:
+      pdb:
+        create: false
       persistence:
         existingClaim: data-mount-keycloak-postgresql-0
     #   podSecurityContext:
@@ -135,6 +141,10 @@ backup:
   # Name of an existing Openshift ADP storage location
   adpStorageLocationName: 'aws-s3'
   ttl: 672h
+  monthly:
+    scheduleName: 'artemis-backup-monthly'
+    schedule: '0 5 1 * *'
+    ttl: 8760h
 
 serviceAccount:
   create: true

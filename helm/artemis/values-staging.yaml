@@ -12,6 +12,8 @@ backup:
   scheduleName: 'artemis-test-backup'
   veleroNamespace: velero
   adpStorageLocationName: cloudflare
+  monthly:
+    scheduleName: 'artemis-test-backup-monthly'
   # veleroNamespace: openshift-adp
 
 

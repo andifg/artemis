@@ -1,14 +1,12 @@
 # Artemis Helm Chart
 
-
-
 ## Prerequesites
 
 Create prod and dev projects
 
 ```bash
-oc create project meat-meter-dev
-oc create project meat-meter
+oc create project artemis-prod
+oc create project artemis-dev
 ```
 
 Create database password secret
